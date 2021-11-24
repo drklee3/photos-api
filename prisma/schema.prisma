@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+   provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  username String @unique
+  password String
+
+  albums       Album[]   @relation("Author")
+  sharedAlbums Album[]   @relation("Shared")
+  photos       Photo[]
+  comments     Comment[]
+}
+
+model Album {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  visibility  Visibility @default(PRIVATE)
+  viewCount   Int        @default(0)
+  author      User       @relation("Author", fields: [authorId], references: [id])
+  authorId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos  PhotosOnAlbums[]
+  // Shared users
+  members User[]           @relation("Shared")
+}
+
+enum Visibility {
+  PRIVATE
+  LINK
+  PUBLIC
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String?
+  author      User?    @relation(fields: [authorId], references: [id])
+  authorId    String?
+
+  albums PhotosOnAlbums[]
+}
+
+model PhotosOnAlbums {
+  album   Album  @relation(fields: [albumId], references: [id])
+  albumId String
+
+  photo   Photo  @relation(fields: [photoId], references: [id])
+  photoId String
+
+  addedAt DateTime @default(now())
+
+  comments Comment[]
+
+  @@id([albumId, photoId])
+}
+
+model Comment {
+  id      String @id @default(uuid())
+  content String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photo                 PhotosOnAlbums @relation(fields: [photosOnAlbumsAlbumId, photosOnAlbumsPhotoId], references: [albumId, photoId])
+  photosOnAlbumsAlbumId String
+  photosOnAlbumsPhotoId String
+}

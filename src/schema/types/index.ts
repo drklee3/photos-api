@@ -1,0 +1,6 @@
+export * as Album from './Album'
+export * as Comment from './Comment'
+export * as Photo from './Photo'
+export * as PhotosOnAlbums from './PhotosOnAlbums'
+export * as User from './User'
+export * as Crud from './crud'
