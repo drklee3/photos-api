@@ -2,10 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator nexusPrisma {
-   provider = "nexus-prisma"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -21,6 +17,20 @@ model User {
   sharedAlbums Album[]   @relation("Shared")
   photos       Photo[]
   comments     Comment[]
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  user         User     @relation("User")
+  userId       String
+
+  expires      DateTime
+
+  sessionToken String   @unique @map("session_token")
+  accessToken  String   @unique @map("access_token")
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Album {
