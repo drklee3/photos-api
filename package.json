@@ -17,20 +17,26 @@
   },
   "dependencies": {
     "@kenchi/nexus-plugin-prisma": "^0.39.0",
+    "@ory/client": "^0.0.1-alpha.29",
+    "@ory/kratos-client": "^0.8.0-alpha.2",
     "@prisma/client": "3.5.0",
     "apollo-server": "3.5.0",
+    "axios": "^0.24.0",
     "bcryptjs": "2.4.3",
+    "express": "^4.17.1",
+    "express-winston": "^4.2.0",
     "graphql": "15.7.2",
     "graphql-middleware": "6.1.12",
     "graphql-scalars": "1.13.6",
     "graphql-shield": "7.5.0",
     "jsonwebtoken": "8.5.1",
-    "nexus": "1.1.0"
+    "nexus": "1.1.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.2",
     "@types/jsonwebtoken": "8.5.6",
-    "@types/node": "16.11.9",
+    "@types/node": "^16.11.10",
     "prisma": "3.5.0",
     "ts-node": "10.4.0",
     "ts-node-dev": "1.1.8",

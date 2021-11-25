@@ -4,32 +4,35 @@ import { Context } from '../context'
 
 const rules = {
   isAuthenticatedUser: rule()((_parent, _args, context: Context) => {
-    const userId = getUserId(context)
-    return Boolean(userId)
+    return !!context.req.session?.active
   }),
-  isPostOwner: rule()(async (_parent, args, context) => {
+  isAlbumOwner: rule()(async (_parent, args, context: Context) => {
     const userId = getUserId(context)
-    const author = await context.prisma.post
+
+    context.req.session?.id
+    const author = await context.prisma.album
       .findUnique({
         where: {
-          id: Number(args.id),
+          id: args.id,
         },
       })
       .author()
-    return userId === author.id
+    return userId === author?.id
   }),
 }
 
 export const permissions = shield({
   Query: {
-    me: rules.isAuthenticatedUser,
-    draftsByUser: rules.isAuthenticatedUser,
-    postById: rules.isAuthenticatedUser,
+    photos: rules.isAuthenticatedUser,
+    users: rules.isAuthenticatedUser,
   },
+  /*
+
   Mutation: {
     createDraft: rules.isAuthenticatedUser,
     deletePost: rules.isPostOwner,
     incrementPostViewCount: rules.isAuthenticatedUser,
     togglePublishPost: rules.isPostOwner,
   },
+  */
 })

@@ -1,16 +1,41 @@
-import { ApolloServer } from 'apollo-server'
 import { createContext } from './context'
 import schema from './schema/schema'
+import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
+import express from 'express'
+import http from 'http'
 
-const server = new ApolloServer({
-  schema,
-  context: createContext,
-})
+import {
+  registerLoginRoute,
+  registerRecoveryRoute,
+  registerRegistrationRoute,
+  registerSettingsRoute,
+  registerVerificationRoute,
+} from './routes'
 
-server.listen().then(({ url }) =>
-  console.log(
-    `\
-🚀 Server ready at: ${url}
-⭐️ See sample queries: http://pris.ly/e/ts/graphql-auth#using-the-graphql-api`,
-  ),
-)
+async function main() {
+  const app = express()
+  const httpServer = http.createServer(app)
+  const server = new ApolloServer({
+    schema,
+    context: createContext,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  })
+
+  await server.start()
+
+  registerLoginRoute(app)
+  registerRecoveryRoute(app)
+  registerRegistrationRoute(app)
+  registerSettingsRoute(app)
+  registerVerificationRoute(app)
+
+  server.applyMiddleware({ app })
+
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve),
+  )
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+}
+
+main()
