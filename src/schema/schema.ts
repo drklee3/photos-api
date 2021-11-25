@@ -1,9 +1,25 @@
-import { makeSchema } from 'nexus'
 import { nexusPrisma } from '@kenchi/nexus-plugin-prisma'
 import * as path from 'path'
 import * as types from './types'
 import { permissions } from '../permissions'
 import { applyMiddleware } from 'graphql-middleware'
+import { APP_SECRET, getUserId } from '../utils'
+import { compare, hash } from 'bcryptjs'
+import { sign } from 'jsonwebtoken'
+
+import {
+  intArg,
+  makeSchema,
+  nonNull,
+  objectType,
+  stringArg,
+  inputObjectType,
+  arg,
+  asNexusMethod,
+  enumType,
+} from 'nexus'
+import { DateTimeResolver } from 'graphql-scalars'
+import { Context } from '../context'
 
 /**
 
@@ -122,141 +138,6 @@ const Query = objectType({
   },
 })
 
-const Mutation = objectType({
-  name: 'Mutation',
-  definition(t) {
-    t.field('signup', {
-      type: 'AuthPayload',
-      args: {
-        username: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        password: nonNull(stringArg()),
-      },
-      resolve: async (_parent, args, context: Context) => {
-        const hashedPassword = await hash(args.password, 10)
-        const user = await context.prisma.user.create({
-          data: {
-            username: args.username,
-            email: args.email,
-            password: hashedPassword,
-          },
-        })
-        return {
-          token: sign({ userId: user.id }, APP_SECRET),
-          user,
-        }
-      },
-    })
-
-    t.field('login', {
-      type: 'AuthPayload',
-      args: {
-        email: nonNull(stringArg()),
-        password: nonNull(stringArg()),
-      },
-      resolve: async (_parent, { email, password }, context: Context) => {
-        const user = await context.prisma.user.findUnique({
-          where: {
-            email,
-          },
-        })
-        if (!user) {
-          throw new Error(`No user found for email: ${email}`)
-        }
-        const passwordValid = await compare(password, user.password)
-        if (!passwordValid) {
-          throw new Error('Invalid password')
-        }
-        return {
-          token: sign({ userId: user.id }, APP_SECRET),
-          user,
-        }
-      },
-    })
-
-    t.field('createAlbum', {
-      type: 'Album',
-      args: {
-        data: nonNull(
-          arg({
-            type: 'AlbumCreateInput',
-          }),
-        ),
-      },
-      resolve: (_, args, context: Context) => {
-        const userId = getUserId(context)
-
-        if (!userId) {
-          throw new Error('userId not found')
-        }
-
-        return context.prisma.album.create({
-          data: {
-            title: args.data.title,
-            description: args.data.content,
-            authorId: userId,
-            visibility: 'PRIVATE',
-          },
-        })
-      },
-    })
-
-    t.field('updateAlbumVisibility', {
-      type: 'Album',
-      args: {
-        id: nonNull(intArg()),
-        visibility: arg({
-          type: 'VisibilityInput',
-        }),
-      },
-      resolve: async (_, args, context: Context) => {
-        try {
-          const _post = await context.prisma.album.findUnique({
-            where: { id: args.id },
-          })
-          return context.prisma.album.update({
-            where: { id: args.id || undefined },
-            data: { visibility: args.visibility },
-          })
-        } catch (e) {
-          throw new Error(
-            `Post with ID ${args.id} does not exist in the database.`,
-          )
-        }
-      },
-    })
-
-    t.field('incrementAlbumViewCount', {
-      type: 'Album',
-      args: {
-        id: nonNull(intArg()),
-      },
-      resolve: (_, args, context: Context) => {
-        return context.prisma.album.update({
-          where: { id: args.id },
-          data: {
-            viewCount: {
-              increment: 1,
-            },
-          },
-        })
-      },
-    })
-
-    t.field('deleteAlbum', {
-      type: 'Album',
-      args: {
-        id: nonNull(intArg()),
-      },
-      resolve: (_, args, context: Context) => {
-        return context.prisma.album.delete({
-          where: { id: args.id },
-        })
-      },
-    })
-  },
-})
-
 const User = objectType({
   name: 'User',
   definition(t) {
@@ -308,11 +189,6 @@ const Post = objectType({
   },
 })
 
-const SortOrder = enumType({
-  name: 'SortOrder',
-  members: ['asc', 'desc'],
-})
-
 const PostOrderByUpdatedAtInput = inputObjectType({
   name: 'PostOrderByUpdatedAtInput',
   definition(t) {
@@ -328,13 +204,7 @@ const UserUniqueInput = inputObjectType({
   },
 })
 
-const PostCreateInput = inputObjectType({
-  name: 'PostCreateInput',
-  definition(t) {
-    t.nonNull.string('title')
-    t.string('content')
-  },
-})
+
 
 const UserCreateInput = inputObjectType({
   name: 'UserCreateInput',
@@ -344,15 +214,6 @@ const UserCreateInput = inputObjectType({
     t.list.nonNull.field('posts', { type: 'PostCreateInput' })
   },
 })
-
-const AuthPayload = objectType({
-  name: 'AuthPayload',
-  definition(t) {
-    t.string('token')
-    t.field('user', { type: 'User' })
-  },
-})
-
 
  */
 

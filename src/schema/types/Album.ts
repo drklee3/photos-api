@@ -1,4 +1,4 @@
-import { objectType } from 'nexus'
+import { enumType, objectType } from 'nexus'
 
 export default objectType({
   name: 'Album',
@@ -13,4 +13,10 @@ export default objectType({
     t.model.createdAt()
     t.model.updatedAt()
   },
+})
+
+export const Visibility = enumType({
+  name: 'Visibility',
+  members: ['PRIVATE', 'LINK', 'PUBLIC'],
+  description: 'User visibility of an album',
 })

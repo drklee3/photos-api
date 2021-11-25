@@ -5,14 +5,6 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
 
-import {
-  registerLoginRoute,
-  registerRecoveryRoute,
-  registerRegistrationRoute,
-  registerSettingsRoute,
-  registerVerificationRoute,
-} from './routes'
-
 async function main() {
   const app = express()
   const httpServer = http.createServer(app)
@@ -23,12 +15,6 @@ async function main() {
   })
 
   await server.start()
-
-  registerLoginRoute(app)
-  registerRecoveryRoute(app)
-  registerRegistrationRoute(app)
-  registerSettingsRoute(app)
-  registerVerificationRoute(app)
 
   server.applyMiddleware({ app })
 

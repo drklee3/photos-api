@@ -1,3 +1,4 @@
+export * as Auth from './Auth'
 export * as Album from './Album'
 export * as Comment from './Comment'
 export * as Photo from './Photo'

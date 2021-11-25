@@ -1,8 +1,7 @@
 import { mutationType } from 'nexus'
 
-mutationType({
+export default mutationType({
   definition(t) {
-    t.crud.createOneUser()
     t.crud.updateOneUser()
     t.crud.deleteOneUser()
 

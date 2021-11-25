@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { Session } from '@ory/kratos-client'
 import { Request } from 'express'
 
 const prisma = new PrismaClient()
@@ -13,6 +12,5 @@ export function createContext(req: Request) {
   return {
     ...req,
     prisma,
-    session: req.session as Session,
   }
 }
