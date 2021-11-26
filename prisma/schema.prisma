@@ -19,20 +19,6 @@ model User {
   comments     Comment[]
 }
 
-model Session {
-  id           String   @id @default(uuid())
-  user         User     @relation("User")
-  userId       String
-
-  expires      DateTime
-
-  sessionToken String   @unique @map("session_token")
-  accessToken  String   @unique @map("access_token")
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
 model Album {
   id          String     @id @default(uuid())
   title       String
@@ -65,6 +51,14 @@ model Photo {
   author      User?    @relation(fields: [authorId], references: [id])
   authorId    String?
 
+  // Metadata
+  fileName String? // Original filename, title user can change
+  width    Int
+  height   Int
+  size     Int
+  mimetype MimeType
+  exif     Json     @default("{}")
+
   albums PhotosOnAlbums[]
 }
 
@@ -95,4 +89,15 @@ model Comment {
   photo                 PhotosOnAlbums @relation(fields: [photosOnAlbumsAlbumId, photosOnAlbumsPhotoId], references: [albumId, photoId])
   photosOnAlbumsAlbumId String
   photosOnAlbumsPhotoId String
+}
+
+enum MimeType {
+  PNG
+  JPG
+  SVG
+  WEBP
+  WEBM
+  AVIF
+  GIF
+  MP4
 }
