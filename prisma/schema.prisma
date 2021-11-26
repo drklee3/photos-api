@@ -13,8 +13,8 @@ model User {
   username String @unique
   password String
 
-  albums       Album[]   @relation("Author")
-  sharedAlbums Album[]   @relation("Shared")
+  albums       Album[]
+  sharedAlbums UsersOnAlbums[]
   photos       Photo[]
   comments     Comment[]
 }
@@ -25,7 +25,7 @@ model Album {
   description String?
   visibility  Visibility @default(PRIVATE)
   viewCount   Int        @default(0)
-  author      User       @relation("Author", fields: [authorId], references: [id])
+  author      User       @relation(fields: [authorId], references: [id])
   authorId    String
 
   createdAt DateTime @default(now())
@@ -33,13 +33,38 @@ model Album {
 
   photos  PhotosOnAlbums[]
   // Shared users
-  members User[]           @relation("Shared")
+  members UsersOnAlbums[]
 }
 
 enum Visibility {
+  // Only shared members can see
   PRIVATE
+  // Anyone with link can see
   LINK
+  // Shows up in public album feed
   PUBLIC
+}
+
+model UsersOnAlbums {
+  album   Album  @relation(fields: [albumId], references: [id])
+  albumId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  role    AlbumRole @default(VIEWER)
+  addedAt DateTime  @default(now())
+
+  @@id([albumId, userId])
+}
+
+enum AlbumRole {
+  // Can view but can't comment
+  VIEWER
+  // Can view and comment
+  COMMENTOR
+  // Can also upload / delete photos
+  EDITOR
 }
 
 model Photo {
