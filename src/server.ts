@@ -8,10 +8,12 @@ import http from 'http'
 import { registerMiddlewares } from './middleware'
 import { buildContext } from 'graphql-passport'
 import prisma from './prisma'
+import { graphqlUploadExpress } from 'graphql-upload'
 
 async function main() {
   const app = express()
 
+  app.use(graphqlUploadExpress())
   registerMiddlewares(app)
 
   const httpServer = http.createServer(app)

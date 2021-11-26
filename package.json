@@ -16,8 +16,11 @@
     "trailingComma": "all"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.42.0",
     "@kenchi/nexus-plugin-prisma": "^0.39.0",
     "@prisma/client": "3.5.0",
+    "@types/file-type": "^10.9.1",
+    "@types/graphql-upload": "^8.0.7",
     "apollo-server": "3.5.0",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",
@@ -25,14 +28,17 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "express-winston": "^4.2.0",
+    "file-type": "^17.0.0",
     "graphql": "15.7.2",
     "graphql-middleware": "6.1.12",
     "graphql-passport": "^0.6.4",
     "graphql-scalars": "1.13.6",
     "graphql-shield": "7.5.0",
+    "graphql-upload": "^12.0.0",
     "jsonwebtoken": "8.5.1",
     "nexus": "1.1.0",
     "passport": "^0.5.0",
+    "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -41,6 +47,7 @@
     "@types/jsonwebtoken": "8.5.6",
     "@types/node": "^16.11.10",
     "@types/passport": "^1.0.7",
+    "@types/uuid": "^8.3.3",
     "prisma": "3.5.0",
     "ts-node": "10.4.0",
     "ts-node-dev": "1.1.8",

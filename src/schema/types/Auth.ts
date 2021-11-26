@@ -118,33 +118,6 @@ export const Mutation = extendType({
     })
     */
 
-    t.field('updateAlbumVisibility', {
-      type: 'Album',
-      args: {
-        id: nonNull(stringArg()),
-        visibility: nonNull(
-          arg({
-            type: 'Visibility',
-          }),
-        ),
-      },
-      resolve: async (_, args, context: Context) => {
-        try {
-          const _post = await context.prisma.album.findUnique({
-            where: { id: args.id },
-          })
-          return context.prisma.album.update({
-            where: { id: args.id || undefined },
-            data: { visibility: args.visibility || undefined },
-          })
-        } catch (e) {
-          throw new Error(
-            `Post with ID ${args.id} does not exist in the database.`,
-          )
-        }
-      },
-    })
-
     t.field('incrementAlbumViewCount', {
       type: 'Album',
       args: {
@@ -158,18 +131,6 @@ export const Mutation = extendType({
               increment: 1,
             },
           },
-        })
-      },
-    })
-
-    t.field('deleteAlbum', {
-      type: 'Album',
-      args: {
-        id: nonNull(stringArg()),
-      },
-      resolve: (_, args, context: Context) => {
-        return context.prisma.album.delete({
-          where: { id: args.id },
         })
       },
     })
