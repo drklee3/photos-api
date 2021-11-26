@@ -5,18 +5,31 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
 
+import { registerMiddlewares } from './middleware'
+import { buildContext } from 'graphql-passport'
+import prisma from './prisma'
+
 async function main() {
   const app = express()
+
+  registerMiddlewares(app)
+
   const httpServer = http.createServer(app)
   const server = new ApolloServer({
     schema,
-    context: createContext,
+    context: ({ req, res }) => buildContext({ req, res, prisma }),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })
 
   await server.start()
 
-  server.applyMiddleware({ app })
+  server.applyMiddleware({
+    app,
+    cors: {
+      origin: 'https://studio.apollographql.com',
+      credentials: true,
+    },
+  })
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve),

@@ -3,9 +3,6 @@ import * as path from 'path'
 import * as types from './types'
 import { permissions } from '../permissions'
 import { applyMiddleware } from 'graphql-middleware'
-import { APP_SECRET, getUserId } from '../utils'
-import { compare, hash } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
 
 import {
   intArg,

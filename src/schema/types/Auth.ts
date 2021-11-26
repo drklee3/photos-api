@@ -1,22 +1,23 @@
-import { APP_SECRET, getUserId } from '../../utils'
-import { compare, hash } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
+import { getUserId } from '../../utils'
+import { hash, verify } from 'argon2'
 
 import { intArg, nonNull, objectType, stringArg, arg, extendType } from 'nexus'
 import { Context } from '../../context'
+import { NexusNullDef } from 'nexus/dist/core'
 
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('signup', {
-      type: 'AuthPayload',
+      type: 'User',
       args: {
         username: nonNull(stringArg()),
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
       resolve: async (_parent, args, context: Context) => {
-        const hashedPassword = await hash(args.password, 10)
+        const hashedPassword = await hash(args.password)
+
         const user = await context.prisma.user.create({
           data: {
             username: args.username,
@@ -24,36 +25,67 @@ export const Mutation = extendType({
             password: hashedPassword,
           },
         })
-        return {
-          token: sign({ userId: user.id }, APP_SECRET),
-          user,
-        }
+
+        // Save to session
+        context.req.session.userId = user.id
+
+        return user
       },
     })
 
     t.field('login', {
-      type: 'AuthPayload',
+      type: 'User',
       args: {
-        email: nonNull(stringArg()),
+        emailOrUsername: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
-      resolve: async (_parent, { email, password }, context: Context) => {
-        const user = await context.prisma.user.findUnique({
+      resolve: async (
+        _parent,
+        { emailOrUsername, password },
+        context: Context,
+      ) => {
+        // Should only have one but can't use findUnique
+        const user = await context.prisma.user.findFirst({
           where: {
-            email,
+            OR: [
+              {
+                email: emailOrUsername,
+              },
+              {
+                username: emailOrUsername,
+              },
+            ],
           },
         })
+
         if (!user) {
-          throw new Error(`No user found for email: ${email}`)
+          throw new Error(
+            `No user found for email or username: ${emailOrUsername}`,
+          )
         }
-        const passwordValid = await compare(password, user.password)
+
+        const passwordValid = await verify(user.password, password)
+
         if (!passwordValid) {
           throw new Error('Invalid password')
         }
-        return {
-          token: sign({ userId: user.id }, APP_SECRET),
-          user,
-        }
+
+        // Logged in, save user id to session
+        context.req.session.userId = user.id
+        context.req.session.save()
+
+        return user
+      },
+    })
+
+    t.field('logout', {
+      type: 'Boolean',
+      args: {},
+      resolve: async (_parent, {}, context: Context) => {
+        // Logged in, save user id to session
+        context.req.session.destroy(() => {})
+
+        return true
       },
     })
 
@@ -141,13 +173,5 @@ export const Mutation = extendType({
         })
       },
     })
-  },
-})
-
-export const AuthPayload = objectType({
-  name: 'AuthPayload',
-  definition(t) {
-    t.string('token')
-    t.field('user', { type: 'User' })
   },
 })
