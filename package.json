@@ -5,10 +5,11 @@
     "dev": "ts-node-dev --no-notify --respawn --transpile-only src/server",
     "start": "node dist/server",
     "clean": "rm -rf dist",
-    "build": "npm -s run clean && npm -s run generate && tsc",
-    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
+    "build": "yarn -s run clean && yarn -s run generate && tsc",
+    "generate": "yarn -s run generate:prisma && yarn -s run generate:nexus",
     "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node --transpile-only src/schema"
+    "generate:nexus": "ts-node --transpile-only src/schema/schema.ts",
+    "test": "jest"
   },
   "prettier": {
     "semi": false,
@@ -21,6 +22,7 @@
     "@prisma/client": "3.5.0",
     "@types/file-type": "^10.9.1",
     "@types/graphql-upload": "^8.0.7",
+    "@types/supertest": "^2.0.11",
     "apollo-server": "3.5.0",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",
@@ -38,17 +40,23 @@
     "jsonwebtoken": "8.5.1",
     "nexus": "1.1.0",
     "passport": "^0.5.0",
+    "supertest": "^6.1.6",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/cors": "^2.8.12",
     "@types/express-session": "^1.17.4",
+    "@types/jest": "^27.0.3",
     "@types/jsonwebtoken": "8.5.6",
     "@types/node": "^16.11.10",
     "@types/passport": "^1.0.7",
     "@types/uuid": "^8.3.3",
+    "jest": "^27.3.1",
     "prisma": "3.5.0",
+    "ts-jest": "^27.0.7",
     "ts-node": "10.4.0",
     "ts-node-dev": "1.1.8",
     "typescript": "4.5.2"

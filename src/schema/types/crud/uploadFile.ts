@@ -22,7 +22,7 @@ export const uploadFile = async (file: FileUpload) => {
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
     Key: id,
-    Body: createReadStream,
+    Body: createReadStream(),
     ContentType: mimetype,
     ContentEncoding: encoding,
   })
