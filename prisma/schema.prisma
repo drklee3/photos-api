@@ -17,6 +17,7 @@ model User {
   sharedAlbums UsersOnAlbums[]
   photos       Photo[]
   comments     Comment[]
+  Like         Like[]
 }
 
 model Album {
@@ -97,8 +98,21 @@ model PhotosOnAlbums {
   addedAt DateTime @default(now())
 
   comments Comment[]
+  likes    Like[]
 
   @@id([albumId, photoId])
+}
+
+model Like {
+  id       String @id @default(uuid())
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  createdAt DateTime @default(now())
+
+  photo                 PhotosOnAlbums @relation(fields: [photosOnAlbumsAlbumId, photosOnAlbumsPhotoId], references: [albumId, photoId])
+  photosOnAlbumsAlbumId String
+  photosOnAlbumsPhotoId String
 }
 
 model Comment {
