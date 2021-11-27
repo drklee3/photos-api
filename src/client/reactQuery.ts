@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { RequestInit } from 'graphql-request/dist/types.dom';
-import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2205,23 +2205,68 @@ export enum Visibility {
   Public = 'PUBLIC'
 }
 
-export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQueryQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type LogoutMutationMutation = { __typename?: 'Mutation', logout?: boolean | null | undefined };
 
-export type SignupMutationVariables = Exact<{
+export type SignupMutationMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
   email: Scalars['String'];
 }>;
 
 
-export type SignupMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type SignupMutationMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+
+export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+export type CurrentUserQueryQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+
+
+export const LogoutMutationDocument = `
+    mutation LogoutMutation {
+  logout
+}
+    `;
+export const useLogoutMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>(
+      'LogoutMutation',
+      (variables?: LogoutMutationMutationVariables) => fetcher<LogoutMutationMutation, LogoutMutationMutationVariables>(client, LogoutMutationDocument, variables, headers)(),
+      options
+    );
+export const SignupMutationDocument = `
+    mutation SignupMutation($username: String!, $password: String!, $email: String!) {
+  signup(username: $username, password: $password, email: $email) {
+    id
+    username
+    email
+  }
+}
+    `;
+export const useSignupMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>(
+      'SignupMutation',
+      (variables?: SignupMutationMutationVariables) => fetcher<SignupMutationMutation, SignupMutationMutationVariables>(client, SignupMutationDocument, variables, headers)(),
+      options
+    );
 export const CurrentUserQueryDocument = `
-    query currentUserQuery {
+    query CurrentUserQuery {
   currentUser {
     id
     username
@@ -2239,29 +2284,7 @@ export const useCurrentUserQueryQuery = <
       headers?: RequestInit['headers']
     ) =>
     useQuery<CurrentUserQueryQuery, TError, TData>(
-      variables === undefined ? ['currentUserQuery'] : ['currentUserQuery', variables],
+      variables === undefined ? ['CurrentUserQuery'] : ['CurrentUserQuery', variables],
       fetcher<CurrentUserQueryQuery, CurrentUserQueryQueryVariables>(client, CurrentUserQueryDocument, variables, headers),
-      options
-    );
-export const SignupDocument = `
-    mutation Signup($username: String!, $password: String!, $email: String!) {
-  signup(username: $username, password: $password, email: $email) {
-    id
-    username
-    email
-  }
-}
-    `;
-export const useSignupMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<SignupMutation, TError, SignupMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
-      'Signup',
-      (variables?: SignupMutationVariables) => fetcher<SignupMutation, SignupMutationVariables>(client, SignupDocument, variables, headers)(),
       options
     );

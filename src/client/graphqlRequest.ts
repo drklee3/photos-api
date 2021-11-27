@@ -2201,33 +2201,43 @@ export enum Visibility {
   Public = 'PUBLIC'
 }
 
-export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQueryQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type LogoutMutationMutation = { __typename?: 'Mutation', logout?: boolean | null | undefined };
 
-export type SignupMutationVariables = Exact<{
+export type SignupMutationMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
   email: Scalars['String'];
 }>;
 
 
-export type SignupMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type SignupMutationMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+
+export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const CurrentUserQueryDocument = gql`
-    query currentUserQuery {
-  currentUser {
+export type CurrentUserQueryQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+
+
+export const LogoutMutationDocument = gql`
+    mutation LogoutMutation {
+  logout
+}
+    `;
+export const SignupMutationDocument = gql`
+    mutation SignupMutation($username: String!, $password: String!, $email: String!) {
+  signup(username: $username, password: $password, email: $email) {
     id
     username
     email
   }
 }
     `;
-export const SignupDocument = gql`
-    mutation Signup($username: String!, $password: String!, $email: String!) {
-  signup(username: $username, password: $password, email: $email) {
+export const CurrentUserQueryDocument = gql`
+    query CurrentUserQuery {
+  currentUser {
     id
     username
     email
@@ -2242,11 +2252,14 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    currentUserQuery(variables?: CurrentUserQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQueryQuery>(CurrentUserQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'currentUserQuery');
+    LogoutMutation(variables?: LogoutMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutationMutation>(LogoutMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'LogoutMutation');
     },
-    Signup(variables: SignupMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignupMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignupMutation>(SignupDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Signup');
+    SignupMutation(variables: SignupMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignupMutationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SignupMutationMutation>(SignupMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignupMutation');
+    },
+    CurrentUserQuery(variables?: CurrentUserQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQueryQuery>(CurrentUserQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUserQuery');
     }
   };
 }

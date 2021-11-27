@@ -53,8 +53,12 @@ describe('auth', () => {
     await cookieJar.removeAllCookies()
   })
 
+  test('query currentUser before signup', async () => {
+    await expect(sdk.CurrentUserQuery()).rejects.toThrow('Not Authorised!')
+  })
+
   test('signup', async () => {
-    const res = await sdk.Signup({
+    const res = await sdk.SignupMutation({
       username: 'bob',
       password: 'Hunter2',
       email: 'me@example.com',
@@ -67,11 +71,23 @@ describe('auth', () => {
   })
 
   test('query currentUser', async () => {
-    const res = await sdk.currentUserQuery()
+    const res = await sdk.CurrentUserQuery()
 
     expect(res.currentUser).toBeDefined()
 
     expect(res.currentUser?.username).toBe('bob')
     expect(res.currentUser?.email).toBe('me@example.com')
   })
+
+  test('signup when already signed in', async () => {
+    await expect(
+      sdk.SignupMutation({
+        username: 'bob',
+        password: 'Hunter2',
+        email: 'me@example.com',
+      }),
+    ).rejects.toThrow('Not Authorised!')
+  })
+
+  test('signout', async () => {})
 })
