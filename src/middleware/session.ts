@@ -10,13 +10,6 @@ export default function registerSessionMiddleware(app: Express) {
     cookie: { sameSite: 'none' },
   }
 
-  app.use(
-    cors({
-      origin: 'https://studio.apollographql.com',
-      credentials: true,
-    }),
-  )
-
   if (process.env.NODE_ENV === 'production') {
     // use https only
     config.cookie!.secure = true

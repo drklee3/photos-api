@@ -31,6 +31,8 @@ const rules = {
   ),
 }
 
+const dev = process.env.NODE_ENV !== 'production'
+
 export const permissions = shield(
   {
     Query: {
@@ -46,5 +48,6 @@ export const permissions = shield(
   },
   {
     fallbackRule: allow,
+    allowExternalErrors: dev,
   },
 )

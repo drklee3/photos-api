@@ -226,6 +226,7 @@ const schemaWithoutPermissions = makeSchema({
       __dirname,
       '../../node_modules/@types/nexus-typegen/index.d.ts',
     ),
+    schema: path.join(__dirname, '../../schema.graphql'),
   },
   contextType: {
     module: require.resolve('../context'),
@@ -242,3 +243,4 @@ const schemaWithoutPermissions = makeSchema({
 })
 
 export default applyMiddleware(schemaWithoutPermissions, permissions)
+// export default schemaWithoutPermissions

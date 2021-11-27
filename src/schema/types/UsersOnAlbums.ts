@@ -1,6 +1,6 @@
-import { objectType } from 'nexus'
+import { enumType, objectType } from 'nexus'
 
-export default objectType({
+const UserOnAlbums = objectType({
   name: 'UsersOnAlbums',
   definition(t) {
     t.model.album()
@@ -9,3 +9,11 @@ export default objectType({
     t.model.role()
   },
 })
+
+const AlbumRole = enumType({
+  name: 'AlbumPermissions',
+  members: ['VIEWER', 'COMMENTER', 'EDITOR'],
+  description: 'User role of an album',
+})
+
+export { UserOnAlbums, AlbumRole }

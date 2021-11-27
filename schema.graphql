@@ -2,51 +2,1452 @@
 ### Do not make changes to this file directly
 
 
-type AuthPayload {
-  token: String
-  user: User
-}
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
-
-type Mutation {
-  createDraft(data: PostCreateInput!): Post
-  deletePost(id: Int!): Post
-  incrementPostViewCount(id: Int!): Post
-  login(email: String!, password: String!): AuthPayload
-  signup(email: String!, name: String, password: String!): AuthPayload
-  togglePublishPost(id: Int!): Post
-}
-
-type Post {
-  author: User
-  content: String
+type Album {
+  author: User!
   createdAt: DateTime!
-  id: Int!
-  published: Boolean!
+  description: String
+  id: String!
+  members(after: UsersOnAlbumsWhereUniqueInput, before: UsersOnAlbumsWhereUniqueInput, first: Int, last: Int): [UsersOnAlbums!]!
+  photos(after: PhotosOnAlbumsWhereUniqueInput, before: PhotosOnAlbumsWhereUniqueInput, first: Int, last: Int): [PhotosOnAlbums!]!
   title: String!
   updatedAt: DateTime!
   viewCount: Int!
+  visibility: Visibility!
 }
 
-input PostCreateInput {
-  content: String
+input AlbumCreateInput {
+  author: UserCreateNestedOneWithoutAlbumsInput!
+  createdAt: DateTime
+  description: String
+  id: String
+  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
+  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
   title: String!
+  updatedAt: DateTime
+  viewCount: Int
+  visibility: Visibility
 }
 
-input PostOrderByUpdatedAtInput {
-  updatedAt: SortOrder!
+input AlbumCreateManyAuthorInput {
+  createdAt: DateTime
+  description: String
+  id: String
+  title: String!
+  updatedAt: DateTime
+  viewCount: Int
+  visibility: Visibility
+}
+
+input AlbumCreateManyAuthorInputEnvelope {
+  data: [AlbumCreateManyAuthorInput!]
+  skipDuplicates: Boolean
+}
+
+input AlbumCreateNestedManyWithoutAuthorInput {
+  connect: [AlbumWhereUniqueInput!]
+  connectOrCreate: [AlbumCreateOrConnectWithoutAuthorInput!]
+  create: [AlbumCreateWithoutAuthorInput!]
+  createMany: AlbumCreateManyAuthorInputEnvelope
+}
+
+input AlbumCreateNestedOneWithoutMembersInput {
+  connect: AlbumWhereUniqueInput
+  connectOrCreate: AlbumCreateOrConnectWithoutMembersInput
+  create: AlbumCreateWithoutMembersInput
+}
+
+input AlbumCreateNestedOneWithoutPhotosInput {
+  connect: AlbumWhereUniqueInput
+  connectOrCreate: AlbumCreateOrConnectWithoutPhotosInput
+  create: AlbumCreateWithoutPhotosInput
+}
+
+input AlbumCreateOrConnectWithoutAuthorInput {
+  create: AlbumCreateWithoutAuthorInput!
+  where: AlbumWhereUniqueInput!
+}
+
+input AlbumCreateOrConnectWithoutMembersInput {
+  create: AlbumCreateWithoutMembersInput!
+  where: AlbumWhereUniqueInput!
+}
+
+input AlbumCreateOrConnectWithoutPhotosInput {
+  create: AlbumCreateWithoutPhotosInput!
+  where: AlbumWhereUniqueInput!
+}
+
+input AlbumCreateWithoutAuthorInput {
+  createdAt: DateTime
+  description: String
+  id: String
+  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
+  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+  title: String!
+  updatedAt: DateTime
+  viewCount: Int
+  visibility: Visibility
+}
+
+input AlbumCreateWithoutMembersInput {
+  author: UserCreateNestedOneWithoutAlbumsInput!
+  createdAt: DateTime
+  description: String
+  id: String
+  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+  title: String!
+  updatedAt: DateTime
+  viewCount: Int
+  visibility: Visibility
+}
+
+input AlbumCreateWithoutPhotosInput {
+  author: UserCreateNestedOneWithoutAlbumsInput!
+  createdAt: DateTime
+  description: String
+  id: String
+  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
+  title: String!
+  updatedAt: DateTime
+  viewCount: Int
+  visibility: Visibility
+}
+
+input AlbumListRelationFilter {
+  every: AlbumWhereInput
+  none: AlbumWhereInput
+  some: AlbumWhereInput
+}
+
+input AlbumOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input AlbumOrderByWithRelationInput {
+  author: UserOrderByWithRelationInput
+  authorId: SortOrder
+  createdAt: SortOrder
+  description: SortOrder
+  id: SortOrder
+  members: UsersOnAlbumsOrderByRelationAggregateInput
+  photos: PhotosOnAlbumsOrderByRelationAggregateInput
+  title: SortOrder
+  updatedAt: SortOrder
+  viewCount: SortOrder
+  visibility: SortOrder
+}
+
+"""User role of an album"""
+enum AlbumPermissions {
+  COMMENTER
+  EDITOR
+  VIEWER
+}
+
+enum AlbumRole {
+  COMMENTOR
+  EDITOR
+  VIEWER
+}
+
+input AlbumScalarWhereInput {
+  AND: [AlbumScalarWhereInput!]
+  NOT: [AlbumScalarWhereInput!]
+  OR: [AlbumScalarWhereInput!]
+  authorId: StringFilter
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  id: StringFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+  viewCount: IntFilter
+  visibility: EnumVisibilityFilter
+}
+
+input AlbumUpdateInput {
+  author: UserUpdateOneRequiredWithoutAlbumsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
+  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  viewCount: IntFieldUpdateOperationsInput
+  visibility: EnumVisibilityFieldUpdateOperationsInput
+}
+
+input AlbumUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  viewCount: IntFieldUpdateOperationsInput
+  visibility: EnumVisibilityFieldUpdateOperationsInput
+}
+
+input AlbumUpdateManyWithWhereWithoutAuthorInput {
+  data: AlbumUpdateManyMutationInput!
+  where: AlbumScalarWhereInput!
+}
+
+input AlbumUpdateManyWithoutAuthorInput {
+  connect: [AlbumWhereUniqueInput!]
+  connectOrCreate: [AlbumCreateOrConnectWithoutAuthorInput!]
+  create: [AlbumCreateWithoutAuthorInput!]
+  createMany: AlbumCreateManyAuthorInputEnvelope
+  delete: [AlbumWhereUniqueInput!]
+  deleteMany: [AlbumScalarWhereInput!]
+  disconnect: [AlbumWhereUniqueInput!]
+  set: [AlbumWhereUniqueInput!]
+  update: [AlbumUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [AlbumUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [AlbumUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input AlbumUpdateOneRequiredWithoutMembersInput {
+  connect: AlbumWhereUniqueInput
+  connectOrCreate: AlbumCreateOrConnectWithoutMembersInput
+  create: AlbumCreateWithoutMembersInput
+  update: AlbumUpdateWithoutMembersInput
+  upsert: AlbumUpsertWithoutMembersInput
+}
+
+input AlbumUpdateOneRequiredWithoutPhotosInput {
+  connect: AlbumWhereUniqueInput
+  connectOrCreate: AlbumCreateOrConnectWithoutPhotosInput
+  create: AlbumCreateWithoutPhotosInput
+  update: AlbumUpdateWithoutPhotosInput
+  upsert: AlbumUpsertWithoutPhotosInput
+}
+
+input AlbumUpdateWithWhereUniqueWithoutAuthorInput {
+  data: AlbumUpdateWithoutAuthorInput!
+  where: AlbumWhereUniqueInput!
+}
+
+input AlbumUpdateWithoutAuthorInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
+  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  viewCount: IntFieldUpdateOperationsInput
+  visibility: EnumVisibilityFieldUpdateOperationsInput
+}
+
+input AlbumUpdateWithoutMembersInput {
+  author: UserUpdateOneRequiredWithoutAlbumsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  viewCount: IntFieldUpdateOperationsInput
+  visibility: EnumVisibilityFieldUpdateOperationsInput
+}
+
+input AlbumUpdateWithoutPhotosInput {
+  author: UserUpdateOneRequiredWithoutAlbumsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  viewCount: IntFieldUpdateOperationsInput
+  visibility: EnumVisibilityFieldUpdateOperationsInput
+}
+
+input AlbumUpsertWithWhereUniqueWithoutAuthorInput {
+  create: AlbumCreateWithoutAuthorInput!
+  update: AlbumUpdateWithoutAuthorInput!
+  where: AlbumWhereUniqueInput!
+}
+
+input AlbumUpsertWithoutMembersInput {
+  create: AlbumCreateWithoutMembersInput!
+  update: AlbumUpdateWithoutMembersInput!
+}
+
+input AlbumUpsertWithoutPhotosInput {
+  create: AlbumCreateWithoutPhotosInput!
+  update: AlbumUpdateWithoutPhotosInput!
+}
+
+input AlbumWhereInput {
+  AND: [AlbumWhereInput!]
+  NOT: [AlbumWhereInput!]
+  OR: [AlbumWhereInput!]
+  author: UserWhereInput
+  authorId: StringFilter
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  id: StringFilter
+  members: UsersOnAlbumsListRelationFilter
+  photos: PhotosOnAlbumsListRelationFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+  viewCount: IntFilter
+  visibility: EnumVisibilityFilter
+}
+
+input AlbumWhereUniqueInput {
+  id: String
+}
+
+type Comment {
+  author: User!
+  content: String!
+  createdAt: DateTime!
+  id: String!
+  photo: PhotosOnAlbums!
+  updatedAt: DateTime!
+}
+
+input CommentCreateInput {
+  author: UserCreateNestedOneWithoutCommentsInput!
+  content: String!
+  createdAt: DateTime
+  id: String
+  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput!
+  updatedAt: DateTime
+}
+
+input CommentCreateManyAuthorInput {
+  content: String!
+  createdAt: DateTime
+  id: String
+  photosOnAlbumsAlbumId: String!
+  photosOnAlbumsPhotoId: String!
+  updatedAt: DateTime
+}
+
+input CommentCreateManyAuthorInputEnvelope {
+  data: [CommentCreateManyAuthorInput!]
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyPhotoInput {
+  authorId: String!
+  content: String!
+  createdAt: DateTime
+  id: String
+  updatedAt: DateTime
+}
+
+input CommentCreateManyPhotoInputEnvelope {
+  data: [CommentCreateManyPhotoInput!]
+  skipDuplicates: Boolean
+}
+
+input CommentCreateNestedManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+}
+
+input CommentCreateNestedManyWithoutPhotoInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutPhotoInput!]
+  create: [CommentCreateWithoutPhotoInput!]
+  createMany: CommentCreateManyPhotoInputEnvelope
+}
+
+input CommentCreateOrConnectWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateOrConnectWithoutPhotoInput {
+  create: CommentCreateWithoutPhotoInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateWithoutAuthorInput {
+  content: String!
+  createdAt: DateTime
+  id: String
+  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput!
+  updatedAt: DateTime
+}
+
+input CommentCreateWithoutPhotoInput {
+  author: UserCreateNestedOneWithoutCommentsInput!
+  content: String!
+  createdAt: DateTime
+  id: String
+  updatedAt: DateTime
+}
+
+input CommentListRelationFilter {
+  every: CommentWhereInput
+  none: CommentWhereInput
+  some: CommentWhereInput
+}
+
+input CommentOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CommentOrderByWithRelationInput {
+  author: UserOrderByWithRelationInput
+  authorId: SortOrder
+  content: SortOrder
+  createdAt: SortOrder
+  id: SortOrder
+  photo: PhotosOnAlbumsOrderByWithRelationInput
+  photosOnAlbumsAlbumId: SortOrder
+  photosOnAlbumsPhotoId: SortOrder
+  updatedAt: SortOrder
+}
+
+input CommentScalarWhereInput {
+  AND: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  authorId: StringFilter
+  content: StringFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  photosOnAlbumsAlbumId: StringFilter
+  photosOnAlbumsPhotoId: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input CommentUpdateInput {
+  author: UserUpdateOneRequiredWithoutCommentsInput
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  photo: PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdateManyMutationInput {
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdateManyWithWhereWithoutAuthorInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithWhereWithoutPhotoInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input CommentUpdateManyWithoutPhotoInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutPhotoInput!]
+  create: [CommentCreateWithoutPhotoInput!]
+  createMany: CommentCreateManyPhotoInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutPhotoInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutPhotoInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutPhotoInput!]
+}
+
+input CommentUpdateWithWhereUniqueWithoutAuthorInput {
+  data: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutPhotoInput {
+  data: CommentUpdateWithoutPhotoInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithoutAuthorInput {
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  photo: PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdateWithoutPhotoInput {
+  author: UserUpdateOneRequiredWithoutCommentsInput
+  content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpsertWithWhereUniqueWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  update: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutPhotoInput {
+  create: CommentCreateWithoutPhotoInput!
+  update: CommentUpdateWithoutPhotoInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentWhereInput {
+  AND: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  author: UserWhereInput
+  authorId: StringFilter
+  content: StringFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  photo: PhotosOnAlbumsWhereInput
+  photosOnAlbumsAlbumId: StringFilter
+  photosOnAlbumsPhotoId: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input CommentWhereUniqueInput {
+  id: String
+}
+
+scalar DateTime
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input EnumAlbumRoleFieldUpdateOperationsInput {
+  set: AlbumRole
+}
+
+input EnumAlbumRoleFilter {
+  equals: AlbumRole
+  in: [AlbumRole!]
+  not: NestedEnumAlbumRoleFilter
+  notIn: [AlbumRole!]
+}
+
+input EnumMimeTypeFieldUpdateOperationsInput {
+  set: MimeType
+}
+
+input EnumMimeTypeFilter {
+  equals: MimeType
+  in: [MimeType!]
+  not: NestedEnumMimeTypeFilter
+  notIn: [MimeType!]
+}
+
+input EnumVisibilityFieldUpdateOperationsInput {
+  set: Visibility
+}
+
+input EnumVisibilityFilter {
+  equals: Visibility
+  in: [Visibility!]
+  not: NestedEnumVisibilityFilter
+  notIn: [Visibility!]
+}
+
+input IntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+scalar Json
+
+type Like {
+  author: User!
+  createdAt: DateTime!
+  id: String!
+  photo: PhotosOnAlbums!
+}
+
+input LikeCreateManyAuthorInput {
+  createdAt: DateTime
+  id: String
+  photosOnAlbumsAlbumId: String!
+  photosOnAlbumsPhotoId: String!
+}
+
+input LikeCreateManyAuthorInputEnvelope {
+  data: [LikeCreateManyAuthorInput!]
+  skipDuplicates: Boolean
+}
+
+input LikeCreateManyPhotoInput {
+  authorId: String!
+  createdAt: DateTime
+  id: String
+}
+
+input LikeCreateManyPhotoInputEnvelope {
+  data: [LikeCreateManyPhotoInput!]
+  skipDuplicates: Boolean
+}
+
+input LikeCreateNestedManyWithoutAuthorInput {
+  connect: [LikeWhereUniqueInput!]
+  connectOrCreate: [LikeCreateOrConnectWithoutAuthorInput!]
+  create: [LikeCreateWithoutAuthorInput!]
+  createMany: LikeCreateManyAuthorInputEnvelope
+}
+
+input LikeCreateNestedManyWithoutPhotoInput {
+  connect: [LikeWhereUniqueInput!]
+  connectOrCreate: [LikeCreateOrConnectWithoutPhotoInput!]
+  create: [LikeCreateWithoutPhotoInput!]
+  createMany: LikeCreateManyPhotoInputEnvelope
+}
+
+input LikeCreateOrConnectWithoutAuthorInput {
+  create: LikeCreateWithoutAuthorInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeCreateOrConnectWithoutPhotoInput {
+  create: LikeCreateWithoutPhotoInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeCreateWithoutAuthorInput {
+  createdAt: DateTime
+  id: String
+  photo: PhotosOnAlbumsCreateNestedOneWithoutLikesInput!
+}
+
+input LikeCreateWithoutPhotoInput {
+  author: UserCreateNestedOneWithoutLikeInput!
+  createdAt: DateTime
+  id: String
+}
+
+input LikeListRelationFilter {
+  every: LikeWhereInput
+  none: LikeWhereInput
+  some: LikeWhereInput
+}
+
+input LikeOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input LikeScalarWhereInput {
+  AND: [LikeScalarWhereInput!]
+  NOT: [LikeScalarWhereInput!]
+  OR: [LikeScalarWhereInput!]
+  authorId: StringFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  photosOnAlbumsAlbumId: StringFilter
+  photosOnAlbumsPhotoId: StringFilter
+}
+
+input LikeUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+}
+
+input LikeUpdateManyWithWhereWithoutAuthorInput {
+  data: LikeUpdateManyMutationInput!
+  where: LikeScalarWhereInput!
+}
+
+input LikeUpdateManyWithWhereWithoutPhotoInput {
+  data: LikeUpdateManyMutationInput!
+  where: LikeScalarWhereInput!
+}
+
+input LikeUpdateManyWithoutAuthorInput {
+  connect: [LikeWhereUniqueInput!]
+  connectOrCreate: [LikeCreateOrConnectWithoutAuthorInput!]
+  create: [LikeCreateWithoutAuthorInput!]
+  createMany: LikeCreateManyAuthorInputEnvelope
+  delete: [LikeWhereUniqueInput!]
+  deleteMany: [LikeScalarWhereInput!]
+  disconnect: [LikeWhereUniqueInput!]
+  set: [LikeWhereUniqueInput!]
+  update: [LikeUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [LikeUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [LikeUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input LikeUpdateManyWithoutPhotoInput {
+  connect: [LikeWhereUniqueInput!]
+  connectOrCreate: [LikeCreateOrConnectWithoutPhotoInput!]
+  create: [LikeCreateWithoutPhotoInput!]
+  createMany: LikeCreateManyPhotoInputEnvelope
+  delete: [LikeWhereUniqueInput!]
+  deleteMany: [LikeScalarWhereInput!]
+  disconnect: [LikeWhereUniqueInput!]
+  set: [LikeWhereUniqueInput!]
+  update: [LikeUpdateWithWhereUniqueWithoutPhotoInput!]
+  updateMany: [LikeUpdateManyWithWhereWithoutPhotoInput!]
+  upsert: [LikeUpsertWithWhereUniqueWithoutPhotoInput!]
+}
+
+input LikeUpdateWithWhereUniqueWithoutAuthorInput {
+  data: LikeUpdateWithoutAuthorInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeUpdateWithWhereUniqueWithoutPhotoInput {
+  data: LikeUpdateWithoutPhotoInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeUpdateWithoutAuthorInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  photo: PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput
+}
+
+input LikeUpdateWithoutPhotoInput {
+  author: UserUpdateOneRequiredWithoutLikeInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+}
+
+input LikeUpsertWithWhereUniqueWithoutAuthorInput {
+  create: LikeCreateWithoutAuthorInput!
+  update: LikeUpdateWithoutAuthorInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeUpsertWithWhereUniqueWithoutPhotoInput {
+  create: LikeCreateWithoutPhotoInput!
+  update: LikeUpdateWithoutPhotoInput!
+  where: LikeWhereUniqueInput!
+}
+
+input LikeWhereInput {
+  AND: [LikeWhereInput!]
+  NOT: [LikeWhereInput!]
+  OR: [LikeWhereInput!]
+  author: UserWhereInput
+  authorId: StringFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  photo: PhotosOnAlbumsWhereInput
+  photosOnAlbumsAlbumId: StringFilter
+  photosOnAlbumsPhotoId: StringFilter
+}
+
+input LikeWhereUniqueInput {
+  id: String
+}
+
+enum MimeType {
+  AVIF
+  GIF
+  JPG
+  MP4
+  PNG
+  SVG
+  WEBM
+  WEBP
+}
+
+type Mutation {
+  createOneAlbum(data: AlbumCreateInput!): Album!
+  createOneComment(data: CommentCreateInput!): Comment!
+  createOnePhotosOnAlbums(data: PhotosOnAlbumsCreateInput!): PhotosOnAlbums!
+  deleteOneAlbum(where: AlbumWhereUniqueInput!): Album
+  deleteOneComment(where: CommentWhereUniqueInput!): Comment
+  deleteOnePhoto(where: PhotoWhereUniqueInput!): Photo
+  deleteOnePhotosOnAlbums(where: PhotosOnAlbumsWhereUniqueInput!): PhotosOnAlbums
+  deleteOneUser(where: UserWhereUniqueInput!): User
+  incrementAlbumViewCount(id: String!): Album
+  login(emailOrUsername: String!, password: String!): User
+  logout: Boolean
+  shareAlbum(albumId: String!, role: AlbumRole!, targetUserId: String!): Album
+  signup(email: String!, password: String!, username: String!): User
+  updateOneAlbum(data: AlbumUpdateInput!, where: AlbumWhereUniqueInput!): Album
+  updateOneComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateOnePhoto(data: PhotoUpdateInput!, where: PhotoWhereUniqueInput!): Photo
+  updateOnePhotosOnAlbums(data: PhotosOnAlbumsUpdateInput!, where: PhotosOnAlbumsWhereUniqueInput!): PhotosOnAlbums
+  updateOneUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  uploadPhotos(files: [Upload!]!): [Photo!]!
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedEnumAlbumRoleFilter {
+  equals: AlbumRole
+  in: [AlbumRole!]
+  not: NestedEnumAlbumRoleFilter
+  notIn: [AlbumRole!]
+}
+
+input NestedEnumMimeTypeFilter {
+  equals: MimeType
+  in: [MimeType!]
+  not: NestedEnumMimeTypeFilter
+  notIn: [MimeType!]
+}
+
+input NestedEnumVisibilityFilter {
+  equals: Visibility
+  in: [Visibility!]
+  not: NestedEnumVisibilityFilter
+  notIn: [Visibility!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NullableStringFieldUpdateOperationsInput {
+  set: String
+}
+
+type Photo {
+  albums(after: PhotosOnAlbumsWhereUniqueInput, before: PhotosOnAlbumsWhereUniqueInput, first: Int, last: Int): [PhotosOnAlbums!]!
+  author: User
+  createdAt: DateTime!
+  description: String
+  exif: Json!
+  fileName: String
+  height: Int!
+  id: String!
+  mimetype: MimeType!
+  size: Int!
+  title: String!
+  updatedAt: DateTime!
+  width: Int!
+}
+
+input PhotoCreateManyAuthorInput {
+  createdAt: DateTime
+  description: String
+  exif: Json
+  fileName: String
+  height: Int!
+  id: String
+  mimetype: MimeType!
+  size: Int!
+  title: String!
+  updatedAt: DateTime
+  width: Int!
+}
+
+input PhotoCreateManyAuthorInputEnvelope {
+  data: [PhotoCreateManyAuthorInput!]
+  skipDuplicates: Boolean
+}
+
+input PhotoCreateNestedManyWithoutAuthorInput {
+  connect: [PhotoWhereUniqueInput!]
+  connectOrCreate: [PhotoCreateOrConnectWithoutAuthorInput!]
+  create: [PhotoCreateWithoutAuthorInput!]
+  createMany: PhotoCreateManyAuthorInputEnvelope
+}
+
+input PhotoCreateNestedOneWithoutAlbumsInput {
+  connect: PhotoWhereUniqueInput
+  connectOrCreate: PhotoCreateOrConnectWithoutAlbumsInput
+  create: PhotoCreateWithoutAlbumsInput
+}
+
+input PhotoCreateOrConnectWithoutAlbumsInput {
+  create: PhotoCreateWithoutAlbumsInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoCreateOrConnectWithoutAuthorInput {
+  create: PhotoCreateWithoutAuthorInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoCreateWithoutAlbumsInput {
+  author: UserCreateNestedOneWithoutPhotosInput
+  createdAt: DateTime
+  description: String
+  exif: Json
+  fileName: String
+  height: Int!
+  id: String
+  mimetype: MimeType!
+  size: Int!
+  title: String!
+  updatedAt: DateTime
+  width: Int!
+}
+
+input PhotoCreateWithoutAuthorInput {
+  albums: PhotosOnAlbumsCreateNestedManyWithoutPhotoInput
+  createdAt: DateTime
+  description: String
+  exif: Json
+  fileName: String
+  height: Int!
+  id: String
+  mimetype: MimeType!
+  size: Int!
+  title: String!
+  updatedAt: DateTime
+  width: Int!
+}
+
+input PhotoListRelationFilter {
+  every: PhotoWhereInput
+  none: PhotoWhereInput
+  some: PhotoWhereInput
+}
+
+input PhotoOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PhotoOrderByWithRelationInput {
+  albums: PhotosOnAlbumsOrderByRelationAggregateInput
+  author: UserOrderByWithRelationInput
+  authorId: SortOrder
+  createdAt: SortOrder
+  description: SortOrder
+  exif: SortOrder
+  fileName: SortOrder
+  height: SortOrder
+  id: SortOrder
+  mimetype: SortOrder
+  size: SortOrder
+  title: SortOrder
+  updatedAt: SortOrder
+  width: SortOrder
+}
+
+input PhotoScalarWhereInput {
+  AND: [PhotoScalarWhereInput!]
+  NOT: [PhotoScalarWhereInput!]
+  OR: [PhotoScalarWhereInput!]
+  authorId: StringNullableFilter
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  fileName: StringNullableFilter
+  height: IntFilter
+  id: StringFilter
+  mimetype: EnumMimeTypeFilter
+  size: IntFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+  width: IntFilter
+}
+
+input PhotoUpdateInput {
+  albums: PhotosOnAlbumsUpdateManyWithoutPhotoInput
+  author: UserUpdateOneWithoutPhotosInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  exif: Json
+  fileName: NullableStringFieldUpdateOperationsInput
+  height: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  size: IntFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  width: IntFieldUpdateOperationsInput
+}
+
+input PhotoUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  exif: Json
+  fileName: NullableStringFieldUpdateOperationsInput
+  height: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  size: IntFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  width: IntFieldUpdateOperationsInput
+}
+
+input PhotoUpdateManyWithWhereWithoutAuthorInput {
+  data: PhotoUpdateManyMutationInput!
+  where: PhotoScalarWhereInput!
+}
+
+input PhotoUpdateManyWithoutAuthorInput {
+  connect: [PhotoWhereUniqueInput!]
+  connectOrCreate: [PhotoCreateOrConnectWithoutAuthorInput!]
+  create: [PhotoCreateWithoutAuthorInput!]
+  createMany: PhotoCreateManyAuthorInputEnvelope
+  delete: [PhotoWhereUniqueInput!]
+  deleteMany: [PhotoScalarWhereInput!]
+  disconnect: [PhotoWhereUniqueInput!]
+  set: [PhotoWhereUniqueInput!]
+  update: [PhotoUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [PhotoUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [PhotoUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input PhotoUpdateOneRequiredWithoutAlbumsInput {
+  connect: PhotoWhereUniqueInput
+  connectOrCreate: PhotoCreateOrConnectWithoutAlbumsInput
+  create: PhotoCreateWithoutAlbumsInput
+  update: PhotoUpdateWithoutAlbumsInput
+  upsert: PhotoUpsertWithoutAlbumsInput
+}
+
+input PhotoUpdateWithWhereUniqueWithoutAuthorInput {
+  data: PhotoUpdateWithoutAuthorInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoUpdateWithoutAlbumsInput {
+  author: UserUpdateOneWithoutPhotosInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  exif: Json
+  fileName: NullableStringFieldUpdateOperationsInput
+  height: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  size: IntFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  width: IntFieldUpdateOperationsInput
+}
+
+input PhotoUpdateWithoutAuthorInput {
+  albums: PhotosOnAlbumsUpdateManyWithoutPhotoInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  exif: Json
+  fileName: NullableStringFieldUpdateOperationsInput
+  height: IntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  size: IntFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  width: IntFieldUpdateOperationsInput
+}
+
+input PhotoUpsertWithWhereUniqueWithoutAuthorInput {
+  create: PhotoCreateWithoutAuthorInput!
+  update: PhotoUpdateWithoutAuthorInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoUpsertWithoutAlbumsInput {
+  create: PhotoCreateWithoutAlbumsInput!
+  update: PhotoUpdateWithoutAlbumsInput!
+}
+
+input PhotoWhereInput {
+  AND: [PhotoWhereInput!]
+  NOT: [PhotoWhereInput!]
+  OR: [PhotoWhereInput!]
+  albums: PhotosOnAlbumsListRelationFilter
+  author: UserWhereInput
+  authorId: StringNullableFilter
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  fileName: StringNullableFilter
+  height: IntFilter
+  id: StringFilter
+  mimetype: EnumMimeTypeFilter
+  size: IntFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+  width: IntFilter
+}
+
+input PhotoWhereUniqueInput {
+  id: String
+}
+
+type PhotosOnAlbums {
+  addedAt: DateTime!
+  album: Album!
+  comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int): [Comment!]!
+  photo: Photo!
+}
+
+input PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput {
+  albumId: String!
+  photoId: String!
+}
+
+input PhotosOnAlbumsCreateInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotosOnAlbumsCreateManyAlbumInput {
+  addedAt: DateTime
+  photoId: String!
+}
+
+input PhotosOnAlbumsCreateManyAlbumInputEnvelope {
+  data: [PhotosOnAlbumsCreateManyAlbumInput!]
+  skipDuplicates: Boolean
+}
+
+input PhotosOnAlbumsCreateManyPhotoInput {
+  addedAt: DateTime
+  albumId: String!
+}
+
+input PhotosOnAlbumsCreateManyPhotoInputEnvelope {
+  data: [PhotosOnAlbumsCreateManyPhotoInput!]
+  skipDuplicates: Boolean
+}
+
+input PhotosOnAlbumsCreateNestedManyWithoutAlbumInput {
+  connect: [PhotosOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutAlbumInput!]
+  create: [PhotosOnAlbumsCreateWithoutAlbumInput!]
+  createMany: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+}
+
+input PhotosOnAlbumsCreateNestedManyWithoutPhotoInput {
+  connect: [PhotosOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutPhotoInput!]
+  create: [PhotosOnAlbumsCreateWithoutPhotoInput!]
+  createMany: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+}
+
+input PhotosOnAlbumsCreateNestedOneWithoutCommentsInput {
+  connect: PhotosOnAlbumsWhereUniqueInput
+  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutCommentsInput
+  create: PhotosOnAlbumsCreateWithoutCommentsInput
+}
+
+input PhotosOnAlbumsCreateNestedOneWithoutLikesInput {
+  connect: PhotosOnAlbumsWhereUniqueInput
+  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutLikesInput
+  create: PhotosOnAlbumsCreateWithoutLikesInput
+}
+
+input PhotosOnAlbumsCreateOrConnectWithoutAlbumInput {
+  create: PhotosOnAlbumsCreateWithoutAlbumInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsCreateOrConnectWithoutCommentsInput {
+  create: PhotosOnAlbumsCreateWithoutCommentsInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsCreateOrConnectWithoutLikesInput {
+  create: PhotosOnAlbumsCreateWithoutLikesInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsCreateOrConnectWithoutPhotoInput {
+  create: PhotosOnAlbumsCreateWithoutPhotoInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsCreateWithoutAlbumInput {
+  addedAt: DateTime
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotosOnAlbumsCreateWithoutCommentsInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotosOnAlbumsCreateWithoutLikesInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotosOnAlbumsCreateWithoutPhotoInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+}
+
+input PhotosOnAlbumsListRelationFilter {
+  every: PhotosOnAlbumsWhereInput
+  none: PhotosOnAlbumsWhereInput
+  some: PhotosOnAlbumsWhereInput
+}
+
+input PhotosOnAlbumsOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PhotosOnAlbumsOrderByWithRelationInput {
+  addedAt: SortOrder
+  album: AlbumOrderByWithRelationInput
+  albumId: SortOrder
+  comments: CommentOrderByRelationAggregateInput
+  likes: LikeOrderByRelationAggregateInput
+  photo: PhotoOrderByWithRelationInput
+  photoId: SortOrder
+}
+
+input PhotosOnAlbumsScalarWhereInput {
+  AND: [PhotosOnAlbumsScalarWhereInput!]
+  NOT: [PhotosOnAlbumsScalarWhereInput!]
+  OR: [PhotosOnAlbumsScalarWhereInput!]
+  addedAt: DateTimeFilter
+  albumId: StringFilter
+  photoId: StringFilter
+}
+
+input PhotosOnAlbumsUpdateInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotosOnAlbumsUpdateManyMutationInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput {
+  data: PhotosOnAlbumsUpdateManyMutationInput!
+  where: PhotosOnAlbumsScalarWhereInput!
+}
+
+input PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput {
+  data: PhotosOnAlbumsUpdateManyMutationInput!
+  where: PhotosOnAlbumsScalarWhereInput!
+}
+
+input PhotosOnAlbumsUpdateManyWithoutAlbumInput {
+  connect: [PhotosOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutAlbumInput!]
+  create: [PhotosOnAlbumsCreateWithoutAlbumInput!]
+  createMany: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+  delete: [PhotosOnAlbumsWhereUniqueInput!]
+  deleteMany: [PhotosOnAlbumsScalarWhereInput!]
+  disconnect: [PhotosOnAlbumsWhereUniqueInput!]
+  set: [PhotosOnAlbumsWhereUniqueInput!]
+  update: [PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput!]
+  updateMany: [PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput!]
+  upsert: [PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput!]
+}
+
+input PhotosOnAlbumsUpdateManyWithoutPhotoInput {
+  connect: [PhotosOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutPhotoInput!]
+  create: [PhotosOnAlbumsCreateWithoutPhotoInput!]
+  createMany: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+  delete: [PhotosOnAlbumsWhereUniqueInput!]
+  deleteMany: [PhotosOnAlbumsScalarWhereInput!]
+  disconnect: [PhotosOnAlbumsWhereUniqueInput!]
+  set: [PhotosOnAlbumsWhereUniqueInput!]
+  update: [PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput!]
+  updateMany: [PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput!]
+  upsert: [PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput!]
+}
+
+input PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput {
+  connect: PhotosOnAlbumsWhereUniqueInput
+  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutCommentsInput
+  create: PhotosOnAlbumsCreateWithoutCommentsInput
+  update: PhotosOnAlbumsUpdateWithoutCommentsInput
+  upsert: PhotosOnAlbumsUpsertWithoutCommentsInput
+}
+
+input PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput {
+  connect: PhotosOnAlbumsWhereUniqueInput
+  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutLikesInput
+  create: PhotosOnAlbumsCreateWithoutLikesInput
+  update: PhotosOnAlbumsUpdateWithoutLikesInput
+  upsert: PhotosOnAlbumsUpsertWithoutLikesInput
+}
+
+input PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput {
+  data: PhotosOnAlbumsUpdateWithoutAlbumInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput {
+  data: PhotosOnAlbumsUpdateWithoutPhotoInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsUpdateWithoutAlbumInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotosOnAlbumsUpdateWithoutCommentsInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotosOnAlbumsUpdateWithoutLikesInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotosOnAlbumsUpdateWithoutPhotoInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+}
+
+input PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput {
+  create: PhotosOnAlbumsCreateWithoutAlbumInput!
+  update: PhotosOnAlbumsUpdateWithoutAlbumInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput {
+  create: PhotosOnAlbumsCreateWithoutPhotoInput!
+  update: PhotosOnAlbumsUpdateWithoutPhotoInput!
+  where: PhotosOnAlbumsWhereUniqueInput!
+}
+
+input PhotosOnAlbumsUpsertWithoutCommentsInput {
+  create: PhotosOnAlbumsCreateWithoutCommentsInput!
+  update: PhotosOnAlbumsUpdateWithoutCommentsInput!
+}
+
+input PhotosOnAlbumsUpsertWithoutLikesInput {
+  create: PhotosOnAlbumsCreateWithoutLikesInput!
+  update: PhotosOnAlbumsUpdateWithoutLikesInput!
+}
+
+input PhotosOnAlbumsWhereInput {
+  AND: [PhotosOnAlbumsWhereInput!]
+  NOT: [PhotosOnAlbumsWhereInput!]
+  OR: [PhotosOnAlbumsWhereInput!]
+  addedAt: DateTimeFilter
+  album: AlbumWhereInput
+  albumId: StringFilter
+  comments: CommentListRelationFilter
+  likes: LikeListRelationFilter
+  photo: PhotoWhereInput
+  photoId: StringFilter
+}
+
+input PhotosOnAlbumsWhereUniqueInput {
+  albumId_photoId: PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput
 }
 
 type Query {
-  allUsers: [User!]!
-  draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
-  feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
-  me: User
-  postById(id: Int): Post
+  album(where: AlbumWhereUniqueInput!): Album
+  albums(after: AlbumWhereUniqueInput, before: AlbumWhereUniqueInput, first: Int, last: Int, orderBy: [AlbumOrderByWithRelationInput!], where: AlbumWhereInput): [Album!]!
+  comment(where: CommentWhereUniqueInput!): Comment
+  comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int, orderBy: [CommentOrderByWithRelationInput!]): [Comment!]!
+  currentUser: User
+  user(where: UserWhereUniqueInput!): User
+  users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, orderBy: [UserOrderByWithRelationInput!]): [User!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 enum SortOrder {
@@ -54,20 +1455,521 @@ enum SortOrder {
   desc
 }
 
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UploadFile {
+  filename: String
+  uri: String
+}
+
 type User {
+  albums(after: AlbumWhereUniqueInput, before: AlbumWhereUniqueInput, first: Int, last: Int): [Album!]!
+  comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int): [Comment!]!
   email: String!
-  id: Int!
-  name: String
-  posts: [Post!]!
+  id: String!
+  photos(after: PhotoWhereUniqueInput, before: PhotoWhereUniqueInput, first: Int, last: Int): [Photo!]!
+  sharedAlbums(after: UsersOnAlbumsWhereUniqueInput, before: UsersOnAlbumsWhereUniqueInput, first: Int, last: Int): [UsersOnAlbums!]!
+  username: String!
 }
 
-input UserCreateInput {
-  email: String!
-  name: String
-  posts: [PostCreateInput!]
+input UserCreateNestedOneWithoutAlbumsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutAlbumsInput
+  create: UserCreateWithoutAlbumsInput
 }
 
-input UserUniqueInput {
+input UserCreateNestedOneWithoutCommentsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentsInput
+  create: UserCreateWithoutCommentsInput
+}
+
+input UserCreateNestedOneWithoutLikeInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutLikeInput
+  create: UserCreateWithoutLikeInput
+}
+
+input UserCreateNestedOneWithoutPhotosInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPhotosInput
+  create: UserCreateWithoutPhotosInput
+}
+
+input UserCreateNestedOneWithoutSharedAlbumsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSharedAlbumsInput
+  create: UserCreateWithoutSharedAlbumsInput
+}
+
+input UserCreateOrConnectWithoutAlbumsInput {
+  create: UserCreateWithoutAlbumsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutLikeInput {
+  create: UserCreateWithoutLikeInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutPhotosInput {
+  create: UserCreateWithoutPhotosInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutSharedAlbumsInput {
+  create: UserCreateWithoutSharedAlbumsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutAlbumsInput {
+  Like: LikeCreateNestedManyWithoutAuthorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  email: String!
+  id: String
+  password: String!
+  photos: PhotoCreateNestedManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  username: String!
+}
+
+input UserCreateWithoutCommentsInput {
+  Like: LikeCreateNestedManyWithoutAuthorInput
+  albums: AlbumCreateNestedManyWithoutAuthorInput
+  email: String!
+  id: String
+  password: String!
+  photos: PhotoCreateNestedManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  username: String!
+}
+
+input UserCreateWithoutLikeInput {
+  albums: AlbumCreateNestedManyWithoutAuthorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  email: String!
+  id: String
+  password: String!
+  photos: PhotoCreateNestedManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  username: String!
+}
+
+input UserCreateWithoutPhotosInput {
+  Like: LikeCreateNestedManyWithoutAuthorInput
+  albums: AlbumCreateNestedManyWithoutAuthorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  email: String!
+  id: String
+  password: String!
+  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  username: String!
+}
+
+input UserCreateWithoutSharedAlbumsInput {
+  Like: LikeCreateNestedManyWithoutAuthorInput
+  albums: AlbumCreateNestedManyWithoutAuthorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  email: String!
+  id: String
+  password: String!
+  photos: PhotoCreateNestedManyWithoutAuthorInput
+  username: String!
+}
+
+input UserOrderByWithRelationInput {
+  Like: LikeOrderByRelationAggregateInput
+  albums: AlbumOrderByRelationAggregateInput
+  comments: CommentOrderByRelationAggregateInput
+  email: SortOrder
+  id: SortOrder
+  password: SortOrder
+  photos: PhotoOrderByRelationAggregateInput
+  sharedAlbums: UsersOnAlbumsOrderByRelationAggregateInput
+  username: SortOrder
+}
+
+input UserUpdateInput {
+  Like: LikeUpdateManyWithoutAuthorInput
+  albums: AlbumUpdateManyWithoutAuthorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  photos: PhotoUpdateManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpdateOneRequiredWithoutAlbumsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutAlbumsInput
+  create: UserCreateWithoutAlbumsInput
+  update: UserUpdateWithoutAlbumsInput
+  upsert: UserUpsertWithoutAlbumsInput
+}
+
+input UserUpdateOneRequiredWithoutCommentsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentsInput
+  create: UserCreateWithoutCommentsInput
+  update: UserUpdateWithoutCommentsInput
+  upsert: UserUpsertWithoutCommentsInput
+}
+
+input UserUpdateOneRequiredWithoutLikeInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutLikeInput
+  create: UserCreateWithoutLikeInput
+  update: UserUpdateWithoutLikeInput
+  upsert: UserUpsertWithoutLikeInput
+}
+
+input UserUpdateOneRequiredWithoutSharedAlbumsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSharedAlbumsInput
+  create: UserCreateWithoutSharedAlbumsInput
+  update: UserUpdateWithoutSharedAlbumsInput
+  upsert: UserUpsertWithoutSharedAlbumsInput
+}
+
+input UserUpdateOneWithoutPhotosInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPhotosInput
+  create: UserCreateWithoutPhotosInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUpdateWithoutPhotosInput
+  upsert: UserUpsertWithoutPhotosInput
+}
+
+input UserUpdateWithoutAlbumsInput {
+  Like: LikeUpdateManyWithoutAuthorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  photos: PhotoUpdateManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutCommentsInput {
+  Like: LikeUpdateManyWithoutAuthorInput
+  albums: AlbumUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  photos: PhotoUpdateManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutLikeInput {
+  albums: AlbumUpdateManyWithoutAuthorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  photos: PhotoUpdateManyWithoutAuthorInput
+  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutPhotosInput {
+  Like: LikeUpdateManyWithoutAuthorInput
+  albums: AlbumUpdateManyWithoutAuthorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutSharedAlbumsInput {
+  Like: LikeUpdateManyWithoutAuthorInput
+  albums: AlbumUpdateManyWithoutAuthorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  email: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
+  photos: PhotoUpdateManyWithoutAuthorInput
+  username: StringFieldUpdateOperationsInput
+}
+
+input UserUpsertWithoutAlbumsInput {
+  create: UserCreateWithoutAlbumsInput!
+  update: UserUpdateWithoutAlbumsInput!
+}
+
+input UserUpsertWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput!
+  update: UserUpdateWithoutCommentsInput!
+}
+
+input UserUpsertWithoutLikeInput {
+  create: UserCreateWithoutLikeInput!
+  update: UserUpdateWithoutLikeInput!
+}
+
+input UserUpsertWithoutPhotosInput {
+  create: UserCreateWithoutPhotosInput!
+  update: UserUpdateWithoutPhotosInput!
+}
+
+input UserUpsertWithoutSharedAlbumsInput {
+  create: UserCreateWithoutSharedAlbumsInput!
+  update: UserUpdateWithoutSharedAlbumsInput!
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  Like: LikeListRelationFilter
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  albums: AlbumListRelationFilter
+  comments: CommentListRelationFilter
+  email: StringFilter
+  id: StringFilter
+  password: StringFilter
+  photos: PhotoListRelationFilter
+  sharedAlbums: UsersOnAlbumsListRelationFilter
+  username: StringFilter
+}
+
+input UserWhereUniqueInput {
   email: String
-  id: Int
+  id: String
+  username: String
+}
+
+type UsersOnAlbums {
+  addedAt: DateTime!
+  album: Album!
+  role: AlbumRole!
+  user: User!
+}
+
+input UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput {
+  albumId: String!
+  userId: String!
+}
+
+input UsersOnAlbumsCreateManyAlbumInput {
+  addedAt: DateTime
+  role: AlbumRole
+  userId: String!
+}
+
+input UsersOnAlbumsCreateManyAlbumInputEnvelope {
+  data: [UsersOnAlbumsCreateManyAlbumInput!]
+  skipDuplicates: Boolean
+}
+
+input UsersOnAlbumsCreateManyUserInput {
+  addedAt: DateTime
+  albumId: String!
+  role: AlbumRole
+}
+
+input UsersOnAlbumsCreateManyUserInputEnvelope {
+  data: [UsersOnAlbumsCreateManyUserInput!]
+  skipDuplicates: Boolean
+}
+
+input UsersOnAlbumsCreateNestedManyWithoutAlbumInput {
+  connect: [UsersOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutAlbumInput!]
+  create: [UsersOnAlbumsCreateWithoutAlbumInput!]
+  createMany: UsersOnAlbumsCreateManyAlbumInputEnvelope
+}
+
+input UsersOnAlbumsCreateNestedManyWithoutUserInput {
+  connect: [UsersOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutUserInput!]
+  create: [UsersOnAlbumsCreateWithoutUserInput!]
+  createMany: UsersOnAlbumsCreateManyUserInputEnvelope
+}
+
+input UsersOnAlbumsCreateOrConnectWithoutAlbumInput {
+  create: UsersOnAlbumsCreateWithoutAlbumInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsCreateOrConnectWithoutUserInput {
+  create: UsersOnAlbumsCreateWithoutUserInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsCreateWithoutAlbumInput {
+  addedAt: DateTime
+  role: AlbumRole
+  user: UserCreateNestedOneWithoutSharedAlbumsInput!
+}
+
+input UsersOnAlbumsCreateWithoutUserInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutMembersInput!
+  role: AlbumRole
+}
+
+input UsersOnAlbumsListRelationFilter {
+  every: UsersOnAlbumsWhereInput
+  none: UsersOnAlbumsWhereInput
+  some: UsersOnAlbumsWhereInput
+}
+
+input UsersOnAlbumsOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input UsersOnAlbumsScalarWhereInput {
+  AND: [UsersOnAlbumsScalarWhereInput!]
+  NOT: [UsersOnAlbumsScalarWhereInput!]
+  OR: [UsersOnAlbumsScalarWhereInput!]
+  addedAt: DateTimeFilter
+  albumId: StringFilter
+  role: EnumAlbumRoleFilter
+  userId: StringFilter
+}
+
+input UsersOnAlbumsUpdateManyMutationInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+}
+
+input UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput {
+  data: UsersOnAlbumsUpdateManyMutationInput!
+  where: UsersOnAlbumsScalarWhereInput!
+}
+
+input UsersOnAlbumsUpdateManyWithWhereWithoutUserInput {
+  data: UsersOnAlbumsUpdateManyMutationInput!
+  where: UsersOnAlbumsScalarWhereInput!
+}
+
+input UsersOnAlbumsUpdateManyWithoutAlbumInput {
+  connect: [UsersOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutAlbumInput!]
+  create: [UsersOnAlbumsCreateWithoutAlbumInput!]
+  createMany: UsersOnAlbumsCreateManyAlbumInputEnvelope
+  delete: [UsersOnAlbumsWhereUniqueInput!]
+  deleteMany: [UsersOnAlbumsScalarWhereInput!]
+  disconnect: [UsersOnAlbumsWhereUniqueInput!]
+  set: [UsersOnAlbumsWhereUniqueInput!]
+  update: [UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput!]
+  updateMany: [UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput!]
+  upsert: [UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput!]
+}
+
+input UsersOnAlbumsUpdateManyWithoutUserInput {
+  connect: [UsersOnAlbumsWhereUniqueInput!]
+  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutUserInput!]
+  create: [UsersOnAlbumsCreateWithoutUserInput!]
+  createMany: UsersOnAlbumsCreateManyUserInputEnvelope
+  delete: [UsersOnAlbumsWhereUniqueInput!]
+  deleteMany: [UsersOnAlbumsScalarWhereInput!]
+  disconnect: [UsersOnAlbumsWhereUniqueInput!]
+  set: [UsersOnAlbumsWhereUniqueInput!]
+  update: [UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [UsersOnAlbumsUpdateManyWithWhereWithoutUserInput!]
+  upsert: [UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput {
+  data: UsersOnAlbumsUpdateWithoutAlbumInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput {
+  data: UsersOnAlbumsUpdateWithoutUserInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsUpdateWithoutAlbumInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutSharedAlbumsInput
+}
+
+input UsersOnAlbumsUpdateWithoutUserInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutMembersInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+}
+
+input UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput {
+  create: UsersOnAlbumsCreateWithoutAlbumInput!
+  update: UsersOnAlbumsUpdateWithoutAlbumInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput {
+  create: UsersOnAlbumsCreateWithoutUserInput!
+  update: UsersOnAlbumsUpdateWithoutUserInput!
+  where: UsersOnAlbumsWhereUniqueInput!
+}
+
+input UsersOnAlbumsWhereInput {
+  AND: [UsersOnAlbumsWhereInput!]
+  NOT: [UsersOnAlbumsWhereInput!]
+  OR: [UsersOnAlbumsWhereInput!]
+  addedAt: DateTimeFilter
+  album: AlbumWhereInput
+  albumId: StringFilter
+  role: EnumAlbumRoleFilter
+  user: UserWhereInput
+  userId: StringFilter
+}
+
+input UsersOnAlbumsWhereUniqueInput {
+  albumId_userId: UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput
+}
+
+"""User visibility of an album"""
+enum Visibility {
+  LINK
+  PRIVATE
+  PUBLIC
 }

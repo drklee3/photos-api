@@ -4,6 +4,7 @@ import { hash, verify } from 'argon2'
 import { intArg, nonNull, objectType, stringArg, arg, extendType } from 'nexus'
 import { Context } from '../../context'
 import { NexusNullDef } from 'nexus/dist/core'
+import { Prisma } from '.prisma/client'
 
 export const Mutation = extendType({
   type: 'Mutation',
@@ -18,17 +19,31 @@ export const Mutation = extendType({
       resolve: async (_parent, args, context: Context) => {
         const hashedPassword = await hash(args.password)
 
-        const user = await context.prisma.user.create({
-          data: {
-            username: args.username,
-            email: args.email,
-            password: hashedPassword,
-          },
-        })
+        let user
+
+        try {
+          user = await context.prisma.user.create({
+            data: {
+              username: args.username,
+              email: args.email,
+              password: hashedPassword,
+            },
+          })
+        } catch (e) {
+          if (e instanceof Prisma.PrismaClientKnownRequestError) {
+            if (e.code === 'P2002') {
+              // Should return error instead of throwing for graphql-shield
+              // but return type doesn't match rip
+              throw new Error('Username or email is already taken')
+            }
+          }
+
+          throw e
+        }
 
         // Save to session
         context.req.session.userId = user.id
-
+        context.req.session.save()
         return user
       },
     })
