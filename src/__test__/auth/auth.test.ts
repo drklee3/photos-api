@@ -6,9 +6,16 @@ import { Server } from 'http'
 import { ApolloServer } from 'apollo-server-express'
 import { getSdk } from '../../client/graphqlRequest'
 import { GraphQLClient } from 'graphql-request'
+import crossFetch from 'cross-fetch'
+import fetchCookie from 'fetch-cookie'
+import { CookieJar } from 'tough-cookie'
+
+const cookieJar = new CookieJar()
+const fetch = fetchCookie(crossFetch, cookieJar)
 
 const client = new GraphQLClient('http://localhost:4000/graphql', {
   credentials: 'include',
+  fetch,
 })
 const sdk = getSdk(client)
 
@@ -29,13 +36,6 @@ afterAll(async () => {
   await apolloServer.stop()
   httpServer.close()
 })
-/*
-describe('basic', () => {
-  test('/ should 404', async () => {
-    await request(httpServer).get('/').expect(404)
-  })
-})
-*/
 
 describe('auth', () => {
   const prisma = new PrismaClient()
@@ -48,6 +48,9 @@ describe('auth', () => {
   afterAll(async () => {
     // Clear database users
     await prisma.user.deleteMany({})
+
+    // Clear cookies
+    await cookieJar.removeAllCookies()
   })
 
   test('signup', async () => {
