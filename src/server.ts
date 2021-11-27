@@ -38,11 +38,6 @@ export async function getApp() {
 
   app.use(graphqlUploadExpress())
   registerMiddlewares(app)
-  app.use((req, res, next) => {
-    console.log('cookies: ', req.headers.cookie)
-    console.log('origin: ', req.get('origin'))
-    next()
-  })
 
   const httpServer = http.createServer(app)
   const apolloServer = new ApolloServer({

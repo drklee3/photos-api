@@ -1,0 +1,5 @@
+query AlbumQuery($where: AlbumWhereUniqueInput!) {
+  album(where: $where) {
+    ...AlbumData
+  }
+}

@@ -1,0 +1,13 @@
+fragment PhotoData on Photo {
+  id
+  title
+  description
+  fileName
+  width
+  height
+  mimetype
+  size
+  exif
+  createdAt
+  updatedAt
+}

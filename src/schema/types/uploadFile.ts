@@ -5,6 +5,7 @@ import { URL } from 'url'
 import { extname } from 'path'
 import { FileUpload } from 'graphql-upload'
 import exifr from 'exifr'
+import sharp from 'sharp'
 
 export const aggregatedS3 = new S3({
   endpoint: process.env.S3_ENDPOINT,
@@ -33,7 +34,9 @@ export const uploadFile = async (file: FileUpload) => {
   const stream = createReadStream()
   const buf = await streamToBuffer(stream)
 
+  // Use exifr for EXIF data cuz sharp only has raw data buffer
   const exif = await exifr.parse(buf)
+  const metadata = await sharp(buf).metadata()
 
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
@@ -48,8 +51,8 @@ export const uploadFile = async (file: FileUpload) => {
     id,
     data: obj,
     metadata: {
-      width: exif.ImageWidth,
-      height: exif.ImageHeight,
+      width: metadata.width || 0,
+      height: metadata.height || 0,
       exif,
     },
   }

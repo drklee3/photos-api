@@ -1153,6 +1153,7 @@ type PhotosOnAlbums {
   addedAt: DateTime!
   album: Album!
   comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int): [Comment!]!
+  likes(after: LikeWhereUniqueInput, before: LikeWhereUniqueInput, first: Int, last: Int): [Like!]!
   photo: Photo!
 }
 
@@ -1441,6 +1442,8 @@ type Query {
   comment(where: CommentWhereUniqueInput!): Comment
   comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int, orderBy: [CommentOrderByWithRelationInput!]): [Comment!]!
   currentUser: User
+  photo(where: PhotoWhereUniqueInput!): Photo
+  photos(after: PhotoWhereUniqueInput, before: PhotoWhereUniqueInput, first: Int, last: Int): [Photo!]!
   user(where: UserWhereUniqueInput!): User
   users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, orderBy: [UserOrderByWithRelationInput!]): [User!]!
 }

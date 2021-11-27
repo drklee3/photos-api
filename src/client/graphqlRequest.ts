@@ -1296,6 +1296,7 @@ export type PhotosOnAlbums = {
   addedAt: Scalars['DateTime'];
   album: Album;
   comments: Array<Comment>;
+  likes: Array<Like>;
   photo: Photo;
 };
 
@@ -1303,6 +1304,14 @@ export type PhotosOnAlbums = {
 export type PhotosOnAlbumsCommentsArgs = {
   after?: InputMaybe<CommentWhereUniqueInput>;
   before?: InputMaybe<CommentWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type PhotosOnAlbumsLikesArgs = {
+  after?: InputMaybe<LikeWhereUniqueInput>;
+  before?: InputMaybe<LikeWhereUniqueInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -1593,6 +1602,8 @@ export type Query = {
   comment?: Maybe<Comment>;
   comments: Array<Comment>;
   currentUser?: Maybe<User>;
+  photo?: Maybe<Photo>;
+  photos: Array<Photo>;
   user?: Maybe<User>;
   users: Array<User>;
 };
@@ -1624,6 +1635,19 @@ export type QueryCommentsArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<CommentOrderByWithRelationInput>>;
+};
+
+
+export type QueryPhotoArgs = {
+  where: PhotoWhereUniqueInput;
+};
+
+
+export type QueryPhotosArgs = {
+  after?: InputMaybe<PhotoWhereUniqueInput>;
+  before?: InputMaybe<PhotoWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2201,6 +2225,13 @@ export enum Visibility {
   Public = 'PUBLIC'
 }
 
+export type CreateAlbumMutationMutationVariables = Exact<{
+  data: AlbumCreateInput;
+}>;
+
+
+export type CreateAlbumMutationMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
+
 export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2215,12 +2246,117 @@ export type SignupMutationMutationVariables = Exact<{
 
 export type SignupMutationMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
 
+export type UploadPhotosMutationMutationVariables = Exact<{
+  files: Array<Scalars['Upload']> | Scalars['Upload'];
+}>;
+
+
+export type UploadPhotosMutationMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, size: number, mimetype: MimeType, exif: any, createdAt: any, updatedAt: any }> };
+
+export type AlbumDataFragment = { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> };
+
+export type AlbumQueryQueryVariables = Exact<{
+  where: AlbumWhereUniqueInput;
+}>;
+
+
+export type AlbumQueryQuery = { __typename?: 'Query', album?: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } | null | undefined };
+
 export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentUserQueryQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
 
+export type PhotoDataFragment = { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any };
 
+export type PhotoQueryQueryVariables = Exact<{
+  where: PhotoWhereUniqueInput;
+}>;
+
+
+export type PhotoQueryQuery = { __typename?: 'Query', photo?: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined, albums: Array<{ __typename?: 'PhotosOnAlbums', album: { __typename?: 'Album', id: string, title: string } }> } | null | undefined };
+
+export type PhotosQueryQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<PhotoWhereUniqueInput>;
+  after?: InputMaybe<PhotoWhereUniqueInput>;
+}>;
+
+
+export type PhotosQueryQuery = { __typename?: 'Query', photos: Array<{ __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined }> };
+
+export type UserDataFragment = { __typename?: 'User', id: string, username: string };
+
+export const PhotoDataFragmentDoc = gql`
+    fragment PhotoData on Photo {
+  id
+  title
+  description
+  fileName
+  width
+  height
+  mimetype
+  size
+  exif
+  createdAt
+  updatedAt
+}
+    `;
+export const UserDataFragmentDoc = gql`
+    fragment UserData on User {
+  id
+  username
+}
+    `;
+export const AlbumDataFragmentDoc = gql`
+    fragment AlbumData on Album {
+  id
+  title
+  description
+  photos {
+    photo {
+      ...PhotoData
+    }
+    comments {
+      content
+      author {
+        ...UserData
+      }
+      createdAt
+      updatedAt
+    }
+    likes {
+      id
+      author {
+        ...UserData
+      }
+    }
+  }
+  author {
+    ...UserData
+  }
+  id
+  viewCount
+  visibility
+  members {
+    user {
+      ...UserData
+    }
+    role
+  }
+  createdAt
+  updatedAt
+}
+    ${PhotoDataFragmentDoc}
+${UserDataFragmentDoc}`;
+export const CreateAlbumMutationDocument = gql`
+    mutation CreateAlbumMutation($data: AlbumCreateInput!) {
+  createOneAlbum(data: $data) {
+    ...AlbumData
+  }
+}
+    ${AlbumDataFragmentDoc}`;
 export const LogoutMutationDocument = gql`
     mutation LogoutMutation {
   logout
@@ -2235,6 +2371,30 @@ export const SignupMutationDocument = gql`
   }
 }
     `;
+export const UploadPhotosMutationDocument = gql`
+    mutation UploadPhotosMutation($files: [Upload!]!) {
+  uploadPhotos(files: $files) {
+    id
+    title
+    description
+    fileName
+    width
+    height
+    size
+    mimetype
+    exif
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const AlbumQueryDocument = gql`
+    query AlbumQuery($where: AlbumWhereUniqueInput!) {
+  album(where: $where) {
+    ...AlbumData
+  }
+}
+    ${AlbumDataFragmentDoc}`;
 export const CurrentUserQueryDocument = gql`
     query CurrentUserQuery {
   currentUser {
@@ -2244,6 +2404,34 @@ export const CurrentUserQueryDocument = gql`
   }
 }
     `;
+export const PhotoQueryDocument = gql`
+    query PhotoQuery($where: PhotoWhereUniqueInput!) {
+  photo(where: $where) {
+    ...PhotoData
+    author {
+      ...UserData
+    }
+    albums {
+      album {
+        id
+        title
+      }
+    }
+  }
+}
+    ${PhotoDataFragmentDoc}
+${UserDataFragmentDoc}`;
+export const PhotosQueryDocument = gql`
+    query PhotosQuery($first: Int, $last: Int, $before: PhotoWhereUniqueInput, $after: PhotoWhereUniqueInput) {
+  photos(first: $first, last: $last, before: $before, after: $after) {
+    ...PhotoData
+    author {
+      ...UserData
+    }
+  }
+}
+    ${PhotoDataFragmentDoc}
+${UserDataFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -2252,14 +2440,29 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    CreateAlbumMutation(variables: CreateAlbumMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateAlbumMutationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateAlbumMutationMutation>(CreateAlbumMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateAlbumMutation');
+    },
     LogoutMutation(variables?: LogoutMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutationMutation>(LogoutMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'LogoutMutation');
     },
     SignupMutation(variables: SignupMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignupMutationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SignupMutationMutation>(SignupMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignupMutation');
     },
+    UploadPhotosMutation(variables: UploadPhotosMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadPhotosMutationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UploadPhotosMutationMutation>(UploadPhotosMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadPhotosMutation');
+    },
+    AlbumQuery(variables: AlbumQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AlbumQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AlbumQueryQuery>(AlbumQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AlbumQuery');
+    },
     CurrentUserQuery(variables?: CurrentUserQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQueryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQueryQuery>(CurrentUserQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUserQuery');
+    },
+    PhotoQuery(variables: PhotoQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotoQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PhotoQueryQuery>(PhotoQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotoQuery');
+    },
+    PhotosQuery(variables?: PhotosQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotosQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PhotosQueryQuery>(PhotosQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotosQuery');
     }
   };
 }

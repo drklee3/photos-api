@@ -89,5 +89,10 @@ describe('auth', () => {
     ).rejects.toThrow('Not Authorised!')
   })
 
-  test('signout', async () => {})
+  test('signout', async () => {
+    await sdk.LogoutMutation()
+
+    // Should actually sign out
+    await expect(sdk.CurrentUserQuery()).rejects.toThrow('Not Authorised!')
+  })
 })

@@ -1,0 +1,15 @@
+mutation UploadPhotosMutation($files: [Upload!]!) {
+  uploadPhotos(files: $files) {
+    id
+    title
+    description
+    fileName
+    width
+    height
+    size
+    mimetype
+    exif
+    createdAt
+    updatedAt
+  }
+}

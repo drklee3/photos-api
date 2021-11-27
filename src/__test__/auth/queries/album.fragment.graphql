@@ -1,0 +1,38 @@
+fragment AlbumData on Album {
+  id
+  title
+  description
+  photos {
+    photo {
+      ...PhotoData
+    }
+    comments {
+      content
+      author {
+        ...UserData
+      }
+      createdAt
+      updatedAt
+    }
+    likes {
+      id
+      author {
+        ...UserData
+      }
+    }
+  }
+  author {
+    ...UserData
+  }
+  id
+  viewCount
+  visibility
+  members {
+    user {
+      ...UserData
+    }
+    role
+  }
+  createdAt
+  updatedAt
+}

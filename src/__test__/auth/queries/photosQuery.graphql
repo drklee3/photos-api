@@ -1,0 +1,13 @@
+query PhotosQuery(
+  $first: Int
+  $last: Int
+  $before: PhotoWhereUniqueInput
+  $after: PhotoWhereUniqueInput
+) {
+  photos(first: $first, last: $last, before: $before, after: $after) {
+    ...PhotoData
+    author {
+      ...UserData
+    }
+  }
+}

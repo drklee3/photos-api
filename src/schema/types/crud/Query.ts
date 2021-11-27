@@ -25,6 +25,10 @@ export default queryType({
     t.crud.users({
       ordering: true,
     })
+
+    t.crud.photo()
+    t.crud.photos()
+
     t.crud.album()
     t.crud.albums({
       filtering: true,

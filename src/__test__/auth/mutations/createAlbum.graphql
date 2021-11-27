@@ -1,0 +1,5 @@
+mutation CreateAlbumMutation($data: AlbumCreateInput!) {
+  createOneAlbum(data: $data) {
+    ...AlbumData
+  }
+}

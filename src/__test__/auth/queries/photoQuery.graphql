@@ -1,0 +1,14 @@
+query PhotoQuery($where: PhotoWhereUniqueInput!) {
+  photo(where: $where) {
+    ...PhotoData
+    author {
+      ...UserData
+    }
+    albums {
+      album {
+        id
+        title
+      }
+    }
+  }
+}
