@@ -1,7 +1,7 @@
 import { enumType, objectType } from 'nexus'
 
 const UserOnAlbums = objectType({
-  name: 'UsersOnAlbums',
+  name: 'UserOnAlbum',
   definition(t) {
     t.model.album()
     t.model.user()

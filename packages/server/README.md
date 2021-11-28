@@ -1,4 +1,4 @@
-# GraphQL Photos Album API <!-- omit in toc --> 
+# GraphQL Photos & Album API <!-- omit in toc --> 
 
 GraphQL API for photo backup and sharable photo albums with data stored in a s3
 compatible bucket. This ideally is to replace basic functionality of Google

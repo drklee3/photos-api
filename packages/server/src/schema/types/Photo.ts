@@ -52,14 +52,23 @@ const UploadPhoto = mutationField('uploadPhotos', {
 
     const photos = results.reduce((photos: any, result) => {
       if (result.status === 'rejected') {
-        // TODO: do more than just log an error
-        console.error(`Failed to store upload: ${result.reason}`)
+        // TODO: do more than just log an error, respond with failed items so
+        // client can retry?
+        console.error(`Failed to process upload: ${result.reason}`)
         return
       }
 
+      const {
+        value: { filename, metadata },
+      } = result
+
       const photo: Partial<Photo> = {
         authorId: userId,
-        fileName: result.value.filename,
+        fileName: filename,
+        width: metadata.width,
+        height: metadata.height,
+        size: metadata.size,
+        exif: metadata.exif.exif,
       }
 
       photos.push(photo)

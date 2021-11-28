@@ -1,11 +1,15 @@
 import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import gql from 'graphql-tag';
+import { RequestInit } from 'graphql-request/dist/types.dom';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+
+function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -25,8 +29,8 @@ export type Album = {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
-  members: Array<UsersOnAlbums>;
-  photos: Array<PhotosOnAlbums>;
+  members: Array<UserOnAlbum>;
+  photos: Array<PhotoOnAlbum>;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   viewCount: Scalars['Int'];
@@ -35,16 +39,16 @@ export type Album = {
 
 
 export type AlbumMembersArgs = {
-  after?: InputMaybe<UsersOnAlbumsWhereUniqueInput>;
-  before?: InputMaybe<UsersOnAlbumsWhereUniqueInput>;
+  after?: InputMaybe<UserOnAlbumWhereUniqueInput>;
+  before?: InputMaybe<UserOnAlbumWhereUniqueInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type AlbumPhotosArgs = {
-  after?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  before?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
+  after?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  before?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -54,8 +58,8 @@ export type AlbumCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  members?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutAlbumInput>;
-  photos?: InputMaybe<PhotosOnAlbumsCreateNestedManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumCreateNestedManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumCreateNestedManyWithoutAlbumInput>;
   title: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   viewCount?: InputMaybe<Scalars['Int']>;
@@ -115,8 +119,8 @@ export type AlbumCreateWithoutAuthorInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  members?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutAlbumInput>;
-  photos?: InputMaybe<PhotosOnAlbumsCreateNestedManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumCreateNestedManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumCreateNestedManyWithoutAlbumInput>;
   title: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   viewCount?: InputMaybe<Scalars['Int']>;
@@ -128,7 +132,7 @@ export type AlbumCreateWithoutMembersInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  photos?: InputMaybe<PhotosOnAlbumsCreateNestedManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumCreateNestedManyWithoutAlbumInput>;
   title: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   viewCount?: InputMaybe<Scalars['Int']>;
@@ -140,7 +144,7 @@ export type AlbumCreateWithoutPhotosInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  members?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumCreateNestedManyWithoutAlbumInput>;
   title: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   viewCount?: InputMaybe<Scalars['Int']>;
@@ -163,8 +167,8 @@ export type AlbumOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
-  members?: InputMaybe<UsersOnAlbumsOrderByRelationAggregateInput>;
-  photos?: InputMaybe<PhotosOnAlbumsOrderByRelationAggregateInput>;
+  members?: InputMaybe<UserOnAlbumOrderByRelationAggregateInput>;
+  photos?: InputMaybe<PhotoOnAlbumOrderByRelationAggregateInput>;
   title?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   viewCount?: InputMaybe<SortOrder>;
@@ -203,8 +207,8 @@ export type AlbumUpdateInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  members?: InputMaybe<UsersOnAlbumsUpdateManyWithoutAlbumInput>;
-  photos?: InputMaybe<PhotosOnAlbumsUpdateManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumUpdateManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumUpdateManyWithoutAlbumInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   viewCount?: InputMaybe<IntFieldUpdateOperationsInput>;
@@ -265,8 +269,8 @@ export type AlbumUpdateWithoutAuthorInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  members?: InputMaybe<UsersOnAlbumsUpdateManyWithoutAlbumInput>;
-  photos?: InputMaybe<PhotosOnAlbumsUpdateManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumUpdateManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumUpdateManyWithoutAlbumInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   viewCount?: InputMaybe<IntFieldUpdateOperationsInput>;
@@ -278,7 +282,7 @@ export type AlbumUpdateWithoutMembersInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  photos?: InputMaybe<PhotosOnAlbumsUpdateManyWithoutAlbumInput>;
+  photos?: InputMaybe<PhotoOnAlbumUpdateManyWithoutAlbumInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   viewCount?: InputMaybe<IntFieldUpdateOperationsInput>;
@@ -290,7 +294,7 @@ export type AlbumUpdateWithoutPhotosInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  members?: InputMaybe<UsersOnAlbumsUpdateManyWithoutAlbumInput>;
+  members?: InputMaybe<UserOnAlbumUpdateManyWithoutAlbumInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   viewCount?: InputMaybe<IntFieldUpdateOperationsInput>;
@@ -322,8 +326,8 @@ export type AlbumWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
-  members?: InputMaybe<UsersOnAlbumsListRelationFilter>;
-  photos?: InputMaybe<PhotosOnAlbumsListRelationFilter>;
+  members?: InputMaybe<UserOnAlbumListRelationFilter>;
+  photos?: InputMaybe<PhotoOnAlbumListRelationFilter>;
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   viewCount?: InputMaybe<IntFilter>;
@@ -340,7 +344,7 @@ export type Comment = {
   content: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
-  photo: PhotosOnAlbums;
+  photo: PhotoOnAlbum;
   updatedAt: Scalars['DateTime'];
 };
 
@@ -349,16 +353,16 @@ export type CommentCreateInput = {
   content: Scalars['String'];
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput;
+  photo: PhotoOnAlbumCreateNestedOneWithoutCommentsInput;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type CommentCreateManyAuthorInput = {
+  PhotoOnAlbumAlbumId: Scalars['String'];
+  PhotoOnAlbumPhotoId: Scalars['String'];
   content: Scalars['String'];
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  photosOnAlbumsAlbumId: Scalars['String'];
-  photosOnAlbumsPhotoId: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -408,7 +412,7 @@ export type CommentCreateWithoutAuthorInput = {
   content: Scalars['String'];
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput;
+  photo: PhotoOnAlbumCreateNestedOneWithoutCommentsInput;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -431,14 +435,14 @@ export type CommentOrderByRelationAggregateInput = {
 };
 
 export type CommentOrderByWithRelationInput = {
+  PhotoOnAlbumAlbumId?: InputMaybe<SortOrder>;
+  PhotoOnAlbumPhotoId?: InputMaybe<SortOrder>;
   author?: InputMaybe<UserOrderByWithRelationInput>;
   authorId?: InputMaybe<SortOrder>;
   content?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
-  photo?: InputMaybe<PhotosOnAlbumsOrderByWithRelationInput>;
-  photosOnAlbumsAlbumId?: InputMaybe<SortOrder>;
-  photosOnAlbumsPhotoId?: InputMaybe<SortOrder>;
+  photo?: InputMaybe<PhotoOnAlbumOrderByWithRelationInput>;
   updatedAt?: InputMaybe<SortOrder>;
 };
 
@@ -446,12 +450,12 @@ export type CommentScalarWhereInput = {
   AND?: InputMaybe<Array<CommentScalarWhereInput>>;
   NOT?: InputMaybe<Array<CommentScalarWhereInput>>;
   OR?: InputMaybe<Array<CommentScalarWhereInput>>;
+  PhotoOnAlbumAlbumId?: InputMaybe<StringFilter>;
+  PhotoOnAlbumPhotoId?: InputMaybe<StringFilter>;
   authorId?: InputMaybe<StringFilter>;
   content?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  photosOnAlbumsAlbumId?: InputMaybe<StringFilter>;
-  photosOnAlbumsPhotoId?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -460,7 +464,7 @@ export type CommentUpdateInput = {
   content?: InputMaybe<StringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  photo?: InputMaybe<PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput>;
+  photo?: InputMaybe<PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
 };
 
@@ -523,7 +527,7 @@ export type CommentUpdateWithoutAuthorInput = {
   content?: InputMaybe<StringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  photo?: InputMaybe<PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput>;
+  photo?: InputMaybe<PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
 };
 
@@ -551,14 +555,14 @@ export type CommentWhereInput = {
   AND?: InputMaybe<Array<CommentWhereInput>>;
   NOT?: InputMaybe<Array<CommentWhereInput>>;
   OR?: InputMaybe<Array<CommentWhereInput>>;
+  PhotoOnAlbumAlbumId?: InputMaybe<StringFilter>;
+  PhotoOnAlbumPhotoId?: InputMaybe<StringFilter>;
   author?: InputMaybe<UserWhereInput>;
   authorId?: InputMaybe<StringFilter>;
   content?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  photo?: InputMaybe<PhotosOnAlbumsWhereInput>;
-  photosOnAlbumsAlbumId?: InputMaybe<StringFilter>;
-  photosOnAlbumsPhotoId?: InputMaybe<StringFilter>;
+  photo?: InputMaybe<PhotoOnAlbumWhereInput>;
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
@@ -638,14 +642,14 @@ export type Like = {
   author: User;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
-  photo: PhotosOnAlbums;
+  photo: PhotoOnAlbum;
 };
 
 export type LikeCreateManyAuthorInput = {
+  PhotoOnAlbumAlbumId: Scalars['String'];
+  PhotoOnAlbumPhotoId: Scalars['String'];
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  photosOnAlbumsAlbumId: Scalars['String'];
-  photosOnAlbumsPhotoId: Scalars['String'];
 };
 
 export type LikeCreateManyAuthorInputEnvelope = {
@@ -691,7 +695,7 @@ export type LikeCreateOrConnectWithoutPhotoInput = {
 export type LikeCreateWithoutAuthorInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
-  photo: PhotosOnAlbumsCreateNestedOneWithoutLikesInput;
+  photo: PhotoOnAlbumCreateNestedOneWithoutLikesInput;
 };
 
 export type LikeCreateWithoutPhotoInput = {
@@ -714,11 +718,11 @@ export type LikeScalarWhereInput = {
   AND?: InputMaybe<Array<LikeScalarWhereInput>>;
   NOT?: InputMaybe<Array<LikeScalarWhereInput>>;
   OR?: InputMaybe<Array<LikeScalarWhereInput>>;
+  PhotoOnAlbumAlbumId?: InputMaybe<StringFilter>;
+  PhotoOnAlbumPhotoId?: InputMaybe<StringFilter>;
   authorId?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  photosOnAlbumsAlbumId?: InputMaybe<StringFilter>;
-  photosOnAlbumsPhotoId?: InputMaybe<StringFilter>;
 };
 
 export type LikeUpdateManyMutationInput = {
@@ -777,7 +781,7 @@ export type LikeUpdateWithWhereUniqueWithoutPhotoInput = {
 export type LikeUpdateWithoutAuthorInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  photo?: InputMaybe<PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput>;
+  photo?: InputMaybe<PhotoOnAlbumUpdateOneRequiredWithoutLikesInput>;
 };
 
 export type LikeUpdateWithoutPhotoInput = {
@@ -802,13 +806,13 @@ export type LikeWhereInput = {
   AND?: InputMaybe<Array<LikeWhereInput>>;
   NOT?: InputMaybe<Array<LikeWhereInput>>;
   OR?: InputMaybe<Array<LikeWhereInput>>;
+  PhotoOnAlbumAlbumId?: InputMaybe<StringFilter>;
+  PhotoOnAlbumPhotoId?: InputMaybe<StringFilter>;
   author?: InputMaybe<UserWhereInput>;
   authorId?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  photo?: InputMaybe<PhotosOnAlbumsWhereInput>;
-  photosOnAlbumsAlbumId?: InputMaybe<StringFilter>;
-  photosOnAlbumsPhotoId?: InputMaybe<StringFilter>;
+  photo?: InputMaybe<PhotoOnAlbumWhereInput>;
 };
 
 export type LikeWhereUniqueInput = {
@@ -830,11 +834,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createOneAlbum: Album;
   createOneComment: Comment;
-  createOnePhotosOnAlbums: PhotosOnAlbums;
+  createOnePhotoOnAlbum: PhotoOnAlbum;
   deleteOneAlbum?: Maybe<Album>;
   deleteOneComment?: Maybe<Comment>;
   deleteOnePhoto?: Maybe<Photo>;
-  deleteOnePhotosOnAlbums?: Maybe<PhotosOnAlbums>;
+  deleteOnePhotoOnAlbum?: Maybe<PhotoOnAlbum>;
   deleteOneUser?: Maybe<User>;
   incrementAlbumViewCount?: Maybe<Album>;
   login?: Maybe<User>;
@@ -844,7 +848,7 @@ export type Mutation = {
   updateOneAlbum?: Maybe<Album>;
   updateOneComment?: Maybe<Comment>;
   updateOnePhoto?: Maybe<Photo>;
-  updateOnePhotosOnAlbums?: Maybe<PhotosOnAlbums>;
+  updateOnePhotoOnAlbum?: Maybe<PhotoOnAlbum>;
   updateOneUser?: Maybe<User>;
   uploadPhotos: Array<Photo>;
 };
@@ -860,8 +864,8 @@ export type MutationCreateOneCommentArgs = {
 };
 
 
-export type MutationCreateOnePhotosOnAlbumsArgs = {
-  data: PhotosOnAlbumsCreateInput;
+export type MutationCreateOnePhotoOnAlbumArgs = {
+  data: PhotoOnAlbumCreateInput;
 };
 
 
@@ -880,8 +884,8 @@ export type MutationDeleteOnePhotoArgs = {
 };
 
 
-export type MutationDeleteOnePhotosOnAlbumsArgs = {
-  where: PhotosOnAlbumsWhereUniqueInput;
+export type MutationDeleteOnePhotoOnAlbumArgs = {
+  where: PhotoOnAlbumWhereUniqueInput;
 };
 
 
@@ -933,9 +937,9 @@ export type MutationUpdateOnePhotoArgs = {
 };
 
 
-export type MutationUpdateOnePhotosOnAlbumsArgs = {
-  data: PhotosOnAlbumsUpdateInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
+export type MutationUpdateOnePhotoOnAlbumArgs = {
+  data: PhotoOnAlbumUpdateInput;
+  where: PhotoOnAlbumWhereUniqueInput;
 };
 
 
@@ -1026,7 +1030,7 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type Photo = {
   __typename?: 'Photo';
-  albums: Array<PhotosOnAlbums>;
+  albums: Array<PhotoOnAlbum>;
   author?: Maybe<User>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -1043,8 +1047,8 @@ export type Photo = {
 
 
 export type PhotoAlbumsArgs = {
-  after?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  before?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
+  after?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  before?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -1107,7 +1111,7 @@ export type PhotoCreateWithoutAlbumsInput = {
 };
 
 export type PhotoCreateWithoutAuthorInput = {
-  albums?: InputMaybe<PhotosOnAlbumsCreateNestedManyWithoutPhotoInput>;
+  albums?: InputMaybe<PhotoOnAlbumCreateNestedManyWithoutPhotoInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1127,12 +1131,316 @@ export type PhotoListRelationFilter = {
   some?: InputMaybe<PhotoWhereInput>;
 };
 
+export type PhotoOnAlbum = {
+  __typename?: 'PhotoOnAlbum';
+  addedAt: Scalars['DateTime'];
+  album: Album;
+  comments: Array<Comment>;
+  likes: Array<Like>;
+  photo: Photo;
+};
+
+
+export type PhotoOnAlbumCommentsArgs = {
+  after?: InputMaybe<CommentWhereUniqueInput>;
+  before?: InputMaybe<CommentWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type PhotoOnAlbumLikesArgs = {
+  after?: InputMaybe<LikeWhereUniqueInput>;
+  before?: InputMaybe<LikeWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+export type PhotoOnAlbumAlbumIdPhotoIdCompoundUniqueInput = {
+  albumId: Scalars['String'];
+  photoId: Scalars['String'];
+};
+
+export type PhotoOnAlbumCreateInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  album: AlbumCreateNestedOneWithoutPhotosInput;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
+  photo: PhotoCreateNestedOneWithoutAlbumsInput;
+};
+
+export type PhotoOnAlbumCreateManyAlbumInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  photoId: Scalars['String'];
+};
+
+export type PhotoOnAlbumCreateManyAlbumInputEnvelope = {
+  data?: InputMaybe<Array<PhotoOnAlbumCreateManyAlbumInput>>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type PhotoOnAlbumCreateManyPhotoInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  albumId: Scalars['String'];
+};
+
+export type PhotoOnAlbumCreateManyPhotoInputEnvelope = {
+  data?: InputMaybe<Array<PhotoOnAlbumCreateManyPhotoInput>>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type PhotoOnAlbumCreateNestedManyWithoutAlbumInput = {
+  connect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<PhotoOnAlbumCreateOrConnectWithoutAlbumInput>>;
+  create?: InputMaybe<Array<PhotoOnAlbumCreateWithoutAlbumInput>>;
+  createMany?: InputMaybe<PhotoOnAlbumCreateManyAlbumInputEnvelope>;
+};
+
+export type PhotoOnAlbumCreateNestedManyWithoutPhotoInput = {
+  connect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<PhotoOnAlbumCreateOrConnectWithoutPhotoInput>>;
+  create?: InputMaybe<Array<PhotoOnAlbumCreateWithoutPhotoInput>>;
+  createMany?: InputMaybe<PhotoOnAlbumCreateManyPhotoInputEnvelope>;
+};
+
+export type PhotoOnAlbumCreateNestedOneWithoutCommentsInput = {
+  connect?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PhotoOnAlbumCreateOrConnectWithoutCommentsInput>;
+  create?: InputMaybe<PhotoOnAlbumCreateWithoutCommentsInput>;
+};
+
+export type PhotoOnAlbumCreateNestedOneWithoutLikesInput = {
+  connect?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PhotoOnAlbumCreateOrConnectWithoutLikesInput>;
+  create?: InputMaybe<PhotoOnAlbumCreateWithoutLikesInput>;
+};
+
+export type PhotoOnAlbumCreateOrConnectWithoutAlbumInput = {
+  create: PhotoOnAlbumCreateWithoutAlbumInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumCreateOrConnectWithoutCommentsInput = {
+  create: PhotoOnAlbumCreateWithoutCommentsInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumCreateOrConnectWithoutLikesInput = {
+  create: PhotoOnAlbumCreateWithoutLikesInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumCreateOrConnectWithoutPhotoInput = {
+  create: PhotoOnAlbumCreateWithoutPhotoInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumCreateWithoutAlbumInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
+  photo: PhotoCreateNestedOneWithoutAlbumsInput;
+};
+
+export type PhotoOnAlbumCreateWithoutCommentsInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  album: AlbumCreateNestedOneWithoutPhotosInput;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
+  photo: PhotoCreateNestedOneWithoutAlbumsInput;
+};
+
+export type PhotoOnAlbumCreateWithoutLikesInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  album: AlbumCreateNestedOneWithoutPhotosInput;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
+  photo: PhotoCreateNestedOneWithoutAlbumsInput;
+};
+
+export type PhotoOnAlbumCreateWithoutPhotoInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  album: AlbumCreateNestedOneWithoutPhotosInput;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
+};
+
+export type PhotoOnAlbumListRelationFilter = {
+  every?: InputMaybe<PhotoOnAlbumWhereInput>;
+  none?: InputMaybe<PhotoOnAlbumWhereInput>;
+  some?: InputMaybe<PhotoOnAlbumWhereInput>;
+};
+
+export type PhotoOnAlbumOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type PhotoOnAlbumOrderByWithRelationInput = {
+  addedAt?: InputMaybe<SortOrder>;
+  album?: InputMaybe<AlbumOrderByWithRelationInput>;
+  albumId?: InputMaybe<SortOrder>;
+  comments?: InputMaybe<CommentOrderByRelationAggregateInput>;
+  likes?: InputMaybe<LikeOrderByRelationAggregateInput>;
+  photo?: InputMaybe<PhotoOrderByWithRelationInput>;
+  photoId?: InputMaybe<SortOrder>;
+};
+
+export type PhotoOnAlbumScalarWhereInput = {
+  AND?: InputMaybe<Array<PhotoOnAlbumScalarWhereInput>>;
+  NOT?: InputMaybe<Array<PhotoOnAlbumScalarWhereInput>>;
+  OR?: InputMaybe<Array<PhotoOnAlbumScalarWhereInput>>;
+  addedAt?: InputMaybe<DateTimeFilter>;
+  albumId?: InputMaybe<StringFilter>;
+  photoId?: InputMaybe<StringFilter>;
+};
+
+export type PhotoOnAlbumUpdateInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
+  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
+};
+
+export type PhotoOnAlbumUpdateManyMutationInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+};
+
+export type PhotoOnAlbumUpdateManyWithWhereWithoutAlbumInput = {
+  data: PhotoOnAlbumUpdateManyMutationInput;
+  where: PhotoOnAlbumScalarWhereInput;
+};
+
+export type PhotoOnAlbumUpdateManyWithWhereWithoutPhotoInput = {
+  data: PhotoOnAlbumUpdateManyMutationInput;
+  where: PhotoOnAlbumScalarWhereInput;
+};
+
+export type PhotoOnAlbumUpdateManyWithoutAlbumInput = {
+  connect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<PhotoOnAlbumCreateOrConnectWithoutAlbumInput>>;
+  create?: InputMaybe<Array<PhotoOnAlbumCreateWithoutAlbumInput>>;
+  createMany?: InputMaybe<PhotoOnAlbumCreateManyAlbumInputEnvelope>;
+  delete?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<PhotoOnAlbumScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  set?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  update?: InputMaybe<Array<PhotoOnAlbumUpdateWithWhereUniqueWithoutAlbumInput>>;
+  updateMany?: InputMaybe<Array<PhotoOnAlbumUpdateManyWithWhereWithoutAlbumInput>>;
+  upsert?: InputMaybe<Array<PhotoOnAlbumUpsertWithWhereUniqueWithoutAlbumInput>>;
+};
+
+export type PhotoOnAlbumUpdateManyWithoutPhotoInput = {
+  connect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<PhotoOnAlbumCreateOrConnectWithoutPhotoInput>>;
+  create?: InputMaybe<Array<PhotoOnAlbumCreateWithoutPhotoInput>>;
+  createMany?: InputMaybe<PhotoOnAlbumCreateManyPhotoInputEnvelope>;
+  delete?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<PhotoOnAlbumScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  set?: InputMaybe<Array<PhotoOnAlbumWhereUniqueInput>>;
+  update?: InputMaybe<Array<PhotoOnAlbumUpdateWithWhereUniqueWithoutPhotoInput>>;
+  updateMany?: InputMaybe<Array<PhotoOnAlbumUpdateManyWithWhereWithoutPhotoInput>>;
+  upsert?: InputMaybe<Array<PhotoOnAlbumUpsertWithWhereUniqueWithoutPhotoInput>>;
+};
+
+export type PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput = {
+  connect?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PhotoOnAlbumCreateOrConnectWithoutCommentsInput>;
+  create?: InputMaybe<PhotoOnAlbumCreateWithoutCommentsInput>;
+  update?: InputMaybe<PhotoOnAlbumUpdateWithoutCommentsInput>;
+  upsert?: InputMaybe<PhotoOnAlbumUpsertWithoutCommentsInput>;
+};
+
+export type PhotoOnAlbumUpdateOneRequiredWithoutLikesInput = {
+  connect?: InputMaybe<PhotoOnAlbumWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PhotoOnAlbumCreateOrConnectWithoutLikesInput>;
+  create?: InputMaybe<PhotoOnAlbumCreateWithoutLikesInput>;
+  update?: InputMaybe<PhotoOnAlbumUpdateWithoutLikesInput>;
+  upsert?: InputMaybe<PhotoOnAlbumUpsertWithoutLikesInput>;
+};
+
+export type PhotoOnAlbumUpdateWithWhereUniqueWithoutAlbumInput = {
+  data: PhotoOnAlbumUpdateWithoutAlbumInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumUpdateWithWhereUniqueWithoutPhotoInput = {
+  data: PhotoOnAlbumUpdateWithoutPhotoInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumUpdateWithoutAlbumInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
+  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
+};
+
+export type PhotoOnAlbumUpdateWithoutCommentsInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
+  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
+  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
+};
+
+export type PhotoOnAlbumUpdateWithoutLikesInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
+  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
+};
+
+export type PhotoOnAlbumUpdateWithoutPhotoInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
+  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
+};
+
+export type PhotoOnAlbumUpsertWithWhereUniqueWithoutAlbumInput = {
+  create: PhotoOnAlbumCreateWithoutAlbumInput;
+  update: PhotoOnAlbumUpdateWithoutAlbumInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumUpsertWithWhereUniqueWithoutPhotoInput = {
+  create: PhotoOnAlbumCreateWithoutPhotoInput;
+  update: PhotoOnAlbumUpdateWithoutPhotoInput;
+  where: PhotoOnAlbumWhereUniqueInput;
+};
+
+export type PhotoOnAlbumUpsertWithoutCommentsInput = {
+  create: PhotoOnAlbumCreateWithoutCommentsInput;
+  update: PhotoOnAlbumUpdateWithoutCommentsInput;
+};
+
+export type PhotoOnAlbumUpsertWithoutLikesInput = {
+  create: PhotoOnAlbumCreateWithoutLikesInput;
+  update: PhotoOnAlbumUpdateWithoutLikesInput;
+};
+
+export type PhotoOnAlbumWhereInput = {
+  AND?: InputMaybe<Array<PhotoOnAlbumWhereInput>>;
+  NOT?: InputMaybe<Array<PhotoOnAlbumWhereInput>>;
+  OR?: InputMaybe<Array<PhotoOnAlbumWhereInput>>;
+  addedAt?: InputMaybe<DateTimeFilter>;
+  album?: InputMaybe<AlbumWhereInput>;
+  albumId?: InputMaybe<StringFilter>;
+  comments?: InputMaybe<CommentListRelationFilter>;
+  likes?: InputMaybe<LikeListRelationFilter>;
+  photo?: InputMaybe<PhotoWhereInput>;
+  photoId?: InputMaybe<StringFilter>;
+};
+
+export type PhotoOnAlbumWhereUniqueInput = {
+  albumId_photoId?: InputMaybe<PhotoOnAlbumAlbumIdPhotoIdCompoundUniqueInput>;
+};
+
 export type PhotoOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
 export type PhotoOrderByWithRelationInput = {
-  albums?: InputMaybe<PhotosOnAlbumsOrderByRelationAggregateInput>;
+  albums?: InputMaybe<PhotoOnAlbumOrderByRelationAggregateInput>;
   author?: InputMaybe<UserOrderByWithRelationInput>;
   authorId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
@@ -1166,7 +1474,7 @@ export type PhotoScalarWhereInput = {
 };
 
 export type PhotoUpdateInput = {
-  albums?: InputMaybe<PhotosOnAlbumsUpdateManyWithoutPhotoInput>;
+  albums?: InputMaybe<PhotoOnAlbumUpdateManyWithoutPhotoInput>;
   author?: InputMaybe<UserUpdateOneWithoutPhotosInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -1243,7 +1551,7 @@ export type PhotoUpdateWithoutAlbumsInput = {
 };
 
 export type PhotoUpdateWithoutAuthorInput = {
-  albums?: InputMaybe<PhotosOnAlbumsUpdateManyWithoutPhotoInput>;
+  albums?: InputMaybe<PhotoOnAlbumUpdateManyWithoutPhotoInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1272,7 +1580,7 @@ export type PhotoWhereInput = {
   AND?: InputMaybe<Array<PhotoWhereInput>>;
   NOT?: InputMaybe<Array<PhotoWhereInput>>;
   OR?: InputMaybe<Array<PhotoWhereInput>>;
-  albums?: InputMaybe<PhotosOnAlbumsListRelationFilter>;
+  albums?: InputMaybe<PhotoOnAlbumListRelationFilter>;
   author?: InputMaybe<UserWhereInput>;
   authorId?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -1289,310 +1597,6 @@ export type PhotoWhereInput = {
 
 export type PhotoWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
-};
-
-export type PhotosOnAlbums = {
-  __typename?: 'PhotosOnAlbums';
-  addedAt: Scalars['DateTime'];
-  album: Album;
-  comments: Array<Comment>;
-  likes: Array<Like>;
-  photo: Photo;
-};
-
-
-export type PhotosOnAlbumsCommentsArgs = {
-  after?: InputMaybe<CommentWhereUniqueInput>;
-  before?: InputMaybe<CommentWhereUniqueInput>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type PhotosOnAlbumsLikesArgs = {
-  after?: InputMaybe<LikeWhereUniqueInput>;
-  before?: InputMaybe<LikeWhereUniqueInput>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-};
-
-export type PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput = {
-  albumId: Scalars['String'];
-  photoId: Scalars['String'];
-};
-
-export type PhotosOnAlbumsCreateInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  album: AlbumCreateNestedOneWithoutPhotosInput;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
-  photo: PhotoCreateNestedOneWithoutAlbumsInput;
-};
-
-export type PhotosOnAlbumsCreateManyAlbumInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  photoId: Scalars['String'];
-};
-
-export type PhotosOnAlbumsCreateManyAlbumInputEnvelope = {
-  data?: InputMaybe<Array<PhotosOnAlbumsCreateManyAlbumInput>>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type PhotosOnAlbumsCreateManyPhotoInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  albumId: Scalars['String'];
-};
-
-export type PhotosOnAlbumsCreateManyPhotoInputEnvelope = {
-  data?: InputMaybe<Array<PhotosOnAlbumsCreateManyPhotoInput>>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type PhotosOnAlbumsCreateNestedManyWithoutAlbumInput = {
-  connect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>>;
-  create?: InputMaybe<Array<PhotosOnAlbumsCreateWithoutAlbumInput>>;
-  createMany?: InputMaybe<PhotosOnAlbumsCreateManyAlbumInputEnvelope>;
-};
-
-export type PhotosOnAlbumsCreateNestedManyWithoutPhotoInput = {
-  connect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>>;
-  create?: InputMaybe<Array<PhotosOnAlbumsCreateWithoutPhotoInput>>;
-  createMany?: InputMaybe<PhotosOnAlbumsCreateManyPhotoInputEnvelope>;
-};
-
-export type PhotosOnAlbumsCreateNestedOneWithoutCommentsInput = {
-  connect?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<PhotosOnAlbumsCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<PhotosOnAlbumsCreateWithoutCommentsInput>;
-};
-
-export type PhotosOnAlbumsCreateNestedOneWithoutLikesInput = {
-  connect?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<PhotosOnAlbumsCreateOrConnectWithoutLikesInput>;
-  create?: InputMaybe<PhotosOnAlbumsCreateWithoutLikesInput>;
-};
-
-export type PhotosOnAlbumsCreateOrConnectWithoutAlbumInput = {
-  create: PhotosOnAlbumsCreateWithoutAlbumInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsCreateOrConnectWithoutCommentsInput = {
-  create: PhotosOnAlbumsCreateWithoutCommentsInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsCreateOrConnectWithoutLikesInput = {
-  create: PhotosOnAlbumsCreateWithoutLikesInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsCreateOrConnectWithoutPhotoInput = {
-  create: PhotosOnAlbumsCreateWithoutPhotoInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsCreateWithoutAlbumInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
-  photo: PhotoCreateNestedOneWithoutAlbumsInput;
-};
-
-export type PhotosOnAlbumsCreateWithoutCommentsInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  album: AlbumCreateNestedOneWithoutPhotosInput;
-  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
-  photo: PhotoCreateNestedOneWithoutAlbumsInput;
-};
-
-export type PhotosOnAlbumsCreateWithoutLikesInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  album: AlbumCreateNestedOneWithoutPhotosInput;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
-  photo: PhotoCreateNestedOneWithoutAlbumsInput;
-};
-
-export type PhotosOnAlbumsCreateWithoutPhotoInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  album: AlbumCreateNestedOneWithoutPhotosInput;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeCreateNestedManyWithoutPhotoInput>;
-};
-
-export type PhotosOnAlbumsListRelationFilter = {
-  every?: InputMaybe<PhotosOnAlbumsWhereInput>;
-  none?: InputMaybe<PhotosOnAlbumsWhereInput>;
-  some?: InputMaybe<PhotosOnAlbumsWhereInput>;
-};
-
-export type PhotosOnAlbumsOrderByRelationAggregateInput = {
-  _count?: InputMaybe<SortOrder>;
-};
-
-export type PhotosOnAlbumsOrderByWithRelationInput = {
-  addedAt?: InputMaybe<SortOrder>;
-  album?: InputMaybe<AlbumOrderByWithRelationInput>;
-  albumId?: InputMaybe<SortOrder>;
-  comments?: InputMaybe<CommentOrderByRelationAggregateInput>;
-  likes?: InputMaybe<LikeOrderByRelationAggregateInput>;
-  photo?: InputMaybe<PhotoOrderByWithRelationInput>;
-  photoId?: InputMaybe<SortOrder>;
-};
-
-export type PhotosOnAlbumsScalarWhereInput = {
-  AND?: InputMaybe<Array<PhotosOnAlbumsScalarWhereInput>>;
-  NOT?: InputMaybe<Array<PhotosOnAlbumsScalarWhereInput>>;
-  OR?: InputMaybe<Array<PhotosOnAlbumsScalarWhereInput>>;
-  addedAt?: InputMaybe<DateTimeFilter>;
-  albumId?: InputMaybe<StringFilter>;
-  photoId?: InputMaybe<StringFilter>;
-};
-
-export type PhotosOnAlbumsUpdateInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
-  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
-};
-
-export type PhotosOnAlbumsUpdateManyMutationInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-};
-
-export type PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput = {
-  data: PhotosOnAlbumsUpdateManyMutationInput;
-  where: PhotosOnAlbumsScalarWhereInput;
-};
-
-export type PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput = {
-  data: PhotosOnAlbumsUpdateManyMutationInput;
-  where: PhotosOnAlbumsScalarWhereInput;
-};
-
-export type PhotosOnAlbumsUpdateManyWithoutAlbumInput = {
-  connect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>>;
-  create?: InputMaybe<Array<PhotosOnAlbumsCreateWithoutAlbumInput>>;
-  createMany?: InputMaybe<PhotosOnAlbumsCreateManyAlbumInputEnvelope>;
-  delete?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<PhotosOnAlbumsScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  set?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  update?: InputMaybe<Array<PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput>>;
-  updateMany?: InputMaybe<Array<PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput>>;
-  upsert?: InputMaybe<Array<PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput>>;
-};
-
-export type PhotosOnAlbumsUpdateManyWithoutPhotoInput = {
-  connect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>>;
-  create?: InputMaybe<Array<PhotosOnAlbumsCreateWithoutPhotoInput>>;
-  createMany?: InputMaybe<PhotosOnAlbumsCreateManyPhotoInputEnvelope>;
-  delete?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<PhotosOnAlbumsScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  set?: InputMaybe<Array<PhotosOnAlbumsWhereUniqueInput>>;
-  update?: InputMaybe<Array<PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput>>;
-  updateMany?: InputMaybe<Array<PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput>>;
-  upsert?: InputMaybe<Array<PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput>>;
-};
-
-export type PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput = {
-  connect?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<PhotosOnAlbumsCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<PhotosOnAlbumsCreateWithoutCommentsInput>;
-  update?: InputMaybe<PhotosOnAlbumsUpdateWithoutCommentsInput>;
-  upsert?: InputMaybe<PhotosOnAlbumsUpsertWithoutCommentsInput>;
-};
-
-export type PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput = {
-  connect?: InputMaybe<PhotosOnAlbumsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<PhotosOnAlbumsCreateOrConnectWithoutLikesInput>;
-  create?: InputMaybe<PhotosOnAlbumsCreateWithoutLikesInput>;
-  update?: InputMaybe<PhotosOnAlbumsUpdateWithoutLikesInput>;
-  upsert?: InputMaybe<PhotosOnAlbumsUpsertWithoutLikesInput>;
-};
-
-export type PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput = {
-  data: PhotosOnAlbumsUpdateWithoutAlbumInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput = {
-  data: PhotosOnAlbumsUpdateWithoutPhotoInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsUpdateWithoutAlbumInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
-  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
-};
-
-export type PhotosOnAlbumsUpdateWithoutCommentsInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
-  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
-  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
-};
-
-export type PhotosOnAlbumsUpdateWithoutLikesInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
-  photo?: InputMaybe<PhotoUpdateOneRequiredWithoutAlbumsInput>;
-};
-
-export type PhotosOnAlbumsUpdateWithoutPhotoInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  album?: InputMaybe<AlbumUpdateOneRequiredWithoutPhotosInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutPhotoInput>;
-  likes?: InputMaybe<LikeUpdateManyWithoutPhotoInput>;
-};
-
-export type PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput = {
-  create: PhotosOnAlbumsCreateWithoutAlbumInput;
-  update: PhotosOnAlbumsUpdateWithoutAlbumInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput = {
-  create: PhotosOnAlbumsCreateWithoutPhotoInput;
-  update: PhotosOnAlbumsUpdateWithoutPhotoInput;
-  where: PhotosOnAlbumsWhereUniqueInput;
-};
-
-export type PhotosOnAlbumsUpsertWithoutCommentsInput = {
-  create: PhotosOnAlbumsCreateWithoutCommentsInput;
-  update: PhotosOnAlbumsUpdateWithoutCommentsInput;
-};
-
-export type PhotosOnAlbumsUpsertWithoutLikesInput = {
-  create: PhotosOnAlbumsCreateWithoutLikesInput;
-  update: PhotosOnAlbumsUpdateWithoutLikesInput;
-};
-
-export type PhotosOnAlbumsWhereInput = {
-  AND?: InputMaybe<Array<PhotosOnAlbumsWhereInput>>;
-  NOT?: InputMaybe<Array<PhotosOnAlbumsWhereInput>>;
-  OR?: InputMaybe<Array<PhotosOnAlbumsWhereInput>>;
-  addedAt?: InputMaybe<DateTimeFilter>;
-  album?: InputMaybe<AlbumWhereInput>;
-  albumId?: InputMaybe<StringFilter>;
-  comments?: InputMaybe<CommentListRelationFilter>;
-  likes?: InputMaybe<LikeListRelationFilter>;
-  photo?: InputMaybe<PhotoWhereInput>;
-  photoId?: InputMaybe<StringFilter>;
-};
-
-export type PhotosOnAlbumsWhereUniqueInput = {
-  albumId_photoId?: InputMaybe<PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput>;
 };
 
 export type Query = {
@@ -1721,7 +1725,7 @@ export type User = {
   email: Scalars['String'];
   id: Scalars['String'];
   photos: Array<Photo>;
-  sharedAlbums: Array<UsersOnAlbums>;
+  sharedAlbums: Array<UserOnAlbum>;
   username: Scalars['String'];
 };
 
@@ -1751,8 +1755,8 @@ export type UserPhotosArgs = {
 
 
 export type UserSharedAlbumsArgs = {
-  after?: InputMaybe<UsersOnAlbumsWhereUniqueInput>;
-  before?: InputMaybe<UsersOnAlbumsWhereUniqueInput>;
+  after?: InputMaybe<UserOnAlbumWhereUniqueInput>;
+  before?: InputMaybe<UserOnAlbumWhereUniqueInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -1819,7 +1823,7 @@ export type UserCreateWithoutAlbumsInput = {
   id?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
 };
 
@@ -1830,7 +1834,7 @@ export type UserCreateWithoutCommentsInput = {
   id?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
 };
 
@@ -1841,7 +1845,7 @@ export type UserCreateWithoutLikeInput = {
   id?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
 };
 
@@ -1852,7 +1856,7 @@ export type UserCreateWithoutPhotosInput = {
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
-  sharedAlbums?: InputMaybe<UsersOnAlbumsCreateNestedManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
 };
 
@@ -1867,6 +1871,190 @@ export type UserCreateWithoutSharedAlbumsInput = {
   username: Scalars['String'];
 };
 
+export type UserOnAlbum = {
+  __typename?: 'UserOnAlbum';
+  addedAt: Scalars['DateTime'];
+  album: Album;
+  role: AlbumRole;
+  user: User;
+};
+
+export type UserOnAlbumAlbumIdUserIdCompoundUniqueInput = {
+  albumId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type UserOnAlbumCreateManyAlbumInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  role?: InputMaybe<AlbumRole>;
+  userId: Scalars['String'];
+};
+
+export type UserOnAlbumCreateManyAlbumInputEnvelope = {
+  data?: InputMaybe<Array<UserOnAlbumCreateManyAlbumInput>>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UserOnAlbumCreateManyUserInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  albumId: Scalars['String'];
+  role?: InputMaybe<AlbumRole>;
+};
+
+export type UserOnAlbumCreateManyUserInputEnvelope = {
+  data?: InputMaybe<Array<UserOnAlbumCreateManyUserInput>>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UserOnAlbumCreateNestedManyWithoutAlbumInput = {
+  connect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<UserOnAlbumCreateOrConnectWithoutAlbumInput>>;
+  create?: InputMaybe<Array<UserOnAlbumCreateWithoutAlbumInput>>;
+  createMany?: InputMaybe<UserOnAlbumCreateManyAlbumInputEnvelope>;
+};
+
+export type UserOnAlbumCreateNestedManyWithoutUserInput = {
+  connect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<UserOnAlbumCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<UserOnAlbumCreateWithoutUserInput>>;
+  createMany?: InputMaybe<UserOnAlbumCreateManyUserInputEnvelope>;
+};
+
+export type UserOnAlbumCreateOrConnectWithoutAlbumInput = {
+  create: UserOnAlbumCreateWithoutAlbumInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumCreateOrConnectWithoutUserInput = {
+  create: UserOnAlbumCreateWithoutUserInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumCreateWithoutAlbumInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  role?: InputMaybe<AlbumRole>;
+  user: UserCreateNestedOneWithoutSharedAlbumsInput;
+};
+
+export type UserOnAlbumCreateWithoutUserInput = {
+  addedAt?: InputMaybe<Scalars['DateTime']>;
+  album: AlbumCreateNestedOneWithoutMembersInput;
+  role?: InputMaybe<AlbumRole>;
+};
+
+export type UserOnAlbumListRelationFilter = {
+  every?: InputMaybe<UserOnAlbumWhereInput>;
+  none?: InputMaybe<UserOnAlbumWhereInput>;
+  some?: InputMaybe<UserOnAlbumWhereInput>;
+};
+
+export type UserOnAlbumOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type UserOnAlbumScalarWhereInput = {
+  AND?: InputMaybe<Array<UserOnAlbumScalarWhereInput>>;
+  NOT?: InputMaybe<Array<UserOnAlbumScalarWhereInput>>;
+  OR?: InputMaybe<Array<UserOnAlbumScalarWhereInput>>;
+  addedAt?: InputMaybe<DateTimeFilter>;
+  albumId?: InputMaybe<StringFilter>;
+  role?: InputMaybe<EnumAlbumRoleFilter>;
+  userId?: InputMaybe<StringFilter>;
+};
+
+export type UserOnAlbumUpdateManyMutationInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
+};
+
+export type UserOnAlbumUpdateManyWithWhereWithoutAlbumInput = {
+  data: UserOnAlbumUpdateManyMutationInput;
+  where: UserOnAlbumScalarWhereInput;
+};
+
+export type UserOnAlbumUpdateManyWithWhereWithoutUserInput = {
+  data: UserOnAlbumUpdateManyMutationInput;
+  where: UserOnAlbumScalarWhereInput;
+};
+
+export type UserOnAlbumUpdateManyWithoutAlbumInput = {
+  connect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<UserOnAlbumCreateOrConnectWithoutAlbumInput>>;
+  create?: InputMaybe<Array<UserOnAlbumCreateWithoutAlbumInput>>;
+  createMany?: InputMaybe<UserOnAlbumCreateManyAlbumInputEnvelope>;
+  delete?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<UserOnAlbumScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  set?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  update?: InputMaybe<Array<UserOnAlbumUpdateWithWhereUniqueWithoutAlbumInput>>;
+  updateMany?: InputMaybe<Array<UserOnAlbumUpdateManyWithWhereWithoutAlbumInput>>;
+  upsert?: InputMaybe<Array<UserOnAlbumUpsertWithWhereUniqueWithoutAlbumInput>>;
+};
+
+export type UserOnAlbumUpdateManyWithoutUserInput = {
+  connect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<UserOnAlbumCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<UserOnAlbumCreateWithoutUserInput>>;
+  createMany?: InputMaybe<UserOnAlbumCreateManyUserInputEnvelope>;
+  delete?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<UserOnAlbumScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  set?: InputMaybe<Array<UserOnAlbumWhereUniqueInput>>;
+  update?: InputMaybe<Array<UserOnAlbumUpdateWithWhereUniqueWithoutUserInput>>;
+  updateMany?: InputMaybe<Array<UserOnAlbumUpdateManyWithWhereWithoutUserInput>>;
+  upsert?: InputMaybe<Array<UserOnAlbumUpsertWithWhereUniqueWithoutUserInput>>;
+};
+
+export type UserOnAlbumUpdateWithWhereUniqueWithoutAlbumInput = {
+  data: UserOnAlbumUpdateWithoutAlbumInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumUpdateWithWhereUniqueWithoutUserInput = {
+  data: UserOnAlbumUpdateWithoutUserInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumUpdateWithoutAlbumInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutSharedAlbumsInput>;
+};
+
+export type UserOnAlbumUpdateWithoutUserInput = {
+  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  album?: InputMaybe<AlbumUpdateOneRequiredWithoutMembersInput>;
+  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
+};
+
+export type UserOnAlbumUpsertWithWhereUniqueWithoutAlbumInput = {
+  create: UserOnAlbumCreateWithoutAlbumInput;
+  update: UserOnAlbumUpdateWithoutAlbumInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumUpsertWithWhereUniqueWithoutUserInput = {
+  create: UserOnAlbumCreateWithoutUserInput;
+  update: UserOnAlbumUpdateWithoutUserInput;
+  where: UserOnAlbumWhereUniqueInput;
+};
+
+export type UserOnAlbumWhereInput = {
+  AND?: InputMaybe<Array<UserOnAlbumWhereInput>>;
+  NOT?: InputMaybe<Array<UserOnAlbumWhereInput>>;
+  OR?: InputMaybe<Array<UserOnAlbumWhereInput>>;
+  addedAt?: InputMaybe<DateTimeFilter>;
+  album?: InputMaybe<AlbumWhereInput>;
+  albumId?: InputMaybe<StringFilter>;
+  role?: InputMaybe<EnumAlbumRoleFilter>;
+  user?: InputMaybe<UserWhereInput>;
+  userId?: InputMaybe<StringFilter>;
+};
+
+export type UserOnAlbumWhereUniqueInput = {
+  albumId_userId?: InputMaybe<UserOnAlbumAlbumIdUserIdCompoundUniqueInput>;
+};
+
 export type UserOrderByWithRelationInput = {
   Like?: InputMaybe<LikeOrderByRelationAggregateInput>;
   albums?: InputMaybe<AlbumOrderByRelationAggregateInput>;
@@ -1875,7 +2063,7 @@ export type UserOrderByWithRelationInput = {
   id?: InputMaybe<SortOrder>;
   password?: InputMaybe<SortOrder>;
   photos?: InputMaybe<PhotoOrderByRelationAggregateInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsOrderByRelationAggregateInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumOrderByRelationAggregateInput>;
   username?: InputMaybe<SortOrder>;
 };
 
@@ -1887,7 +2075,7 @@ export type UserUpdateInput = {
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsUpdateManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
@@ -1940,7 +2128,7 @@ export type UserUpdateWithoutAlbumsInput = {
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsUpdateManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
@@ -1951,7 +2139,7 @@ export type UserUpdateWithoutCommentsInput = {
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsUpdateManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
@@ -1962,7 +2150,7 @@ export type UserUpdateWithoutLikeInput = {
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsUpdateManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
@@ -1973,7 +2161,7 @@ export type UserUpdateWithoutPhotosInput = {
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   password?: InputMaybe<StringFieldUpdateOperationsInput>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsUpdateManyWithoutUserInput>;
+  sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
@@ -2024,7 +2212,7 @@ export type UserWhereInput = {
   id?: InputMaybe<StringFilter>;
   password?: InputMaybe<StringFilter>;
   photos?: InputMaybe<PhotoListRelationFilter>;
-  sharedAlbums?: InputMaybe<UsersOnAlbumsListRelationFilter>;
+  sharedAlbums?: InputMaybe<UserOnAlbumListRelationFilter>;
   username?: InputMaybe<StringFilter>;
 };
 
@@ -2032,190 +2220,6 @@ export type UserWhereUniqueInput = {
   email?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   username?: InputMaybe<Scalars['String']>;
-};
-
-export type UsersOnAlbums = {
-  __typename?: 'UsersOnAlbums';
-  addedAt: Scalars['DateTime'];
-  album: Album;
-  role: AlbumRole;
-  user: User;
-};
-
-export type UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput = {
-  albumId: Scalars['String'];
-  userId: Scalars['String'];
-};
-
-export type UsersOnAlbumsCreateManyAlbumInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  role?: InputMaybe<AlbumRole>;
-  userId: Scalars['String'];
-};
-
-export type UsersOnAlbumsCreateManyAlbumInputEnvelope = {
-  data?: InputMaybe<Array<UsersOnAlbumsCreateManyAlbumInput>>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UsersOnAlbumsCreateManyUserInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  albumId: Scalars['String'];
-  role?: InputMaybe<AlbumRole>;
-};
-
-export type UsersOnAlbumsCreateManyUserInputEnvelope = {
-  data?: InputMaybe<Array<UsersOnAlbumsCreateManyUserInput>>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UsersOnAlbumsCreateNestedManyWithoutAlbumInput = {
-  connect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<UsersOnAlbumsCreateOrConnectWithoutAlbumInput>>;
-  create?: InputMaybe<Array<UsersOnAlbumsCreateWithoutAlbumInput>>;
-  createMany?: InputMaybe<UsersOnAlbumsCreateManyAlbumInputEnvelope>;
-};
-
-export type UsersOnAlbumsCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<UsersOnAlbumsCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<UsersOnAlbumsCreateWithoutUserInput>>;
-  createMany?: InputMaybe<UsersOnAlbumsCreateManyUserInputEnvelope>;
-};
-
-export type UsersOnAlbumsCreateOrConnectWithoutAlbumInput = {
-  create: UsersOnAlbumsCreateWithoutAlbumInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsCreateOrConnectWithoutUserInput = {
-  create: UsersOnAlbumsCreateWithoutUserInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsCreateWithoutAlbumInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  role?: InputMaybe<AlbumRole>;
-  user: UserCreateNestedOneWithoutSharedAlbumsInput;
-};
-
-export type UsersOnAlbumsCreateWithoutUserInput = {
-  addedAt?: InputMaybe<Scalars['DateTime']>;
-  album: AlbumCreateNestedOneWithoutMembersInput;
-  role?: InputMaybe<AlbumRole>;
-};
-
-export type UsersOnAlbumsListRelationFilter = {
-  every?: InputMaybe<UsersOnAlbumsWhereInput>;
-  none?: InputMaybe<UsersOnAlbumsWhereInput>;
-  some?: InputMaybe<UsersOnAlbumsWhereInput>;
-};
-
-export type UsersOnAlbumsOrderByRelationAggregateInput = {
-  _count?: InputMaybe<SortOrder>;
-};
-
-export type UsersOnAlbumsScalarWhereInput = {
-  AND?: InputMaybe<Array<UsersOnAlbumsScalarWhereInput>>;
-  NOT?: InputMaybe<Array<UsersOnAlbumsScalarWhereInput>>;
-  OR?: InputMaybe<Array<UsersOnAlbumsScalarWhereInput>>;
-  addedAt?: InputMaybe<DateTimeFilter>;
-  albumId?: InputMaybe<StringFilter>;
-  role?: InputMaybe<EnumAlbumRoleFilter>;
-  userId?: InputMaybe<StringFilter>;
-};
-
-export type UsersOnAlbumsUpdateManyMutationInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
-};
-
-export type UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput = {
-  data: UsersOnAlbumsUpdateManyMutationInput;
-  where: UsersOnAlbumsScalarWhereInput;
-};
-
-export type UsersOnAlbumsUpdateManyWithWhereWithoutUserInput = {
-  data: UsersOnAlbumsUpdateManyMutationInput;
-  where: UsersOnAlbumsScalarWhereInput;
-};
-
-export type UsersOnAlbumsUpdateManyWithoutAlbumInput = {
-  connect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<UsersOnAlbumsCreateOrConnectWithoutAlbumInput>>;
-  create?: InputMaybe<Array<UsersOnAlbumsCreateWithoutAlbumInput>>;
-  createMany?: InputMaybe<UsersOnAlbumsCreateManyAlbumInputEnvelope>;
-  delete?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<UsersOnAlbumsScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  set?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  update?: InputMaybe<Array<UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput>>;
-  updateMany?: InputMaybe<Array<UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput>>;
-  upsert?: InputMaybe<Array<UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput>>;
-};
-
-export type UsersOnAlbumsUpdateManyWithoutUserInput = {
-  connect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<UsersOnAlbumsCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<UsersOnAlbumsCreateWithoutUserInput>>;
-  createMany?: InputMaybe<UsersOnAlbumsCreateManyUserInputEnvelope>;
-  delete?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<UsersOnAlbumsScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  set?: InputMaybe<Array<UsersOnAlbumsWhereUniqueInput>>;
-  update?: InputMaybe<Array<UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput>>;
-  updateMany?: InputMaybe<Array<UsersOnAlbumsUpdateManyWithWhereWithoutUserInput>>;
-  upsert?: InputMaybe<Array<UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput>>;
-};
-
-export type UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput = {
-  data: UsersOnAlbumsUpdateWithoutAlbumInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput = {
-  data: UsersOnAlbumsUpdateWithoutUserInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsUpdateWithoutAlbumInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
-  user?: InputMaybe<UserUpdateOneRequiredWithoutSharedAlbumsInput>;
-};
-
-export type UsersOnAlbumsUpdateWithoutUserInput = {
-  addedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  album?: InputMaybe<AlbumUpdateOneRequiredWithoutMembersInput>;
-  role?: InputMaybe<EnumAlbumRoleFieldUpdateOperationsInput>;
-};
-
-export type UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput = {
-  create: UsersOnAlbumsCreateWithoutAlbumInput;
-  update: UsersOnAlbumsUpdateWithoutAlbumInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput = {
-  create: UsersOnAlbumsCreateWithoutUserInput;
-  update: UsersOnAlbumsUpdateWithoutUserInput;
-  where: UsersOnAlbumsWhereUniqueInput;
-};
-
-export type UsersOnAlbumsWhereInput = {
-  AND?: InputMaybe<Array<UsersOnAlbumsWhereInput>>;
-  NOT?: InputMaybe<Array<UsersOnAlbumsWhereInput>>;
-  OR?: InputMaybe<Array<UsersOnAlbumsWhereInput>>;
-  addedAt?: InputMaybe<DateTimeFilter>;
-  album?: InputMaybe<AlbumWhereInput>;
-  albumId?: InputMaybe<StringFilter>;
-  role?: InputMaybe<EnumAlbumRoleFilter>;
-  user?: InputMaybe<UserWhereInput>;
-  userId?: InputMaybe<StringFilter>;
-};
-
-export type UsersOnAlbumsWhereUniqueInput = {
-  albumId_userId?: InputMaybe<UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput>;
 };
 
 /** User visibility of an album */
@@ -2230,7 +2234,7 @@ export type CreateAlbumMutationMutationVariables = Exact<{
 }>;
 
 
-export type CreateAlbumMutationMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
+export type CreateAlbumMutationMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
 
 export type LogoutMutationMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -2253,14 +2257,14 @@ export type UploadPhotosMutationMutationVariables = Exact<{
 
 export type UploadPhotosMutationMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, size: number, mimetype: MimeType, exif: any, createdAt: any, updatedAt: any }> };
 
-export type AlbumDataFragment = { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> };
+export type AlbumDataFragment = { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> };
 
 export type AlbumQueryQueryVariables = Exact<{
   where: AlbumWhereUniqueInput;
 }>;
 
 
-export type AlbumQueryQuery = { __typename?: 'Query', album?: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotosOnAlbums', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UsersOnAlbums', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } | null | undefined };
+export type AlbumQueryQuery = { __typename?: 'Query', album?: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } | null | undefined };
 
 export type CurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2274,7 +2278,7 @@ export type PhotoQueryQueryVariables = Exact<{
 }>;
 
 
-export type PhotoQueryQuery = { __typename?: 'Query', photo?: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined, albums: Array<{ __typename?: 'PhotosOnAlbums', album: { __typename?: 'Album', id: string, title: string } }> } | null | undefined };
+export type PhotoQueryQuery = { __typename?: 'Query', photo?: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined, albums: Array<{ __typename?: 'PhotoOnAlbum', album: { __typename?: 'Album', id: string, title: string } }> } | null | undefined };
 
 export type PhotosQueryQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -2288,7 +2292,7 @@ export type PhotosQueryQuery = { __typename?: 'Query', photos: Array<{ __typenam
 
 export type UserDataFragment = { __typename?: 'User', id: string, username: string };
 
-export const PhotoDataFragmentDoc = gql`
+export const PhotoDataFragmentDoc = `
     fragment PhotoData on Photo {
   id
   title
@@ -2303,13 +2307,13 @@ export const PhotoDataFragmentDoc = gql`
   updatedAt
 }
     `;
-export const UserDataFragmentDoc = gql`
+export const UserDataFragmentDoc = `
     fragment UserData on User {
   id
   username
 }
     `;
-export const AlbumDataFragmentDoc = gql`
+export const AlbumDataFragmentDoc = `
     fragment AlbumData on Album {
   id
   title
@@ -2350,19 +2354,45 @@ export const AlbumDataFragmentDoc = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-export const CreateAlbumMutationDocument = gql`
+export const CreateAlbumMutationDocument = `
     mutation CreateAlbumMutation($data: AlbumCreateInput!) {
   createOneAlbum(data: $data) {
     ...AlbumData
   }
 }
     ${AlbumDataFragmentDoc}`;
-export const LogoutMutationDocument = gql`
+export const useCreateAlbumMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateAlbumMutationMutation, TError, CreateAlbumMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateAlbumMutationMutation, TError, CreateAlbumMutationMutationVariables, TContext>(
+      'CreateAlbumMutation',
+      (variables?: CreateAlbumMutationMutationVariables) => fetcher<CreateAlbumMutationMutation, CreateAlbumMutationMutationVariables>(client, CreateAlbumMutationDocument, variables, headers)(),
+      options
+    );
+export const LogoutMutationDocument = `
     mutation LogoutMutation {
   logout
 }
     `;
-export const SignupMutationDocument = gql`
+export const useLogoutMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>(
+      'LogoutMutation',
+      (variables?: LogoutMutationMutationVariables) => fetcher<LogoutMutationMutation, LogoutMutationMutationVariables>(client, LogoutMutationDocument, variables, headers)(),
+      options
+    );
+export const SignupMutationDocument = `
     mutation SignupMutation($username: String!, $password: String!, $email: String!) {
   signup(username: $username, password: $password, email: $email) {
     id
@@ -2371,7 +2401,20 @@ export const SignupMutationDocument = gql`
   }
 }
     `;
-export const UploadPhotosMutationDocument = gql`
+export const useSignupMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>(
+      'SignupMutation',
+      (variables?: SignupMutationMutationVariables) => fetcher<SignupMutationMutation, SignupMutationMutationVariables>(client, SignupMutationDocument, variables, headers)(),
+      options
+    );
+export const UploadPhotosMutationDocument = `
     mutation UploadPhotosMutation($files: [Upload!]!) {
   uploadPhotos(files: $files) {
     id
@@ -2388,14 +2431,41 @@ export const UploadPhotosMutationDocument = gql`
   }
 }
     `;
-export const AlbumQueryDocument = gql`
+export const useUploadPhotosMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UploadPhotosMutationMutation, TError, UploadPhotosMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UploadPhotosMutationMutation, TError, UploadPhotosMutationMutationVariables, TContext>(
+      'UploadPhotosMutation',
+      (variables?: UploadPhotosMutationMutationVariables) => fetcher<UploadPhotosMutationMutation, UploadPhotosMutationMutationVariables>(client, UploadPhotosMutationDocument, variables, headers)(),
+      options
+    );
+export const AlbumQueryDocument = `
     query AlbumQuery($where: AlbumWhereUniqueInput!) {
   album(where: $where) {
     ...AlbumData
   }
 }
     ${AlbumDataFragmentDoc}`;
-export const CurrentUserQueryDocument = gql`
+export const useAlbumQueryQuery = <
+      TData = AlbumQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: AlbumQueryQueryVariables,
+      options?: UseQueryOptions<AlbumQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<AlbumQueryQuery, TError, TData>(
+      ['AlbumQuery', variables],
+      fetcher<AlbumQueryQuery, AlbumQueryQueryVariables>(client, AlbumQueryDocument, variables, headers),
+      options
+    );
+export const CurrentUserQueryDocument = `
     query CurrentUserQuery {
   currentUser {
     id
@@ -2404,7 +2474,21 @@ export const CurrentUserQueryDocument = gql`
   }
 }
     `;
-export const PhotoQueryDocument = gql`
+export const useCurrentUserQueryQuery = <
+      TData = CurrentUserQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: CurrentUserQueryQueryVariables,
+      options?: UseQueryOptions<CurrentUserQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<CurrentUserQueryQuery, TError, TData>(
+      variables === undefined ? ['CurrentUserQuery'] : ['CurrentUserQuery', variables],
+      fetcher<CurrentUserQueryQuery, CurrentUserQueryQueryVariables>(client, CurrentUserQueryDocument, variables, headers),
+      options
+    );
+export const PhotoQueryDocument = `
     query PhotoQuery($where: PhotoWhereUniqueInput!) {
   photo(where: $where) {
     ...PhotoData
@@ -2421,7 +2505,21 @@ export const PhotoQueryDocument = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-export const PhotosQueryDocument = gql`
+export const usePhotoQueryQuery = <
+      TData = PhotoQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PhotoQueryQueryVariables,
+      options?: UseQueryOptions<PhotoQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PhotoQueryQuery, TError, TData>(
+      ['PhotoQuery', variables],
+      fetcher<PhotoQueryQuery, PhotoQueryQueryVariables>(client, PhotoQueryDocument, variables, headers),
+      options
+    );
+export const PhotosQueryDocument = `
     query PhotosQuery($first: Int, $last: Int, $before: PhotoWhereUniqueInput, $after: PhotoWhereUniqueInput) {
   photos(first: $first, last: $last, before: $before, after: $after) {
     ...PhotoData
@@ -2432,38 +2530,17 @@ export const PhotosQueryDocument = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
-
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    CreateAlbumMutation(variables: CreateAlbumMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateAlbumMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateAlbumMutationMutation>(CreateAlbumMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateAlbumMutation');
-    },
-    LogoutMutation(variables?: LogoutMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutationMutation>(LogoutMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'LogoutMutation');
-    },
-    SignupMutation(variables: SignupMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignupMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignupMutationMutation>(SignupMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignupMutation');
-    },
-    UploadPhotosMutation(variables: UploadPhotosMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadPhotosMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UploadPhotosMutationMutation>(UploadPhotosMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadPhotosMutation');
-    },
-    AlbumQuery(variables: AlbumQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AlbumQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<AlbumQueryQuery>(AlbumQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AlbumQuery');
-    },
-    CurrentUserQuery(variables?: CurrentUserQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQueryQuery>(CurrentUserQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUserQuery');
-    },
-    PhotoQuery(variables: PhotoQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotoQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PhotoQueryQuery>(PhotoQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotoQuery');
-    },
-    PhotosQuery(variables?: PhotosQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotosQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PhotosQueryQuery>(PhotosQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotosQuery');
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export const usePhotosQueryQuery = <
+      TData = PhotosQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: PhotosQueryQueryVariables,
+      options?: UseQueryOptions<PhotosQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PhotosQueryQuery, TError, TData>(
+      variables === undefined ? ['PhotosQuery'] : ['PhotosQuery', variables],
+      fetcher<PhotosQueryQuery, PhotosQueryQueryVariables>(client, PhotosQueryDocument, variables, headers),
+      options
+    );

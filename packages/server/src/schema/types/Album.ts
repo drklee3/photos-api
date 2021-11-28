@@ -57,7 +57,7 @@ const ShareAlbum = mutationField('shareAlbum', {
       throw new Error('user not found')
     }
 
-    const albumMember = await context.prisma.usersOnAlbums.findUnique({
+    const albumMember = await context.prisma.userOnAlbum.findUnique({
       where: {
         albumId_userId: {
           albumId: albumId,
@@ -70,7 +70,7 @@ const ShareAlbum = mutationField('shareAlbum', {
       throw new Error('album already shared with user')
     }
 
-    await context.prisma.usersOnAlbums.create({
+    await context.prisma.userOnAlbum.create({
       data: {
         albumId: albumId,
         userId: targetUserId,

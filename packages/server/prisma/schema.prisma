@@ -14,7 +14,7 @@ model User {
   password String
 
   albums       Album[]
-  sharedAlbums UsersOnAlbums[]
+  sharedAlbums UserOnAlbum[]
   photos       Photo[]
   comments     Comment[]
   Like         Like[]
@@ -32,9 +32,9 @@ model Album {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  photos  PhotosOnAlbums[]
+  photos  PhotoOnAlbum[]
   // Shared users
-  members UsersOnAlbums[]
+  members UserOnAlbum[]
 }
 
 enum Visibility {
@@ -46,7 +46,7 @@ enum Visibility {
   PUBLIC
 }
 
-model UsersOnAlbums {
+model UserOnAlbum {
   album   Album  @relation(fields: [albumId], references: [id])
   albumId String
 
@@ -85,10 +85,10 @@ model Photo {
   mimetype MimeType
   exif     Json     @default("{}")
 
-  albums PhotosOnAlbums[]
+  albums PhotoOnAlbum[]
 }
 
-model PhotosOnAlbums {
+model PhotoOnAlbum {
   album   Album  @relation(fields: [albumId], references: [id])
   albumId String
 
@@ -110,9 +110,9 @@ model Like {
 
   createdAt DateTime @default(now())
 
-  photo                 PhotosOnAlbums @relation(fields: [photosOnAlbumsAlbumId, photosOnAlbumsPhotoId], references: [albumId, photoId])
-  photosOnAlbumsAlbumId String
-  photosOnAlbumsPhotoId String
+  photo                 PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
+  PhotoOnAlbumAlbumId String
+  PhotoOnAlbumPhotoId String
 }
 
 model Comment {
@@ -125,9 +125,9 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  photo                 PhotosOnAlbums @relation(fields: [photosOnAlbumsAlbumId, photosOnAlbumsPhotoId], references: [albumId, photoId])
-  photosOnAlbumsAlbumId String
-  photosOnAlbumsPhotoId String
+  photo                 PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
+  PhotoOnAlbumAlbumId String
+  PhotoOnAlbumPhotoId String
 }
 
 enum MimeType {

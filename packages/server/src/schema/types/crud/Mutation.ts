@@ -12,9 +12,9 @@ export default mutationType({
     t.crud.updateOneAlbum()
     t.crud.deleteOneAlbum()
 
-    t.crud.createOnePhotosOnAlbums()
-    t.crud.updateOnePhotosOnAlbums()
-    t.crud.deleteOnePhotosOnAlbums()
+    t.crud.createOnePhotoOnAlbum()
+    t.crud.updateOnePhotoOnAlbum()
+    t.crud.deleteOnePhotoOnAlbum()
 
     t.crud.createOneComment()
     t.crud.updateOneComment()

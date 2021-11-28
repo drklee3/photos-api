@@ -3,5 +3,7 @@ dist/
 src/generated/
 *.env*
 *.db
+.yarn
 
 yarn-error.log
+tsconfig.tsbuildinfo

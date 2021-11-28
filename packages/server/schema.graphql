@@ -7,8 +7,8 @@ type Album {
   createdAt: DateTime!
   description: String
   id: String!
-  members(after: UsersOnAlbumsWhereUniqueInput, before: UsersOnAlbumsWhereUniqueInput, first: Int, last: Int): [UsersOnAlbums!]!
-  photos(after: PhotosOnAlbumsWhereUniqueInput, before: PhotosOnAlbumsWhereUniqueInput, first: Int, last: Int): [PhotosOnAlbums!]!
+  members(after: UserOnAlbumWhereUniqueInput, before: UserOnAlbumWhereUniqueInput, first: Int, last: Int): [UserOnAlbum!]!
+  photos(after: PhotoOnAlbumWhereUniqueInput, before: PhotoOnAlbumWhereUniqueInput, first: Int, last: Int): [PhotoOnAlbum!]!
   title: String!
   updatedAt: DateTime!
   viewCount: Int!
@@ -20,8 +20,8 @@ input AlbumCreateInput {
   createdAt: DateTime
   description: String
   id: String
-  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
-  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+  members: UserOnAlbumCreateNestedManyWithoutAlbumInput
+  photos: PhotoOnAlbumCreateNestedManyWithoutAlbumInput
   title: String!
   updatedAt: DateTime
   viewCount: Int
@@ -81,8 +81,8 @@ input AlbumCreateWithoutAuthorInput {
   createdAt: DateTime
   description: String
   id: String
-  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
-  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+  members: UserOnAlbumCreateNestedManyWithoutAlbumInput
+  photos: PhotoOnAlbumCreateNestedManyWithoutAlbumInput
   title: String!
   updatedAt: DateTime
   viewCount: Int
@@ -94,7 +94,7 @@ input AlbumCreateWithoutMembersInput {
   createdAt: DateTime
   description: String
   id: String
-  photos: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+  photos: PhotoOnAlbumCreateNestedManyWithoutAlbumInput
   title: String!
   updatedAt: DateTime
   viewCount: Int
@@ -106,7 +106,7 @@ input AlbumCreateWithoutPhotosInput {
   createdAt: DateTime
   description: String
   id: String
-  members: UsersOnAlbumsCreateNestedManyWithoutAlbumInput
+  members: UserOnAlbumCreateNestedManyWithoutAlbumInput
   title: String!
   updatedAt: DateTime
   viewCount: Int
@@ -129,8 +129,8 @@ input AlbumOrderByWithRelationInput {
   createdAt: SortOrder
   description: SortOrder
   id: SortOrder
-  members: UsersOnAlbumsOrderByRelationAggregateInput
-  photos: PhotosOnAlbumsOrderByRelationAggregateInput
+  members: UserOnAlbumOrderByRelationAggregateInput
+  photos: PhotoOnAlbumOrderByRelationAggregateInput
   title: SortOrder
   updatedAt: SortOrder
   viewCount: SortOrder
@@ -169,8 +169,8 @@ input AlbumUpdateInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
-  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  members: UserOnAlbumUpdateManyWithoutAlbumInput
+  photos: PhotoOnAlbumUpdateManyWithoutAlbumInput
   title: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   viewCount: IntFieldUpdateOperationsInput
@@ -231,8 +231,8 @@ input AlbumUpdateWithoutAuthorInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
-  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  members: UserOnAlbumUpdateManyWithoutAlbumInput
+  photos: PhotoOnAlbumUpdateManyWithoutAlbumInput
   title: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   viewCount: IntFieldUpdateOperationsInput
@@ -244,7 +244,7 @@ input AlbumUpdateWithoutMembersInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  photos: PhotosOnAlbumsUpdateManyWithoutAlbumInput
+  photos: PhotoOnAlbumUpdateManyWithoutAlbumInput
   title: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   viewCount: IntFieldUpdateOperationsInput
@@ -256,7 +256,7 @@ input AlbumUpdateWithoutPhotosInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  members: UsersOnAlbumsUpdateManyWithoutAlbumInput
+  members: UserOnAlbumUpdateManyWithoutAlbumInput
   title: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   viewCount: IntFieldUpdateOperationsInput
@@ -288,8 +288,8 @@ input AlbumWhereInput {
   createdAt: DateTimeFilter
   description: StringNullableFilter
   id: StringFilter
-  members: UsersOnAlbumsListRelationFilter
-  photos: PhotosOnAlbumsListRelationFilter
+  members: UserOnAlbumListRelationFilter
+  photos: PhotoOnAlbumListRelationFilter
   title: StringFilter
   updatedAt: DateTimeFilter
   viewCount: IntFilter
@@ -305,7 +305,7 @@ type Comment {
   content: String!
   createdAt: DateTime!
   id: String!
-  photo: PhotosOnAlbums!
+  photo: PhotoOnAlbum!
   updatedAt: DateTime!
 }
 
@@ -314,16 +314,16 @@ input CommentCreateInput {
   content: String!
   createdAt: DateTime
   id: String
-  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput!
+  photo: PhotoOnAlbumCreateNestedOneWithoutCommentsInput!
   updatedAt: DateTime
 }
 
 input CommentCreateManyAuthorInput {
+  PhotoOnAlbumAlbumId: String!
+  PhotoOnAlbumPhotoId: String!
   content: String!
   createdAt: DateTime
   id: String
-  photosOnAlbumsAlbumId: String!
-  photosOnAlbumsPhotoId: String!
   updatedAt: DateTime
 }
 
@@ -373,7 +373,7 @@ input CommentCreateWithoutAuthorInput {
   content: String!
   createdAt: DateTime
   id: String
-  photo: PhotosOnAlbumsCreateNestedOneWithoutCommentsInput!
+  photo: PhotoOnAlbumCreateNestedOneWithoutCommentsInput!
   updatedAt: DateTime
 }
 
@@ -396,14 +396,14 @@ input CommentOrderByRelationAggregateInput {
 }
 
 input CommentOrderByWithRelationInput {
+  PhotoOnAlbumAlbumId: SortOrder
+  PhotoOnAlbumPhotoId: SortOrder
   author: UserOrderByWithRelationInput
   authorId: SortOrder
   content: SortOrder
   createdAt: SortOrder
   id: SortOrder
-  photo: PhotosOnAlbumsOrderByWithRelationInput
-  photosOnAlbumsAlbumId: SortOrder
-  photosOnAlbumsPhotoId: SortOrder
+  photo: PhotoOnAlbumOrderByWithRelationInput
   updatedAt: SortOrder
 }
 
@@ -411,12 +411,12 @@ input CommentScalarWhereInput {
   AND: [CommentScalarWhereInput!]
   NOT: [CommentScalarWhereInput!]
   OR: [CommentScalarWhereInput!]
+  PhotoOnAlbumAlbumId: StringFilter
+  PhotoOnAlbumPhotoId: StringFilter
   authorId: StringFilter
   content: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  photosOnAlbumsAlbumId: StringFilter
-  photosOnAlbumsPhotoId: StringFilter
   updatedAt: DateTimeFilter
 }
 
@@ -425,7 +425,7 @@ input CommentUpdateInput {
   content: StringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  photo: PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput
+  photo: PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
@@ -488,7 +488,7 @@ input CommentUpdateWithoutAuthorInput {
   content: StringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  photo: PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput
+  photo: PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
@@ -516,14 +516,14 @@ input CommentWhereInput {
   AND: [CommentWhereInput!]
   NOT: [CommentWhereInput!]
   OR: [CommentWhereInput!]
+  PhotoOnAlbumAlbumId: StringFilter
+  PhotoOnAlbumPhotoId: StringFilter
   author: UserWhereInput
   authorId: StringFilter
   content: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  photo: PhotosOnAlbumsWhereInput
-  photosOnAlbumsAlbumId: StringFilter
-  photosOnAlbumsPhotoId: StringFilter
+  photo: PhotoOnAlbumWhereInput
   updatedAt: DateTimeFilter
 }
 
@@ -606,14 +606,14 @@ type Like {
   author: User!
   createdAt: DateTime!
   id: String!
-  photo: PhotosOnAlbums!
+  photo: PhotoOnAlbum!
 }
 
 input LikeCreateManyAuthorInput {
+  PhotoOnAlbumAlbumId: String!
+  PhotoOnAlbumPhotoId: String!
   createdAt: DateTime
   id: String
-  photosOnAlbumsAlbumId: String!
-  photosOnAlbumsPhotoId: String!
 }
 
 input LikeCreateManyAuthorInputEnvelope {
@@ -659,7 +659,7 @@ input LikeCreateOrConnectWithoutPhotoInput {
 input LikeCreateWithoutAuthorInput {
   createdAt: DateTime
   id: String
-  photo: PhotosOnAlbumsCreateNestedOneWithoutLikesInput!
+  photo: PhotoOnAlbumCreateNestedOneWithoutLikesInput!
 }
 
 input LikeCreateWithoutPhotoInput {
@@ -682,11 +682,11 @@ input LikeScalarWhereInput {
   AND: [LikeScalarWhereInput!]
   NOT: [LikeScalarWhereInput!]
   OR: [LikeScalarWhereInput!]
+  PhotoOnAlbumAlbumId: StringFilter
+  PhotoOnAlbumPhotoId: StringFilter
   authorId: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  photosOnAlbumsAlbumId: StringFilter
-  photosOnAlbumsPhotoId: StringFilter
 }
 
 input LikeUpdateManyMutationInput {
@@ -745,7 +745,7 @@ input LikeUpdateWithWhereUniqueWithoutPhotoInput {
 input LikeUpdateWithoutAuthorInput {
   createdAt: DateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  photo: PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput
+  photo: PhotoOnAlbumUpdateOneRequiredWithoutLikesInput
 }
 
 input LikeUpdateWithoutPhotoInput {
@@ -770,13 +770,13 @@ input LikeWhereInput {
   AND: [LikeWhereInput!]
   NOT: [LikeWhereInput!]
   OR: [LikeWhereInput!]
+  PhotoOnAlbumAlbumId: StringFilter
+  PhotoOnAlbumPhotoId: StringFilter
   author: UserWhereInput
   authorId: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  photo: PhotosOnAlbumsWhereInput
-  photosOnAlbumsAlbumId: StringFilter
-  photosOnAlbumsPhotoId: StringFilter
+  photo: PhotoOnAlbumWhereInput
 }
 
 input LikeWhereUniqueInput {
@@ -797,11 +797,11 @@ enum MimeType {
 type Mutation {
   createOneAlbum(data: AlbumCreateInput!): Album!
   createOneComment(data: CommentCreateInput!): Comment!
-  createOnePhotosOnAlbums(data: PhotosOnAlbumsCreateInput!): PhotosOnAlbums!
+  createOnePhotoOnAlbum(data: PhotoOnAlbumCreateInput!): PhotoOnAlbum!
   deleteOneAlbum(where: AlbumWhereUniqueInput!): Album
   deleteOneComment(where: CommentWhereUniqueInput!): Comment
   deleteOnePhoto(where: PhotoWhereUniqueInput!): Photo
-  deleteOnePhotosOnAlbums(where: PhotosOnAlbumsWhereUniqueInput!): PhotosOnAlbums
+  deleteOnePhotoOnAlbum(where: PhotoOnAlbumWhereUniqueInput!): PhotoOnAlbum
   deleteOneUser(where: UserWhereUniqueInput!): User
   incrementAlbumViewCount(id: String!): Album
   login(emailOrUsername: String!, password: String!): User
@@ -811,7 +811,7 @@ type Mutation {
   updateOneAlbum(data: AlbumUpdateInput!, where: AlbumWhereUniqueInput!): Album
   updateOneComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updateOnePhoto(data: PhotoUpdateInput!, where: PhotoWhereUniqueInput!): Photo
-  updateOnePhotosOnAlbums(data: PhotosOnAlbumsUpdateInput!, where: PhotosOnAlbumsWhereUniqueInput!): PhotosOnAlbums
+  updateOnePhotoOnAlbum(data: PhotoOnAlbumUpdateInput!, where: PhotoOnAlbumWhereUniqueInput!): PhotoOnAlbum
   updateOneUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   uploadPhotos(files: [Upload!]!): [Photo!]!
 }
@@ -892,7 +892,7 @@ input NullableStringFieldUpdateOperationsInput {
 }
 
 type Photo {
-  albums(after: PhotosOnAlbumsWhereUniqueInput, before: PhotosOnAlbumsWhereUniqueInput, first: Int, last: Int): [PhotosOnAlbums!]!
+  albums(after: PhotoOnAlbumWhereUniqueInput, before: PhotoOnAlbumWhereUniqueInput, first: Int, last: Int): [PhotoOnAlbum!]!
   author: User
   createdAt: DateTime!
   description: String
@@ -965,7 +965,7 @@ input PhotoCreateWithoutAlbumsInput {
 }
 
 input PhotoCreateWithoutAuthorInput {
-  albums: PhotosOnAlbumsCreateNestedManyWithoutPhotoInput
+  albums: PhotoOnAlbumCreateNestedManyWithoutPhotoInput
   createdAt: DateTime
   description: String
   exif: Json
@@ -985,12 +985,299 @@ input PhotoListRelationFilter {
   some: PhotoWhereInput
 }
 
+type PhotoOnAlbum {
+  addedAt: DateTime!
+  album: Album!
+  comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int): [Comment!]!
+  likes(after: LikeWhereUniqueInput, before: LikeWhereUniqueInput, first: Int, last: Int): [Like!]!
+  photo: Photo!
+}
+
+input PhotoOnAlbumAlbumIdPhotoIdCompoundUniqueInput {
+  albumId: String!
+  photoId: String!
+}
+
+input PhotoOnAlbumCreateInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotoOnAlbumCreateManyAlbumInput {
+  addedAt: DateTime
+  photoId: String!
+}
+
+input PhotoOnAlbumCreateManyAlbumInputEnvelope {
+  data: [PhotoOnAlbumCreateManyAlbumInput!]
+  skipDuplicates: Boolean
+}
+
+input PhotoOnAlbumCreateManyPhotoInput {
+  addedAt: DateTime
+  albumId: String!
+}
+
+input PhotoOnAlbumCreateManyPhotoInputEnvelope {
+  data: [PhotoOnAlbumCreateManyPhotoInput!]
+  skipDuplicates: Boolean
+}
+
+input PhotoOnAlbumCreateNestedManyWithoutAlbumInput {
+  connect: [PhotoOnAlbumWhereUniqueInput!]
+  connectOrCreate: [PhotoOnAlbumCreateOrConnectWithoutAlbumInput!]
+  create: [PhotoOnAlbumCreateWithoutAlbumInput!]
+  createMany: PhotoOnAlbumCreateManyAlbumInputEnvelope
+}
+
+input PhotoOnAlbumCreateNestedManyWithoutPhotoInput {
+  connect: [PhotoOnAlbumWhereUniqueInput!]
+  connectOrCreate: [PhotoOnAlbumCreateOrConnectWithoutPhotoInput!]
+  create: [PhotoOnAlbumCreateWithoutPhotoInput!]
+  createMany: PhotoOnAlbumCreateManyPhotoInputEnvelope
+}
+
+input PhotoOnAlbumCreateNestedOneWithoutCommentsInput {
+  connect: PhotoOnAlbumWhereUniqueInput
+  connectOrCreate: PhotoOnAlbumCreateOrConnectWithoutCommentsInput
+  create: PhotoOnAlbumCreateWithoutCommentsInput
+}
+
+input PhotoOnAlbumCreateNestedOneWithoutLikesInput {
+  connect: PhotoOnAlbumWhereUniqueInput
+  connectOrCreate: PhotoOnAlbumCreateOrConnectWithoutLikesInput
+  create: PhotoOnAlbumCreateWithoutLikesInput
+}
+
+input PhotoOnAlbumCreateOrConnectWithoutAlbumInput {
+  create: PhotoOnAlbumCreateWithoutAlbumInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumCreateOrConnectWithoutCommentsInput {
+  create: PhotoOnAlbumCreateWithoutCommentsInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumCreateOrConnectWithoutLikesInput {
+  create: PhotoOnAlbumCreateWithoutLikesInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumCreateOrConnectWithoutPhotoInput {
+  create: PhotoOnAlbumCreateWithoutPhotoInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumCreateWithoutAlbumInput {
+  addedAt: DateTime
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotoOnAlbumCreateWithoutCommentsInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  likes: LikeCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotoOnAlbumCreateWithoutLikesInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  photo: PhotoCreateNestedOneWithoutAlbumsInput!
+}
+
+input PhotoOnAlbumCreateWithoutPhotoInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutPhotosInput!
+  comments: CommentCreateNestedManyWithoutPhotoInput
+  likes: LikeCreateNestedManyWithoutPhotoInput
+}
+
+input PhotoOnAlbumListRelationFilter {
+  every: PhotoOnAlbumWhereInput
+  none: PhotoOnAlbumWhereInput
+  some: PhotoOnAlbumWhereInput
+}
+
+input PhotoOnAlbumOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PhotoOnAlbumOrderByWithRelationInput {
+  addedAt: SortOrder
+  album: AlbumOrderByWithRelationInput
+  albumId: SortOrder
+  comments: CommentOrderByRelationAggregateInput
+  likes: LikeOrderByRelationAggregateInput
+  photo: PhotoOrderByWithRelationInput
+  photoId: SortOrder
+}
+
+input PhotoOnAlbumScalarWhereInput {
+  AND: [PhotoOnAlbumScalarWhereInput!]
+  NOT: [PhotoOnAlbumScalarWhereInput!]
+  OR: [PhotoOnAlbumScalarWhereInput!]
+  addedAt: DateTimeFilter
+  albumId: StringFilter
+  photoId: StringFilter
+}
+
+input PhotoOnAlbumUpdateInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotoOnAlbumUpdateManyMutationInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PhotoOnAlbumUpdateManyWithWhereWithoutAlbumInput {
+  data: PhotoOnAlbumUpdateManyMutationInput!
+  where: PhotoOnAlbumScalarWhereInput!
+}
+
+input PhotoOnAlbumUpdateManyWithWhereWithoutPhotoInput {
+  data: PhotoOnAlbumUpdateManyMutationInput!
+  where: PhotoOnAlbumScalarWhereInput!
+}
+
+input PhotoOnAlbumUpdateManyWithoutAlbumInput {
+  connect: [PhotoOnAlbumWhereUniqueInput!]
+  connectOrCreate: [PhotoOnAlbumCreateOrConnectWithoutAlbumInput!]
+  create: [PhotoOnAlbumCreateWithoutAlbumInput!]
+  createMany: PhotoOnAlbumCreateManyAlbumInputEnvelope
+  delete: [PhotoOnAlbumWhereUniqueInput!]
+  deleteMany: [PhotoOnAlbumScalarWhereInput!]
+  disconnect: [PhotoOnAlbumWhereUniqueInput!]
+  set: [PhotoOnAlbumWhereUniqueInput!]
+  update: [PhotoOnAlbumUpdateWithWhereUniqueWithoutAlbumInput!]
+  updateMany: [PhotoOnAlbumUpdateManyWithWhereWithoutAlbumInput!]
+  upsert: [PhotoOnAlbumUpsertWithWhereUniqueWithoutAlbumInput!]
+}
+
+input PhotoOnAlbumUpdateManyWithoutPhotoInput {
+  connect: [PhotoOnAlbumWhereUniqueInput!]
+  connectOrCreate: [PhotoOnAlbumCreateOrConnectWithoutPhotoInput!]
+  create: [PhotoOnAlbumCreateWithoutPhotoInput!]
+  createMany: PhotoOnAlbumCreateManyPhotoInputEnvelope
+  delete: [PhotoOnAlbumWhereUniqueInput!]
+  deleteMany: [PhotoOnAlbumScalarWhereInput!]
+  disconnect: [PhotoOnAlbumWhereUniqueInput!]
+  set: [PhotoOnAlbumWhereUniqueInput!]
+  update: [PhotoOnAlbumUpdateWithWhereUniqueWithoutPhotoInput!]
+  updateMany: [PhotoOnAlbumUpdateManyWithWhereWithoutPhotoInput!]
+  upsert: [PhotoOnAlbumUpsertWithWhereUniqueWithoutPhotoInput!]
+}
+
+input PhotoOnAlbumUpdateOneRequiredWithoutCommentsInput {
+  connect: PhotoOnAlbumWhereUniqueInput
+  connectOrCreate: PhotoOnAlbumCreateOrConnectWithoutCommentsInput
+  create: PhotoOnAlbumCreateWithoutCommentsInput
+  update: PhotoOnAlbumUpdateWithoutCommentsInput
+  upsert: PhotoOnAlbumUpsertWithoutCommentsInput
+}
+
+input PhotoOnAlbumUpdateOneRequiredWithoutLikesInput {
+  connect: PhotoOnAlbumWhereUniqueInput
+  connectOrCreate: PhotoOnAlbumCreateOrConnectWithoutLikesInput
+  create: PhotoOnAlbumCreateWithoutLikesInput
+  update: PhotoOnAlbumUpdateWithoutLikesInput
+  upsert: PhotoOnAlbumUpsertWithoutLikesInput
+}
+
+input PhotoOnAlbumUpdateWithWhereUniqueWithoutAlbumInput {
+  data: PhotoOnAlbumUpdateWithoutAlbumInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumUpdateWithWhereUniqueWithoutPhotoInput {
+  data: PhotoOnAlbumUpdateWithoutPhotoInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumUpdateWithoutAlbumInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotoOnAlbumUpdateWithoutCommentsInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  likes: LikeUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotoOnAlbumUpdateWithoutLikesInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
+}
+
+input PhotoOnAlbumUpdateWithoutPhotoInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutPhotosInput
+  comments: CommentUpdateManyWithoutPhotoInput
+  likes: LikeUpdateManyWithoutPhotoInput
+}
+
+input PhotoOnAlbumUpsertWithWhereUniqueWithoutAlbumInput {
+  create: PhotoOnAlbumCreateWithoutAlbumInput!
+  update: PhotoOnAlbumUpdateWithoutAlbumInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumUpsertWithWhereUniqueWithoutPhotoInput {
+  create: PhotoOnAlbumCreateWithoutPhotoInput!
+  update: PhotoOnAlbumUpdateWithoutPhotoInput!
+  where: PhotoOnAlbumWhereUniqueInput!
+}
+
+input PhotoOnAlbumUpsertWithoutCommentsInput {
+  create: PhotoOnAlbumCreateWithoutCommentsInput!
+  update: PhotoOnAlbumUpdateWithoutCommentsInput!
+}
+
+input PhotoOnAlbumUpsertWithoutLikesInput {
+  create: PhotoOnAlbumCreateWithoutLikesInput!
+  update: PhotoOnAlbumUpdateWithoutLikesInput!
+}
+
+input PhotoOnAlbumWhereInput {
+  AND: [PhotoOnAlbumWhereInput!]
+  NOT: [PhotoOnAlbumWhereInput!]
+  OR: [PhotoOnAlbumWhereInput!]
+  addedAt: DateTimeFilter
+  album: AlbumWhereInput
+  albumId: StringFilter
+  comments: CommentListRelationFilter
+  likes: LikeListRelationFilter
+  photo: PhotoWhereInput
+  photoId: StringFilter
+}
+
+input PhotoOnAlbumWhereUniqueInput {
+  albumId_photoId: PhotoOnAlbumAlbumIdPhotoIdCompoundUniqueInput
+}
+
 input PhotoOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
 input PhotoOrderByWithRelationInput {
-  albums: PhotosOnAlbumsOrderByRelationAggregateInput
+  albums: PhotoOnAlbumOrderByRelationAggregateInput
   author: UserOrderByWithRelationInput
   authorId: SortOrder
   createdAt: SortOrder
@@ -1024,7 +1311,7 @@ input PhotoScalarWhereInput {
 }
 
 input PhotoUpdateInput {
-  albums: PhotosOnAlbumsUpdateManyWithoutPhotoInput
+  albums: PhotoOnAlbumUpdateManyWithoutPhotoInput
   author: UserUpdateOneWithoutPhotosInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -1101,7 +1388,7 @@ input PhotoUpdateWithoutAlbumsInput {
 }
 
 input PhotoUpdateWithoutAuthorInput {
-  albums: PhotosOnAlbumsUpdateManyWithoutPhotoInput
+  albums: PhotoOnAlbumUpdateManyWithoutPhotoInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   exif: Json
@@ -1130,7 +1417,7 @@ input PhotoWhereInput {
   AND: [PhotoWhereInput!]
   NOT: [PhotoWhereInput!]
   OR: [PhotoWhereInput!]
-  albums: PhotosOnAlbumsListRelationFilter
+  albums: PhotoOnAlbumListRelationFilter
   author: UserWhereInput
   authorId: StringNullableFilter
   createdAt: DateTimeFilter
@@ -1147,293 +1434,6 @@ input PhotoWhereInput {
 
 input PhotoWhereUniqueInput {
   id: String
-}
-
-type PhotosOnAlbums {
-  addedAt: DateTime!
-  album: Album!
-  comments(after: CommentWhereUniqueInput, before: CommentWhereUniqueInput, first: Int, last: Int): [Comment!]!
-  likes(after: LikeWhereUniqueInput, before: LikeWhereUniqueInput, first: Int, last: Int): [Like!]!
-  photo: Photo!
-}
-
-input PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput {
-  albumId: String!
-  photoId: String!
-}
-
-input PhotosOnAlbumsCreateInput {
-  addedAt: DateTime
-  album: AlbumCreateNestedOneWithoutPhotosInput!
-  comments: CommentCreateNestedManyWithoutPhotoInput
-  likes: LikeCreateNestedManyWithoutPhotoInput
-  photo: PhotoCreateNestedOneWithoutAlbumsInput!
-}
-
-input PhotosOnAlbumsCreateManyAlbumInput {
-  addedAt: DateTime
-  photoId: String!
-}
-
-input PhotosOnAlbumsCreateManyAlbumInputEnvelope {
-  data: [PhotosOnAlbumsCreateManyAlbumInput!]
-  skipDuplicates: Boolean
-}
-
-input PhotosOnAlbumsCreateManyPhotoInput {
-  addedAt: DateTime
-  albumId: String!
-}
-
-input PhotosOnAlbumsCreateManyPhotoInputEnvelope {
-  data: [PhotosOnAlbumsCreateManyPhotoInput!]
-  skipDuplicates: Boolean
-}
-
-input PhotosOnAlbumsCreateNestedManyWithoutAlbumInput {
-  connect: [PhotosOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutAlbumInput!]
-  create: [PhotosOnAlbumsCreateWithoutAlbumInput!]
-  createMany: PhotosOnAlbumsCreateManyAlbumInputEnvelope
-}
-
-input PhotosOnAlbumsCreateNestedManyWithoutPhotoInput {
-  connect: [PhotosOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutPhotoInput!]
-  create: [PhotosOnAlbumsCreateWithoutPhotoInput!]
-  createMany: PhotosOnAlbumsCreateManyPhotoInputEnvelope
-}
-
-input PhotosOnAlbumsCreateNestedOneWithoutCommentsInput {
-  connect: PhotosOnAlbumsWhereUniqueInput
-  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutCommentsInput
-  create: PhotosOnAlbumsCreateWithoutCommentsInput
-}
-
-input PhotosOnAlbumsCreateNestedOneWithoutLikesInput {
-  connect: PhotosOnAlbumsWhereUniqueInput
-  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutLikesInput
-  create: PhotosOnAlbumsCreateWithoutLikesInput
-}
-
-input PhotosOnAlbumsCreateOrConnectWithoutAlbumInput {
-  create: PhotosOnAlbumsCreateWithoutAlbumInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsCreateOrConnectWithoutCommentsInput {
-  create: PhotosOnAlbumsCreateWithoutCommentsInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsCreateOrConnectWithoutLikesInput {
-  create: PhotosOnAlbumsCreateWithoutLikesInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsCreateOrConnectWithoutPhotoInput {
-  create: PhotosOnAlbumsCreateWithoutPhotoInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsCreateWithoutAlbumInput {
-  addedAt: DateTime
-  comments: CommentCreateNestedManyWithoutPhotoInput
-  likes: LikeCreateNestedManyWithoutPhotoInput
-  photo: PhotoCreateNestedOneWithoutAlbumsInput!
-}
-
-input PhotosOnAlbumsCreateWithoutCommentsInput {
-  addedAt: DateTime
-  album: AlbumCreateNestedOneWithoutPhotosInput!
-  likes: LikeCreateNestedManyWithoutPhotoInput
-  photo: PhotoCreateNestedOneWithoutAlbumsInput!
-}
-
-input PhotosOnAlbumsCreateWithoutLikesInput {
-  addedAt: DateTime
-  album: AlbumCreateNestedOneWithoutPhotosInput!
-  comments: CommentCreateNestedManyWithoutPhotoInput
-  photo: PhotoCreateNestedOneWithoutAlbumsInput!
-}
-
-input PhotosOnAlbumsCreateWithoutPhotoInput {
-  addedAt: DateTime
-  album: AlbumCreateNestedOneWithoutPhotosInput!
-  comments: CommentCreateNestedManyWithoutPhotoInput
-  likes: LikeCreateNestedManyWithoutPhotoInput
-}
-
-input PhotosOnAlbumsListRelationFilter {
-  every: PhotosOnAlbumsWhereInput
-  none: PhotosOnAlbumsWhereInput
-  some: PhotosOnAlbumsWhereInput
-}
-
-input PhotosOnAlbumsOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input PhotosOnAlbumsOrderByWithRelationInput {
-  addedAt: SortOrder
-  album: AlbumOrderByWithRelationInput
-  albumId: SortOrder
-  comments: CommentOrderByRelationAggregateInput
-  likes: LikeOrderByRelationAggregateInput
-  photo: PhotoOrderByWithRelationInput
-  photoId: SortOrder
-}
-
-input PhotosOnAlbumsScalarWhereInput {
-  AND: [PhotosOnAlbumsScalarWhereInput!]
-  NOT: [PhotosOnAlbumsScalarWhereInput!]
-  OR: [PhotosOnAlbumsScalarWhereInput!]
-  addedAt: DateTimeFilter
-  albumId: StringFilter
-  photoId: StringFilter
-}
-
-input PhotosOnAlbumsUpdateInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  album: AlbumUpdateOneRequiredWithoutPhotosInput
-  comments: CommentUpdateManyWithoutPhotoInput
-  likes: LikeUpdateManyWithoutPhotoInput
-  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
-}
-
-input PhotosOnAlbumsUpdateManyMutationInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-}
-
-input PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput {
-  data: PhotosOnAlbumsUpdateManyMutationInput!
-  where: PhotosOnAlbumsScalarWhereInput!
-}
-
-input PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput {
-  data: PhotosOnAlbumsUpdateManyMutationInput!
-  where: PhotosOnAlbumsScalarWhereInput!
-}
-
-input PhotosOnAlbumsUpdateManyWithoutAlbumInput {
-  connect: [PhotosOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutAlbumInput!]
-  create: [PhotosOnAlbumsCreateWithoutAlbumInput!]
-  createMany: PhotosOnAlbumsCreateManyAlbumInputEnvelope
-  delete: [PhotosOnAlbumsWhereUniqueInput!]
-  deleteMany: [PhotosOnAlbumsScalarWhereInput!]
-  disconnect: [PhotosOnAlbumsWhereUniqueInput!]
-  set: [PhotosOnAlbumsWhereUniqueInput!]
-  update: [PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput!]
-  updateMany: [PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput!]
-  upsert: [PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput!]
-}
-
-input PhotosOnAlbumsUpdateManyWithoutPhotoInput {
-  connect: [PhotosOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [PhotosOnAlbumsCreateOrConnectWithoutPhotoInput!]
-  create: [PhotosOnAlbumsCreateWithoutPhotoInput!]
-  createMany: PhotosOnAlbumsCreateManyPhotoInputEnvelope
-  delete: [PhotosOnAlbumsWhereUniqueInput!]
-  deleteMany: [PhotosOnAlbumsScalarWhereInput!]
-  disconnect: [PhotosOnAlbumsWhereUniqueInput!]
-  set: [PhotosOnAlbumsWhereUniqueInput!]
-  update: [PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput!]
-  updateMany: [PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput!]
-  upsert: [PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput!]
-}
-
-input PhotosOnAlbumsUpdateOneRequiredWithoutCommentsInput {
-  connect: PhotosOnAlbumsWhereUniqueInput
-  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutCommentsInput
-  create: PhotosOnAlbumsCreateWithoutCommentsInput
-  update: PhotosOnAlbumsUpdateWithoutCommentsInput
-  upsert: PhotosOnAlbumsUpsertWithoutCommentsInput
-}
-
-input PhotosOnAlbumsUpdateOneRequiredWithoutLikesInput {
-  connect: PhotosOnAlbumsWhereUniqueInput
-  connectOrCreate: PhotosOnAlbumsCreateOrConnectWithoutLikesInput
-  create: PhotosOnAlbumsCreateWithoutLikesInput
-  update: PhotosOnAlbumsUpdateWithoutLikesInput
-  upsert: PhotosOnAlbumsUpsertWithoutLikesInput
-}
-
-input PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput {
-  data: PhotosOnAlbumsUpdateWithoutAlbumInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput {
-  data: PhotosOnAlbumsUpdateWithoutPhotoInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsUpdateWithoutAlbumInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  comments: CommentUpdateManyWithoutPhotoInput
-  likes: LikeUpdateManyWithoutPhotoInput
-  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
-}
-
-input PhotosOnAlbumsUpdateWithoutCommentsInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  album: AlbumUpdateOneRequiredWithoutPhotosInput
-  likes: LikeUpdateManyWithoutPhotoInput
-  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
-}
-
-input PhotosOnAlbumsUpdateWithoutLikesInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  album: AlbumUpdateOneRequiredWithoutPhotosInput
-  comments: CommentUpdateManyWithoutPhotoInput
-  photo: PhotoUpdateOneRequiredWithoutAlbumsInput
-}
-
-input PhotosOnAlbumsUpdateWithoutPhotoInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  album: AlbumUpdateOneRequiredWithoutPhotosInput
-  comments: CommentUpdateManyWithoutPhotoInput
-  likes: LikeUpdateManyWithoutPhotoInput
-}
-
-input PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput {
-  create: PhotosOnAlbumsCreateWithoutAlbumInput!
-  update: PhotosOnAlbumsUpdateWithoutAlbumInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput {
-  create: PhotosOnAlbumsCreateWithoutPhotoInput!
-  update: PhotosOnAlbumsUpdateWithoutPhotoInput!
-  where: PhotosOnAlbumsWhereUniqueInput!
-}
-
-input PhotosOnAlbumsUpsertWithoutCommentsInput {
-  create: PhotosOnAlbumsCreateWithoutCommentsInput!
-  update: PhotosOnAlbumsUpdateWithoutCommentsInput!
-}
-
-input PhotosOnAlbumsUpsertWithoutLikesInput {
-  create: PhotosOnAlbumsCreateWithoutLikesInput!
-  update: PhotosOnAlbumsUpdateWithoutLikesInput!
-}
-
-input PhotosOnAlbumsWhereInput {
-  AND: [PhotosOnAlbumsWhereInput!]
-  NOT: [PhotosOnAlbumsWhereInput!]
-  OR: [PhotosOnAlbumsWhereInput!]
-  addedAt: DateTimeFilter
-  album: AlbumWhereInput
-  albumId: StringFilter
-  comments: CommentListRelationFilter
-  likes: LikeListRelationFilter
-  photo: PhotoWhereInput
-  photoId: StringFilter
-}
-
-input PhotosOnAlbumsWhereUniqueInput {
-  albumId_photoId: PhotosOnAlbumsAlbumIdPhotoIdCompoundUniqueInput
 }
 
 type Query {
@@ -1506,7 +1506,7 @@ type User {
   email: String!
   id: String!
   photos(after: PhotoWhereUniqueInput, before: PhotoWhereUniqueInput, first: Int, last: Int): [Photo!]!
-  sharedAlbums(after: UsersOnAlbumsWhereUniqueInput, before: UsersOnAlbumsWhereUniqueInput, first: Int, last: Int): [UsersOnAlbums!]!
+  sharedAlbums(after: UserOnAlbumWhereUniqueInput, before: UserOnAlbumWhereUniqueInput, first: Int, last: Int): [UserOnAlbum!]!
   username: String!
 }
 
@@ -1572,7 +1572,7 @@ input UserCreateWithoutAlbumsInput {
   id: String
   password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
 }
 
@@ -1583,7 +1583,7 @@ input UserCreateWithoutCommentsInput {
   id: String
   password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
 }
 
@@ -1594,7 +1594,7 @@ input UserCreateWithoutLikeInput {
   id: String
   password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
 }
 
@@ -1605,7 +1605,7 @@ input UserCreateWithoutPhotosInput {
   email: String!
   id: String
   password: String!
-  sharedAlbums: UsersOnAlbumsCreateNestedManyWithoutUserInput
+  sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
 }
 
@@ -1620,6 +1620,189 @@ input UserCreateWithoutSharedAlbumsInput {
   username: String!
 }
 
+type UserOnAlbum {
+  addedAt: DateTime!
+  album: Album!
+  role: AlbumRole!
+  user: User!
+}
+
+input UserOnAlbumAlbumIdUserIdCompoundUniqueInput {
+  albumId: String!
+  userId: String!
+}
+
+input UserOnAlbumCreateManyAlbumInput {
+  addedAt: DateTime
+  role: AlbumRole
+  userId: String!
+}
+
+input UserOnAlbumCreateManyAlbumInputEnvelope {
+  data: [UserOnAlbumCreateManyAlbumInput!]
+  skipDuplicates: Boolean
+}
+
+input UserOnAlbumCreateManyUserInput {
+  addedAt: DateTime
+  albumId: String!
+  role: AlbumRole
+}
+
+input UserOnAlbumCreateManyUserInputEnvelope {
+  data: [UserOnAlbumCreateManyUserInput!]
+  skipDuplicates: Boolean
+}
+
+input UserOnAlbumCreateNestedManyWithoutAlbumInput {
+  connect: [UserOnAlbumWhereUniqueInput!]
+  connectOrCreate: [UserOnAlbumCreateOrConnectWithoutAlbumInput!]
+  create: [UserOnAlbumCreateWithoutAlbumInput!]
+  createMany: UserOnAlbumCreateManyAlbumInputEnvelope
+}
+
+input UserOnAlbumCreateNestedManyWithoutUserInput {
+  connect: [UserOnAlbumWhereUniqueInput!]
+  connectOrCreate: [UserOnAlbumCreateOrConnectWithoutUserInput!]
+  create: [UserOnAlbumCreateWithoutUserInput!]
+  createMany: UserOnAlbumCreateManyUserInputEnvelope
+}
+
+input UserOnAlbumCreateOrConnectWithoutAlbumInput {
+  create: UserOnAlbumCreateWithoutAlbumInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumCreateOrConnectWithoutUserInput {
+  create: UserOnAlbumCreateWithoutUserInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumCreateWithoutAlbumInput {
+  addedAt: DateTime
+  role: AlbumRole
+  user: UserCreateNestedOneWithoutSharedAlbumsInput!
+}
+
+input UserOnAlbumCreateWithoutUserInput {
+  addedAt: DateTime
+  album: AlbumCreateNestedOneWithoutMembersInput!
+  role: AlbumRole
+}
+
+input UserOnAlbumListRelationFilter {
+  every: UserOnAlbumWhereInput
+  none: UserOnAlbumWhereInput
+  some: UserOnAlbumWhereInput
+}
+
+input UserOnAlbumOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input UserOnAlbumScalarWhereInput {
+  AND: [UserOnAlbumScalarWhereInput!]
+  NOT: [UserOnAlbumScalarWhereInput!]
+  OR: [UserOnAlbumScalarWhereInput!]
+  addedAt: DateTimeFilter
+  albumId: StringFilter
+  role: EnumAlbumRoleFilter
+  userId: StringFilter
+}
+
+input UserOnAlbumUpdateManyMutationInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+}
+
+input UserOnAlbumUpdateManyWithWhereWithoutAlbumInput {
+  data: UserOnAlbumUpdateManyMutationInput!
+  where: UserOnAlbumScalarWhereInput!
+}
+
+input UserOnAlbumUpdateManyWithWhereWithoutUserInput {
+  data: UserOnAlbumUpdateManyMutationInput!
+  where: UserOnAlbumScalarWhereInput!
+}
+
+input UserOnAlbumUpdateManyWithoutAlbumInput {
+  connect: [UserOnAlbumWhereUniqueInput!]
+  connectOrCreate: [UserOnAlbumCreateOrConnectWithoutAlbumInput!]
+  create: [UserOnAlbumCreateWithoutAlbumInput!]
+  createMany: UserOnAlbumCreateManyAlbumInputEnvelope
+  delete: [UserOnAlbumWhereUniqueInput!]
+  deleteMany: [UserOnAlbumScalarWhereInput!]
+  disconnect: [UserOnAlbumWhereUniqueInput!]
+  set: [UserOnAlbumWhereUniqueInput!]
+  update: [UserOnAlbumUpdateWithWhereUniqueWithoutAlbumInput!]
+  updateMany: [UserOnAlbumUpdateManyWithWhereWithoutAlbumInput!]
+  upsert: [UserOnAlbumUpsertWithWhereUniqueWithoutAlbumInput!]
+}
+
+input UserOnAlbumUpdateManyWithoutUserInput {
+  connect: [UserOnAlbumWhereUniqueInput!]
+  connectOrCreate: [UserOnAlbumCreateOrConnectWithoutUserInput!]
+  create: [UserOnAlbumCreateWithoutUserInput!]
+  createMany: UserOnAlbumCreateManyUserInputEnvelope
+  delete: [UserOnAlbumWhereUniqueInput!]
+  deleteMany: [UserOnAlbumScalarWhereInput!]
+  disconnect: [UserOnAlbumWhereUniqueInput!]
+  set: [UserOnAlbumWhereUniqueInput!]
+  update: [UserOnAlbumUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [UserOnAlbumUpdateManyWithWhereWithoutUserInput!]
+  upsert: [UserOnAlbumUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input UserOnAlbumUpdateWithWhereUniqueWithoutAlbumInput {
+  data: UserOnAlbumUpdateWithoutAlbumInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumUpdateWithWhereUniqueWithoutUserInput {
+  data: UserOnAlbumUpdateWithoutUserInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumUpdateWithoutAlbumInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+  user: UserUpdateOneRequiredWithoutSharedAlbumsInput
+}
+
+input UserOnAlbumUpdateWithoutUserInput {
+  addedAt: DateTimeFieldUpdateOperationsInput
+  album: AlbumUpdateOneRequiredWithoutMembersInput
+  role: EnumAlbumRoleFieldUpdateOperationsInput
+}
+
+input UserOnAlbumUpsertWithWhereUniqueWithoutAlbumInput {
+  create: UserOnAlbumCreateWithoutAlbumInput!
+  update: UserOnAlbumUpdateWithoutAlbumInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumUpsertWithWhereUniqueWithoutUserInput {
+  create: UserOnAlbumCreateWithoutUserInput!
+  update: UserOnAlbumUpdateWithoutUserInput!
+  where: UserOnAlbumWhereUniqueInput!
+}
+
+input UserOnAlbumWhereInput {
+  AND: [UserOnAlbumWhereInput!]
+  NOT: [UserOnAlbumWhereInput!]
+  OR: [UserOnAlbumWhereInput!]
+  addedAt: DateTimeFilter
+  album: AlbumWhereInput
+  albumId: StringFilter
+  role: EnumAlbumRoleFilter
+  user: UserWhereInput
+  userId: StringFilter
+}
+
+input UserOnAlbumWhereUniqueInput {
+  albumId_userId: UserOnAlbumAlbumIdUserIdCompoundUniqueInput
+}
+
 input UserOrderByWithRelationInput {
   Like: LikeOrderByRelationAggregateInput
   albums: AlbumOrderByRelationAggregateInput
@@ -1628,7 +1811,7 @@ input UserOrderByWithRelationInput {
   id: SortOrder
   password: SortOrder
   photos: PhotoOrderByRelationAggregateInput
-  sharedAlbums: UsersOnAlbumsOrderByRelationAggregateInput
+  sharedAlbums: UserOnAlbumOrderByRelationAggregateInput
   username: SortOrder
 }
 
@@ -1640,7 +1823,7 @@ input UserUpdateInput {
   id: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
 
@@ -1693,7 +1876,7 @@ input UserUpdateWithoutAlbumsInput {
   id: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
 
@@ -1704,7 +1887,7 @@ input UserUpdateWithoutCommentsInput {
   id: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
 
@@ -1715,7 +1898,7 @@ input UserUpdateWithoutLikeInput {
   id: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
-  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
 
@@ -1726,7 +1909,7 @@ input UserUpdateWithoutPhotosInput {
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
-  sharedAlbums: UsersOnAlbumsUpdateManyWithoutUserInput
+  sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
 
@@ -1777,7 +1960,7 @@ input UserWhereInput {
   id: StringFilter
   password: StringFilter
   photos: PhotoListRelationFilter
-  sharedAlbums: UsersOnAlbumsListRelationFilter
+  sharedAlbums: UserOnAlbumListRelationFilter
   username: StringFilter
 }
 
@@ -1785,189 +1968,6 @@ input UserWhereUniqueInput {
   email: String
   id: String
   username: String
-}
-
-type UsersOnAlbums {
-  addedAt: DateTime!
-  album: Album!
-  role: AlbumRole!
-  user: User!
-}
-
-input UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput {
-  albumId: String!
-  userId: String!
-}
-
-input UsersOnAlbumsCreateManyAlbumInput {
-  addedAt: DateTime
-  role: AlbumRole
-  userId: String!
-}
-
-input UsersOnAlbumsCreateManyAlbumInputEnvelope {
-  data: [UsersOnAlbumsCreateManyAlbumInput!]
-  skipDuplicates: Boolean
-}
-
-input UsersOnAlbumsCreateManyUserInput {
-  addedAt: DateTime
-  albumId: String!
-  role: AlbumRole
-}
-
-input UsersOnAlbumsCreateManyUserInputEnvelope {
-  data: [UsersOnAlbumsCreateManyUserInput!]
-  skipDuplicates: Boolean
-}
-
-input UsersOnAlbumsCreateNestedManyWithoutAlbumInput {
-  connect: [UsersOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutAlbumInput!]
-  create: [UsersOnAlbumsCreateWithoutAlbumInput!]
-  createMany: UsersOnAlbumsCreateManyAlbumInputEnvelope
-}
-
-input UsersOnAlbumsCreateNestedManyWithoutUserInput {
-  connect: [UsersOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutUserInput!]
-  create: [UsersOnAlbumsCreateWithoutUserInput!]
-  createMany: UsersOnAlbumsCreateManyUserInputEnvelope
-}
-
-input UsersOnAlbumsCreateOrConnectWithoutAlbumInput {
-  create: UsersOnAlbumsCreateWithoutAlbumInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsCreateOrConnectWithoutUserInput {
-  create: UsersOnAlbumsCreateWithoutUserInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsCreateWithoutAlbumInput {
-  addedAt: DateTime
-  role: AlbumRole
-  user: UserCreateNestedOneWithoutSharedAlbumsInput!
-}
-
-input UsersOnAlbumsCreateWithoutUserInput {
-  addedAt: DateTime
-  album: AlbumCreateNestedOneWithoutMembersInput!
-  role: AlbumRole
-}
-
-input UsersOnAlbumsListRelationFilter {
-  every: UsersOnAlbumsWhereInput
-  none: UsersOnAlbumsWhereInput
-  some: UsersOnAlbumsWhereInput
-}
-
-input UsersOnAlbumsOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input UsersOnAlbumsScalarWhereInput {
-  AND: [UsersOnAlbumsScalarWhereInput!]
-  NOT: [UsersOnAlbumsScalarWhereInput!]
-  OR: [UsersOnAlbumsScalarWhereInput!]
-  addedAt: DateTimeFilter
-  albumId: StringFilter
-  role: EnumAlbumRoleFilter
-  userId: StringFilter
-}
-
-input UsersOnAlbumsUpdateManyMutationInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  role: EnumAlbumRoleFieldUpdateOperationsInput
-}
-
-input UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput {
-  data: UsersOnAlbumsUpdateManyMutationInput!
-  where: UsersOnAlbumsScalarWhereInput!
-}
-
-input UsersOnAlbumsUpdateManyWithWhereWithoutUserInput {
-  data: UsersOnAlbumsUpdateManyMutationInput!
-  where: UsersOnAlbumsScalarWhereInput!
-}
-
-input UsersOnAlbumsUpdateManyWithoutAlbumInput {
-  connect: [UsersOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutAlbumInput!]
-  create: [UsersOnAlbumsCreateWithoutAlbumInput!]
-  createMany: UsersOnAlbumsCreateManyAlbumInputEnvelope
-  delete: [UsersOnAlbumsWhereUniqueInput!]
-  deleteMany: [UsersOnAlbumsScalarWhereInput!]
-  disconnect: [UsersOnAlbumsWhereUniqueInput!]
-  set: [UsersOnAlbumsWhereUniqueInput!]
-  update: [UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput!]
-  updateMany: [UsersOnAlbumsUpdateManyWithWhereWithoutAlbumInput!]
-  upsert: [UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput!]
-}
-
-input UsersOnAlbumsUpdateManyWithoutUserInput {
-  connect: [UsersOnAlbumsWhereUniqueInput!]
-  connectOrCreate: [UsersOnAlbumsCreateOrConnectWithoutUserInput!]
-  create: [UsersOnAlbumsCreateWithoutUserInput!]
-  createMany: UsersOnAlbumsCreateManyUserInputEnvelope
-  delete: [UsersOnAlbumsWhereUniqueInput!]
-  deleteMany: [UsersOnAlbumsScalarWhereInput!]
-  disconnect: [UsersOnAlbumsWhereUniqueInput!]
-  set: [UsersOnAlbumsWhereUniqueInput!]
-  update: [UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput!]
-  updateMany: [UsersOnAlbumsUpdateManyWithWhereWithoutUserInput!]
-  upsert: [UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput!]
-}
-
-input UsersOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput {
-  data: UsersOnAlbumsUpdateWithoutAlbumInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsUpdateWithWhereUniqueWithoutUserInput {
-  data: UsersOnAlbumsUpdateWithoutUserInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsUpdateWithoutAlbumInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  role: EnumAlbumRoleFieldUpdateOperationsInput
-  user: UserUpdateOneRequiredWithoutSharedAlbumsInput
-}
-
-input UsersOnAlbumsUpdateWithoutUserInput {
-  addedAt: DateTimeFieldUpdateOperationsInput
-  album: AlbumUpdateOneRequiredWithoutMembersInput
-  role: EnumAlbumRoleFieldUpdateOperationsInput
-}
-
-input UsersOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput {
-  create: UsersOnAlbumsCreateWithoutAlbumInput!
-  update: UsersOnAlbumsUpdateWithoutAlbumInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsUpsertWithWhereUniqueWithoutUserInput {
-  create: UsersOnAlbumsCreateWithoutUserInput!
-  update: UsersOnAlbumsUpdateWithoutUserInput!
-  where: UsersOnAlbumsWhereUniqueInput!
-}
-
-input UsersOnAlbumsWhereInput {
-  AND: [UsersOnAlbumsWhereInput!]
-  NOT: [UsersOnAlbumsWhereInput!]
-  OR: [UsersOnAlbumsWhereInput!]
-  addedAt: DateTimeFilter
-  album: AlbumWhereInput
-  albumId: StringFilter
-  role: EnumAlbumRoleFilter
-  user: UserWhereInput
-  userId: StringFilter
-}
-
-input UsersOnAlbumsWhereUniqueInput {
-  albumId_userId: UsersOnAlbumsAlbumIdUserIdCompoundUniqueInput
 }
 
 """User visibility of an album"""

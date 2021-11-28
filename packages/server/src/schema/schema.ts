@@ -219,13 +219,13 @@ const schemaWithoutPermissions = makeSchema({
   plugins: [
     nexusPrisma({
       experimentalCRUD: true,
+      outputs: {
+        typegen: __dirname + '/generated/nexusPrisma.d.ts',
+      },
     }),
   ],
   outputs: {
-    typegen: path.join(
-      __dirname,
-      '../../node_modules/@types/nexus-typegen/index.d.ts',
-    ),
+    typegen: __dirname + '/generated/schema.d.ts',
     schema: path.join(__dirname, '../../schema.graphql'),
   },
   contextType: {

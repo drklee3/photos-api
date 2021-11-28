@@ -4,7 +4,7 @@ import { S3 } from '@aws-sdk/client-s3'
 import { URL } from 'url'
 import { extname } from 'path'
 import { FileUpload } from 'graphql-upload'
-import exifr from 'exifr'
+import exif from 'exif-reader'
 import sharp from 'sharp'
 
 export const aggregatedS3 = new S3({
@@ -34,26 +34,38 @@ export const uploadFile = async (file: FileUpload) => {
   const stream = createReadStream()
   const buf = await streamToBuffer(stream)
 
-  // Use exifr for EXIF data cuz sharp only has raw data buffer
-  const exif = await exifr.parse(buf)
+  // TODO: Save original file, generate and save webp, thumbnails, etc out of band
+  // TODO: support video uploads
+  const conversion = sharp().webp({ quality: 80 }).withMetadata()
+
   const metadata = await sharp(buf).metadata()
+
+  // Parse raw exif buffer
+  const exifData = exif(metadata.exif)
 
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
     Key: id,
-    Body: buf,
+    Body: stream.pipe(conversion),
     ContentType: mimetype,
     ContentEncoding: encoding,
   })
+
+  const { width, height, size } = metadata
+
+  if (!width || !height || !size) {
+    throw new Error('file output is invalid')
+  }
 
   return {
     filename,
     id,
     data: obj,
     metadata: {
-      width: metadata.width || 0,
-      height: metadata.height || 0,
-      exif,
+      width: width,
+      height: height,
+      size: size,
+      exif: exifData,
     },
   }
 }
