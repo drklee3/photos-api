@@ -10,7 +10,7 @@
     "generate:prisma": "prisma generate",
     "generate:nexus": "ts-node --transpile-only src/schema/schema.ts",
     "generate:client": "graphql-codegen --config codegen.yml",
-    "test": "jest"
+    "test": "yarn build && jest dist/"
   },
   "prettier": {
     "semi": false,

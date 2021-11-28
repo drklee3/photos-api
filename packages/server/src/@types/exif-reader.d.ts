@@ -8,9 +8,3 @@ declare module 'exif-reader' {
   }
   export default function exif(input: any): ExifData
 }
-
-declare module 'express-session' {
-  export interface SessionData {
-    userId?: string
-  }
-}

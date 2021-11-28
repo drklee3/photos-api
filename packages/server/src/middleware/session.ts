@@ -1,6 +1,5 @@
 import session, { SessionOptions } from 'express-session'
 import type { Express } from 'express'
-import cors from 'cors'
 
 export default function registerSessionMiddleware(app: Express) {
   const config: SessionOptions = {
