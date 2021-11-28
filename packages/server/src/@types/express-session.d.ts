@@ -1,5 +1,5 @@
 declare module 'express-session' {
-  export interface SessionData {
+  interface SessionData {
     userId?: string
   }
 }
