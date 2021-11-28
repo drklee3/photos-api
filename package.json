@@ -1,5 +1,5 @@
 {
-  "name": "photos-api",
+  "name": "picatch",
   "packageManager": "yarn@3.1.0",
   "private": true,
   "workspaces": [

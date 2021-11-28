@@ -1,5 +1,5 @@
 {
-  "name": "@photos-api/server",
+  "name": "@picatch/server",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
