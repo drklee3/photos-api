@@ -5,13 +5,13 @@
  */
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import {
-    BottomTabNavigationOptions,
-    createBottomTabNavigator,
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import {
-    NavigationContainer,
-    DefaultTheme,
-    DarkTheme,
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
@@ -24,25 +24,25 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import PhotosScreen from "../screens/PhotosScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
-    RootStackParamList,
-    RootTabParamList,
-    RootTabScreenProps,
+  RootStackParamList,
+  RootTabParamList,
+  RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
 export default function Navigation({
-    colorScheme,
+  colorScheme,
 }: {
-    colorScheme: ColorSchemeName;
+  colorScheme: ColorSchemeName;
 }) {
-    return (
-        <NavigationContainer
-            linking={LinkingConfiguration}
-            theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-            <RootNavigator />
-        </NavigationContainer>
-    );
+  return (
+    <NavigationContainer
+      linking={LinkingConfiguration}
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+    >
+      <RootNavigator />
+    </NavigationContainer>
+  );
 }
 
 /**
@@ -52,23 +52,23 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="Root"
-                component={BottomTabNavigator}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="NotFound"
-                component={NotFoundScreen}
-                options={{ title: "Oops!" }}
-            />
-            <Stack.Group screenOptions={{ presentation: "modal" }}>
-                <Stack.Screen name="Modal" component={ModalScreen} />
-            </Stack.Group>
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Root"
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: "Oops!" }}
+      />
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen name="Modal" component={ModalScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
 }
 
 /**
@@ -78,77 +78,63 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-    const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
 
-    return (
-        <BottomTab.Navigator
-            initialRouteName="Photos"
-            screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme].tint,
-            }}
-        >
-            <BottomTab.Screen
-                name="Photos"
-                component={PhotosScreen}
-                options={({ navigation }: RootTabScreenProps<"Photos">) => ({
-                    title: "Photos",
-                    ...tabBarOptions,
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="photo-library" color={color} />
-                    ),
-                    headerRight: () => (
-                        <Pressable
-                            onPress={() => navigation.navigate("Modal")}
-                            style={({ pressed }) => ({
-                                opacity: pressed ? 0.5 : 1,
-                            })}
-                        >
-                            <FontAwesome
-                                name="info-circle"
-                                size={25}
-                                color={Colors[colorScheme].text}
-                                style={{ marginRight: 15 }}
-                            />
-                        </Pressable>
-                    ),
-                })}
-            />
-            <BottomTab.Screen
-                name="TabTwo"
-                component={TabTwoScreen}
-                options={{
-                    title: "Albums",
-                    ...tabBarOptions,
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="photo-album" color={color} />
-                    ),
-                }}
-            />
-        </BottomTab.Navigator>
-    );
+  return (
+    <BottomTab.Navigator
+      initialRouteName="Photos"
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme].tint,
+      }}
+    >
+      <BottomTab.Screen
+        name="Photos"
+        component={PhotosScreen}
+        options={({ navigation }: RootTabScreenProps<"Photos">) => ({
+          title: "Photos",
+          ...tabBarOptions,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="photo-library" color={color} />
+          ),
+        })}
+      />
+      <BottomTab.Screen
+        name="TabTwo"
+        component={TabTwoScreen}
+        options={{
+          title: "Albums",
+          ...tabBarOptions,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="photo-album" color={color} />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
+  );
 }
 
 const tabBarOptions: BottomTabNavigationOptions = {
-    tabBarLabelPosition: "below-icon",
-    tabBarItemStyle: {
-        marginBottom: 8,
-        marginTop: 8,
-    },
-    tabBarIconStyle: {
-        marginBottom: 4,
-        marginTop: 4,
-    },
-    tabBarStyle: {
-        height: 70,
-    },
+  tabBarLabelPosition: "below-icon",
+  tabBarItemStyle: {
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  tabBarIconStyle: {
+    marginBottom: 4,
+    marginTop: 4,
+  },
+  tabBarStyle: {
+    height: 70,
+  },
+  headerShown: false,
 };
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-    name: React.ComponentProps<typeof MaterialIcons>["name"];
-    color: string;
+  name: React.ComponentProps<typeof MaterialIcons>["name"];
+  color: string;
 }) {
-    return <MaterialIcons size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <MaterialIcons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
