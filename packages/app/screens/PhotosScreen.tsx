@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  StyleSheet,
-  Image,
-  SectionList,
-  TouchableOpacity,
-  SectionListData,
-} from "react-native";
+import { StyleSheet, Image, FlatList, TouchableOpacity } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
@@ -19,12 +13,14 @@ interface ImageItemProps {
 function ImageItem({ asset }: ImageItemProps) {
   return (
     <TouchableOpacity key={asset.uri}>
-      <Image
-        width={asset.width}
-        height={asset.height}
-        source={{ uri: asset.uri }}
-        style={[styles.image, {}]}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          width={asset.width}
+          height={asset.height}
+          source={{ uri: asset.uri }}
+          style={[styles.image, {}]}
+        />
+      </View>
     </TouchableOpacity>
   );
 }
@@ -47,9 +43,7 @@ function renderHeader() {
 export default function PhotosScreen({
   navigation,
 }: RootTabScreenProps<"Photos">) {
-  const [media, setMedia] = React.useState<
-    SectionListData<MediaLibrary.Asset>[]
-  >([]);
+  const [media, setMedia] = React.useState<MediaLibrary.Asset[]>([]);
 
   const getMedia = async () => {
     let { status } = await MediaLibrary.requestPermissionsAsync();
@@ -63,7 +57,7 @@ export default function PhotosScreen({
 
     console.log(first);
 
-    setMedia([{ data: media.assets }]);
+    setMedia(media.assets);
   };
 
   React.useEffect(() => {
@@ -71,12 +65,12 @@ export default function PhotosScreen({
   }, []);
 
   return (
-    <SectionList
+    <FlatList
       style={styles.container}
       ListHeaderComponent={renderHeader}
       renderItem={({ item }) => <ImageItem asset={item} />}
-      renderSectionHeader={({ section }) => <SectionHeader />}
-      sections={media}
+      data={media}
+      numColumns={4}
     />
   );
 }
@@ -119,9 +113,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
+  imageContainer: {
+    width: "50%",
+  },
   image: {
-    minWidth: 100,
-    minHeight: 100,
+    width: 100,
+    flexGrow: 1,
+    height: undefined,
+    aspectRatio: 1,
     margin: 6,
     resizeMode: "cover",
   },
