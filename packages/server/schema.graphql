@@ -908,6 +908,7 @@ type Photo {
 }
 
 input PhotoCreateManyAuthorInput {
+  blurHash: String
   createdAt: DateTime
   description: String
   exif: Json
@@ -951,6 +952,7 @@ input PhotoCreateOrConnectWithoutAuthorInput {
 
 input PhotoCreateWithoutAlbumsInput {
   author: UserCreateNestedOneWithoutPhotosInput
+  blurHash: String
   createdAt: DateTime
   description: String
   exif: Json
@@ -966,6 +968,7 @@ input PhotoCreateWithoutAlbumsInput {
 
 input PhotoCreateWithoutAuthorInput {
   albums: PhotoOnAlbumCreateNestedManyWithoutPhotoInput
+  blurHash: String
   createdAt: DateTime
   description: String
   exif: Json
@@ -1280,6 +1283,7 @@ input PhotoOrderByWithRelationInput {
   albums: PhotoOnAlbumOrderByRelationAggregateInput
   author: UserOrderByWithRelationInput
   authorId: SortOrder
+  blurHash: SortOrder
   createdAt: SortOrder
   description: SortOrder
   exif: SortOrder
@@ -1298,6 +1302,7 @@ input PhotoScalarWhereInput {
   NOT: [PhotoScalarWhereInput!]
   OR: [PhotoScalarWhereInput!]
   authorId: StringNullableFilter
+  blurHash: StringNullableFilter
   createdAt: DateTimeFilter
   description: StringNullableFilter
   fileName: StringNullableFilter
@@ -1313,6 +1318,7 @@ input PhotoScalarWhereInput {
 input PhotoUpdateInput {
   albums: PhotoOnAlbumUpdateManyWithoutPhotoInput
   author: UserUpdateOneWithoutPhotosInput
+  blurHash: NullableStringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   exif: Json
@@ -1327,6 +1333,7 @@ input PhotoUpdateInput {
 }
 
 input PhotoUpdateManyMutationInput {
+  blurHash: NullableStringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   exif: Json
@@ -1374,6 +1381,7 @@ input PhotoUpdateWithWhereUniqueWithoutAuthorInput {
 
 input PhotoUpdateWithoutAlbumsInput {
   author: UserUpdateOneWithoutPhotosInput
+  blurHash: NullableStringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   exif: Json
@@ -1389,6 +1397,7 @@ input PhotoUpdateWithoutAlbumsInput {
 
 input PhotoUpdateWithoutAuthorInput {
   albums: PhotoOnAlbumUpdateManyWithoutPhotoInput
+  blurHash: NullableStringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   exif: Json
@@ -1420,6 +1429,7 @@ input PhotoWhereInput {
   albums: PhotoOnAlbumListRelationFilter
   author: UserWhereInput
   authorId: StringNullableFilter
+  blurHash: StringNullableFilter
   createdAt: DateTimeFilter
   description: StringNullableFilter
   fileName: StringNullableFilter

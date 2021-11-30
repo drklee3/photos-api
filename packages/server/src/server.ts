@@ -9,6 +9,7 @@ import { registerMiddlewares } from './middleware'
 import { buildContext } from 'graphql-passport'
 import prisma from './prisma'
 import { graphqlUploadExpress } from 'graphql-upload'
+import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from './worker/queues'
 
 let origin: string
 
@@ -38,6 +39,9 @@ export async function getApp() {
 
   app.use(graphqlUploadExpress())
   registerMiddlewares(app)
+
+  // Add bullmq queue
+  app.set(NEW_PHOTOS_QUEUE, NewPhotosQueue())
 
   const httpServer = http.createServer(app)
   const apolloServer = new ApolloServer({

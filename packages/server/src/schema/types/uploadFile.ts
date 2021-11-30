@@ -1,11 +1,14 @@
 import { createWriteStream, ReadStream, unlink } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 import { S3 } from '@aws-sdk/client-s3'
+import { Queue } from 'bullmq'
 import { URL } from 'url'
-import { extname } from 'path'
+import path, { extname } from 'path'
 import { FileUpload } from 'graphql-upload'
 import exif from 'exif-reader'
 import sharp from 'sharp'
+import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from '../../worker/queues'
+import type { Application, Express } from 'express'
 
 export const aggregatedS3 = new S3({
   endpoint: process.env.S3_ENDPOINT,
@@ -26,27 +29,31 @@ function streamToBuffer(stream: ReadStream): Promise<Buffer> {
   })
 }
 
-export const uploadFile = async (file: FileUpload) => {
-  const { createReadStream, filename, mimetype, encoding } = await file
+export const uploadFile = async (file: FileUpload, app: Application) => {
+  const { createReadStream, filename, mimetype, encoding } = file
+
+  const extension = path.extname(filename)
+  if (!extension) {
+    throw new Error('invalid file extension')
+  }
 
   const id = uuidv4()
 
+  // TODO: support video uploads
   const stream = createReadStream()
   const buf = await streamToBuffer(stream)
-
-  // TODO: Save original file, generate and save webp, thumbnails, etc out of band
-  // TODO: support video uploads
-  const conversion = sharp().webp({ quality: 80 }).withMetadata()
 
   const metadata = await sharp(buf).metadata()
 
   // Parse raw exif buffer
   const exifData = exif(metadata.exif)
 
+  // Only upload original, resized ones are generated and uploaded out of band
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
-    Key: id,
-    Body: stream.pipe(conversion),
+    Key: id + extension,
+    Body: buf,
+    ContentDisposition: filename,
     ContentType: mimetype,
     ContentEncoding: encoding,
   })
@@ -56,6 +63,13 @@ export const uploadFile = async (file: FileUpload) => {
   if (!width || !height || !size) {
     throw new Error('file output is invalid')
   }
+
+  const queue: Queue = app.get(NEW_PHOTOS_QUEUE)
+  await queue.add('resize images', {
+    id,
+    filename,
+    mimetype,
+  })
 
   return {
     filename,

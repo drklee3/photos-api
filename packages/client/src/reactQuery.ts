@@ -1,11 +1,15 @@
 import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import gql from 'graphql-tag';
+import { RequestInit } from 'graphql-request/dist/types.dom';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+
+function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -1050,6 +1054,7 @@ export type PhotoAlbumsArgs = {
 };
 
 export type PhotoCreateManyAuthorInput = {
+  blurHash?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1093,6 +1098,7 @@ export type PhotoCreateOrConnectWithoutAuthorInput = {
 
 export type PhotoCreateWithoutAlbumsInput = {
   author?: InputMaybe<UserCreateNestedOneWithoutPhotosInput>;
+  blurHash?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1108,6 +1114,7 @@ export type PhotoCreateWithoutAlbumsInput = {
 
 export type PhotoCreateWithoutAuthorInput = {
   albums?: InputMaybe<PhotoOnAlbumCreateNestedManyWithoutPhotoInput>;
+  blurHash?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   description?: InputMaybe<Scalars['String']>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1439,6 +1446,7 @@ export type PhotoOrderByWithRelationInput = {
   albums?: InputMaybe<PhotoOnAlbumOrderByRelationAggregateInput>;
   author?: InputMaybe<UserOrderByWithRelationInput>;
   authorId?: InputMaybe<SortOrder>;
+  blurHash?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   exif?: InputMaybe<SortOrder>;
@@ -1457,6 +1465,7 @@ export type PhotoScalarWhereInput = {
   NOT?: InputMaybe<Array<PhotoScalarWhereInput>>;
   OR?: InputMaybe<Array<PhotoScalarWhereInput>>;
   authorId?: InputMaybe<StringNullableFilter>;
+  blurHash?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringNullableFilter>;
   fileName?: InputMaybe<StringNullableFilter>;
@@ -1472,6 +1481,7 @@ export type PhotoScalarWhereInput = {
 export type PhotoUpdateInput = {
   albums?: InputMaybe<PhotoOnAlbumUpdateManyWithoutPhotoInput>;
   author?: InputMaybe<UserUpdateOneWithoutPhotosInput>;
+  blurHash?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1486,6 +1496,7 @@ export type PhotoUpdateInput = {
 };
 
 export type PhotoUpdateManyMutationInput = {
+  blurHash?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1533,6 +1544,7 @@ export type PhotoUpdateWithWhereUniqueWithoutAuthorInput = {
 
 export type PhotoUpdateWithoutAlbumsInput = {
   author?: InputMaybe<UserUpdateOneWithoutPhotosInput>;
+  blurHash?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1548,6 +1560,7 @@ export type PhotoUpdateWithoutAlbumsInput = {
 
 export type PhotoUpdateWithoutAuthorInput = {
   albums?: InputMaybe<PhotoOnAlbumUpdateManyWithoutPhotoInput>;
+  blurHash?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   exif?: InputMaybe<Scalars['Json']>;
@@ -1579,6 +1592,7 @@ export type PhotoWhereInput = {
   albums?: InputMaybe<PhotoOnAlbumListRelationFilter>;
   author?: InputMaybe<UserWhereInput>;
   authorId?: InputMaybe<StringNullableFilter>;
+  blurHash?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringNullableFilter>;
   fileName?: InputMaybe<StringNullableFilter>;
@@ -2288,7 +2302,7 @@ export type PhotosQueryQuery = { __typename?: 'Query', photos: Array<{ __typenam
 
 export type UserDataFragment = { __typename?: 'User', id: string, username: string };
 
-export const PhotoDataFragmentDoc = gql`
+export const PhotoDataFragmentDoc = `
     fragment PhotoData on Photo {
   id
   title
@@ -2303,13 +2317,13 @@ export const PhotoDataFragmentDoc = gql`
   updatedAt
 }
     `;
-export const UserDataFragmentDoc = gql`
+export const UserDataFragmentDoc = `
     fragment UserData on User {
   id
   username
 }
     `;
-export const AlbumDataFragmentDoc = gql`
+export const AlbumDataFragmentDoc = `
     fragment AlbumData on Album {
   id
   title
@@ -2350,19 +2364,45 @@ export const AlbumDataFragmentDoc = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-export const CreateAlbumMutationDocument = gql`
+export const CreateAlbumMutationDocument = `
     mutation CreateAlbumMutation($data: AlbumCreateInput!) {
   createOneAlbum(data: $data) {
     ...AlbumData
   }
 }
     ${AlbumDataFragmentDoc}`;
-export const LogoutMutationDocument = gql`
+export const useCreateAlbumMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateAlbumMutationMutation, TError, CreateAlbumMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateAlbumMutationMutation, TError, CreateAlbumMutationMutationVariables, TContext>(
+      'CreateAlbumMutation',
+      (variables?: CreateAlbumMutationMutationVariables) => fetcher<CreateAlbumMutationMutation, CreateAlbumMutationMutationVariables>(client, CreateAlbumMutationDocument, variables, headers)(),
+      options
+    );
+export const LogoutMutationDocument = `
     mutation LogoutMutation {
   logout
 }
     `;
-export const SignupMutationDocument = gql`
+export const useLogoutMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<LogoutMutationMutation, TError, LogoutMutationMutationVariables, TContext>(
+      'LogoutMutation',
+      (variables?: LogoutMutationMutationVariables) => fetcher<LogoutMutationMutation, LogoutMutationMutationVariables>(client, LogoutMutationDocument, variables, headers)(),
+      options
+    );
+export const SignupMutationDocument = `
     mutation SignupMutation($username: String!, $password: String!, $email: String!) {
   signup(username: $username, password: $password, email: $email) {
     id
@@ -2371,7 +2411,20 @@ export const SignupMutationDocument = gql`
   }
 }
     `;
-export const UploadPhotosMutationDocument = gql`
+export const useSignupMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<SignupMutationMutation, TError, SignupMutationMutationVariables, TContext>(
+      'SignupMutation',
+      (variables?: SignupMutationMutationVariables) => fetcher<SignupMutationMutation, SignupMutationMutationVariables>(client, SignupMutationDocument, variables, headers)(),
+      options
+    );
+export const UploadPhotosMutationDocument = `
     mutation UploadPhotosMutation($files: [Upload!]!) {
   uploadPhotos(files: $files) {
     id
@@ -2388,14 +2441,41 @@ export const UploadPhotosMutationDocument = gql`
   }
 }
     `;
-export const AlbumQueryDocument = gql`
+export const useUploadPhotosMutationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UploadPhotosMutationMutation, TError, UploadPhotosMutationMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UploadPhotosMutationMutation, TError, UploadPhotosMutationMutationVariables, TContext>(
+      'UploadPhotosMutation',
+      (variables?: UploadPhotosMutationMutationVariables) => fetcher<UploadPhotosMutationMutation, UploadPhotosMutationMutationVariables>(client, UploadPhotosMutationDocument, variables, headers)(),
+      options
+    );
+export const AlbumQueryDocument = `
     query AlbumQuery($where: AlbumWhereUniqueInput!) {
   album(where: $where) {
     ...AlbumData
   }
 }
     ${AlbumDataFragmentDoc}`;
-export const CurrentUserQueryDocument = gql`
+export const useAlbumQueryQuery = <
+      TData = AlbumQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: AlbumQueryQueryVariables,
+      options?: UseQueryOptions<AlbumQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<AlbumQueryQuery, TError, TData>(
+      ['AlbumQuery', variables],
+      fetcher<AlbumQueryQuery, AlbumQueryQueryVariables>(client, AlbumQueryDocument, variables, headers),
+      options
+    );
+export const CurrentUserQueryDocument = `
     query CurrentUserQuery {
   currentUser {
     id
@@ -2404,7 +2484,21 @@ export const CurrentUserQueryDocument = gql`
   }
 }
     `;
-export const PhotoQueryDocument = gql`
+export const useCurrentUserQueryQuery = <
+      TData = CurrentUserQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: CurrentUserQueryQueryVariables,
+      options?: UseQueryOptions<CurrentUserQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<CurrentUserQueryQuery, TError, TData>(
+      variables === undefined ? ['CurrentUserQuery'] : ['CurrentUserQuery', variables],
+      fetcher<CurrentUserQueryQuery, CurrentUserQueryQueryVariables>(client, CurrentUserQueryDocument, variables, headers),
+      options
+    );
+export const PhotoQueryDocument = `
     query PhotoQuery($where: PhotoWhereUniqueInput!) {
   photo(where: $where) {
     ...PhotoData
@@ -2421,7 +2515,21 @@ export const PhotoQueryDocument = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-export const PhotosQueryDocument = gql`
+export const usePhotoQueryQuery = <
+      TData = PhotoQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PhotoQueryQueryVariables,
+      options?: UseQueryOptions<PhotoQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PhotoQueryQuery, TError, TData>(
+      ['PhotoQuery', variables],
+      fetcher<PhotoQueryQuery, PhotoQueryQueryVariables>(client, PhotoQueryDocument, variables, headers),
+      options
+    );
+export const PhotosQueryDocument = `
     query PhotosQuery($first: Int, $last: Int, $before: PhotoWhereUniqueInput, $after: PhotoWhereUniqueInput) {
   photos(first: $first, last: $last, before: $before, after: $after) {
     ...PhotoData
@@ -2432,38 +2540,17 @@ export const PhotosQueryDocument = gql`
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
-
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    CreateAlbumMutation(variables: CreateAlbumMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateAlbumMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateAlbumMutationMutation>(CreateAlbumMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateAlbumMutation');
-    },
-    LogoutMutation(variables?: LogoutMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LogoutMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<LogoutMutationMutation>(LogoutMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'LogoutMutation');
-    },
-    SignupMutation(variables: SignupMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignupMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignupMutationMutation>(SignupMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignupMutation');
-    },
-    UploadPhotosMutation(variables: UploadPhotosMutationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadPhotosMutationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UploadPhotosMutationMutation>(UploadPhotosMutationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadPhotosMutation');
-    },
-    AlbumQuery(variables: AlbumQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AlbumQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<AlbumQueryQuery>(AlbumQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AlbumQuery');
-    },
-    CurrentUserQuery(variables?: CurrentUserQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQueryQuery>(CurrentUserQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUserQuery');
-    },
-    PhotoQuery(variables: PhotoQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotoQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PhotoQueryQuery>(PhotoQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotoQuery');
-    },
-    PhotosQuery(variables?: PhotosQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PhotosQueryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PhotosQueryQuery>(PhotosQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PhotosQuery');
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export const usePhotosQueryQuery = <
+      TData = PhotosQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: PhotosQueryQueryVariables,
+      options?: UseQueryOptions<PhotosQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PhotosQueryQuery, TError, TData>(
+      variables === undefined ? ['PhotosQuery'] : ['PhotosQuery', variables],
+      fetcher<PhotosQueryQuery, PhotosQueryQueryVariables>(client, PhotosQueryDocument, variables, headers),
+      options
+    );

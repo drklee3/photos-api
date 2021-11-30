@@ -741,6 +741,7 @@ export interface NexusGenInputs {
     set?: string | null; // String
   }
   PhotoCreateManyAuthorInput: { // input type
+    blurHash?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -778,6 +779,7 @@ export interface NexusGenInputs {
   }
   PhotoCreateWithoutAlbumsInput: { // input type
     author?: NexusGenInputs['UserCreateNestedOneWithoutPhotosInput'] | null; // UserCreateNestedOneWithoutPhotosInput
+    blurHash?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -792,6 +794,7 @@ export interface NexusGenInputs {
   }
   PhotoCreateWithoutAuthorInput: { // input type
     albums?: NexusGenInputs['PhotoOnAlbumCreateNestedManyWithoutPhotoInput'] | null; // PhotoOnAlbumCreateNestedManyWithoutPhotoInput
+    blurHash?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -1053,6 +1056,7 @@ export interface NexusGenInputs {
     albums?: NexusGenInputs['PhotoOnAlbumOrderByRelationAggregateInput'] | null; // PhotoOnAlbumOrderByRelationAggregateInput
     author?: NexusGenInputs['UserOrderByWithRelationInput'] | null; // UserOrderByWithRelationInput
     authorId?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    blurHash?: NexusGenEnums['SortOrder'] | null; // SortOrder
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     description?: NexusGenEnums['SortOrder'] | null; // SortOrder
     exif?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -1070,6 +1074,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['PhotoScalarWhereInput'][] | null; // [PhotoScalarWhereInput!]
     OR?: NexusGenInputs['PhotoScalarWhereInput'][] | null; // [PhotoScalarWhereInput!]
     authorId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    blurHash?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     description?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     fileName?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -1084,6 +1089,7 @@ export interface NexusGenInputs {
   PhotoUpdateInput: { // input type
     albums?: NexusGenInputs['PhotoOnAlbumUpdateManyWithoutPhotoInput'] | null; // PhotoOnAlbumUpdateManyWithoutPhotoInput
     author?: NexusGenInputs['UserUpdateOneWithoutPhotosInput'] | null; // UserUpdateOneWithoutPhotosInput
+    blurHash?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     createdAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -1097,6 +1103,7 @@ export interface NexusGenInputs {
     width?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
   }
   PhotoUpdateManyMutationInput: { // input type
+    blurHash?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     createdAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -1139,6 +1146,7 @@ export interface NexusGenInputs {
   }
   PhotoUpdateWithoutAlbumsInput: { // input type
     author?: NexusGenInputs['UserUpdateOneWithoutPhotosInput'] | null; // UserUpdateOneWithoutPhotosInput
+    blurHash?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     createdAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -1153,6 +1161,7 @@ export interface NexusGenInputs {
   }
   PhotoUpdateWithoutAuthorInput: { // input type
     albums?: NexusGenInputs['PhotoOnAlbumUpdateManyWithoutPhotoInput'] | null; // PhotoOnAlbumUpdateManyWithoutPhotoInput
+    blurHash?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     createdAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     exif?: NexusGenScalars['Json'] | null; // Json
@@ -1181,6 +1190,7 @@ export interface NexusGenInputs {
     albums?: NexusGenInputs['PhotoOnAlbumListRelationFilter'] | null; // PhotoOnAlbumListRelationFilter
     author?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     authorId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    blurHash?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     description?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     fileName?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter

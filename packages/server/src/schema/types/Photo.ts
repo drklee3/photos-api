@@ -43,7 +43,9 @@ const UploadPhoto = mutationField('uploadPhotos', {
     // https://github.com/graphql-nexus/nexus/issues/441#issuecomment-665776307
 
     // Ensure an error storing one upload doesn’t prevent storing the rest.
-    const results = await Promise.allSettled(args.files.map(uploadFile))
+    const results = await Promise.allSettled(
+      args.files.map((file) => uploadFile(file, context.req.app)),
+    )
 
     const userId = getUserId(context)
     if (!userId) {
@@ -59,10 +61,11 @@ const UploadPhoto = mutationField('uploadPhotos', {
       }
 
       const {
-        value: { filename, metadata },
+        value: { id, filename, metadata },
       } = result
 
       const photo: Partial<Photo> = {
+        id,
         authorId: userId,
         fileName: filename,
         width: metadata.width,

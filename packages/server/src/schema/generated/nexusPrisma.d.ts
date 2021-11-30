@@ -39,8 +39,8 @@ interface NexusPrismaInputs {
       ordering: 'album' | 'albumId' | 'user' | 'userId' | 'role' | 'addedAt'
     }
     photos: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'albums'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'albums'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'blurHash' | 'albums'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'blurHash' | 'albums'
     }
     photoOnAlbums: {
       filtering: 'AND' | 'OR' | 'NOT' | 'album' | 'albumId' | 'photo' | 'photoId' | 'addedAt' | 'comments' | 'likes'
@@ -65,8 +65,8 @@ interface NexusPrismaInputs {
       ordering: 'album' | 'albumId' | 'user' | 'userId' | 'role' | 'addedAt'
     }
     photos: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'albums'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'albums'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'blurHash' | 'albums'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'author' | 'authorId' | 'fileName' | 'width' | 'height' | 'size' | 'mimetype' | 'exif' | 'blurHash' | 'albums'
     }
     comments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'content' | 'author' | 'authorId' | 'createdAt' | 'updatedAt' | 'photo' | 'PhotoOnAlbumAlbumId' | 'PhotoOnAlbumPhotoId'
@@ -222,6 +222,7 @@ interface NexusPrismaOutputs {
     size: 'Int'
     mimetype: 'MimeType'
     exif: 'Json'
+    blurHash: 'String'
     albums: 'PhotoOnAlbum'
   }
   PhotoOnAlbum: {
