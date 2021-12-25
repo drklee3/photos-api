@@ -3,8 +3,9 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
+  BottomTabBarProps,
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
@@ -15,10 +16,9 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { ColorSchemeName } from "react-native";
 
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
+import { Box, Pressable, Center, HStack, Text } from "native-base";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import PhotosScreen from "../screens/PhotosScreen";
@@ -78,34 +78,28 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="Photos"
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <BottomTab.Screen
         name="Photos"
         component={PhotosScreen}
         options={({ navigation }: RootTabScreenProps<"Photos">) => ({
           title: "Photos",
-          ...tabBarOptions,
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="photo-library" color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <MaterialIcons name="photo-library" size={size} color={color} />
           ),
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Albums"
         component={TabTwoScreen}
         options={{
           title: "Albums",
-          ...tabBarOptions,
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="photo-album" color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <MaterialIcons name="photo-album" size={size} color={color} />
           ),
         }}
       />
@@ -113,21 +107,73 @@ function BottomTabNavigator() {
   );
 }
 
-const tabBarOptions: BottomTabNavigationOptions = {
-  tabBarLabelPosition: "below-icon",
-  tabBarItemStyle: {
-    marginBottom: 8,
-    marginTop: 8,
-  },
-  tabBarIconStyle: {
-    marginBottom: 4,
-    marginTop: 4,
-  },
-  tabBarStyle: {
-    height: 70,
-  },
-  headerShown: false,
-};
+function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  return (
+    <Box flex={1} bg="black" safeAreaTop>
+      <Center flex={1}></Center>
+      <HStack bg="blue.600" alignItems="center" safeAreaBottom shadow={6}>
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
+
+          const isFocused = state.index === index;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate({
+                name: route.name,
+                params: [],
+                merge: true,
+              });
+            }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              type: "tabLongPress",
+              target: route.key,
+            });
+          };
+
+          return (
+            <Pressable
+              cursor="pointer"
+              opacity={isFocused ? 1 : 0.5}
+              py="3"
+              flex={1}
+              onPress={onPress}
+              onLongPress={onLongPress}
+            >
+              <Center>
+                {options.tabBarIcon &&
+                  options.tabBarIcon({
+                    color: "white",
+                    focused: isFocused,
+                    size: 30,
+                  })}
+                <Text color="white" fontSize="sm" mt="1">
+                  {label}
+                </Text>
+              </Center>
+            </Pressable>
+          );
+        })}
+      </HStack>
+    </Box>
+  );
+}
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -136,5 +182,5 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof MaterialIcons>["name"];
   color: string;
 }) {
-  return <MaterialIcons size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <MaterialIcons style={{ marginBottom: -3 }} {...props} />;
 }
