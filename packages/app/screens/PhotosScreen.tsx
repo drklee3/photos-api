@@ -1,8 +1,15 @@
 import * as React from "react";
-import { StyleSheet, Image, FlatList, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
+import { View } from "../components/Themed";
+import { Box, Flex, Text, Heading } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 
@@ -32,10 +39,29 @@ function SectionHeader() {
 function renderHeader() {
   return (
     <>
-      <Text style={styles.h1}>Photos</Text>
-      <View style={styles.highlight}>
-        <Text style={[styles.h4, styles.highlightText]}>Recent Highlights</Text>
-      </View>
+      <Heading size="xl">Photos</Heading>
+      <Flex direction="row" mb="2.5" mt="1.5">
+        <Box
+          w="90"
+          h="160"
+          rounded="lg"
+          overflow="hidden"
+          borderColor="coolGray.200"
+          bg={{
+            linearGradient: {
+              colors: ["lightBlue.300", "violet.800"],
+              start: [0, 0],
+              end: [1, 1],
+            },
+          }}
+          _text={{
+            fontSize: "md",
+            color: "warmGray.50",
+          }}
+        >
+          Recent Highlights
+        </Box>
+      </Flex>
     </>
   );
 }
@@ -61,7 +87,9 @@ export default function PhotosScreen({
   };
 
   React.useEffect(() => {
-    getMedia();
+    if (Platform.OS !== "web") {
+      getMedia();
+    }
   }, []);
 
   return (
