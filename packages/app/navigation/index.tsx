@@ -6,6 +6,7 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
   BottomTabBarProps,
+  BottomTabHeaderProps,
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
@@ -18,7 +19,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 
-import { Box, Pressable, Center, HStack, Text } from "native-base";
+import {
+  Box,
+  Heading,
+  Pressable,
+  Center,
+  HStack,
+  Text,
+  useColorModeValue,
+} from "native-base";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import PhotosScreen from "../screens/PhotosScreen";
@@ -88,6 +97,7 @@ function BottomTabNavigator() {
         component={PhotosScreen}
         options={({ navigation }: RootTabScreenProps<"Photos">) => ({
           title: "Photos",
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialIcons name="photo-library" size={size} color={color} />
           ),
@@ -98,6 +108,7 @@ function BottomTabNavigator() {
         component={TabTwoScreen}
         options={{
           title: "Albums",
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <MaterialIcons name="photo-album" size={size} color={color} />
           ),
@@ -111,15 +122,16 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <Box flex={1} bg="black" safeAreaTop>
       <Center flex={1}></Center>
-      <HStack bg="blue.600" alignItems="center" safeAreaBottom shadow={6}>
+      <HStack
+        borderTopWidth={1}
+        borderTopColor={useColorModeValue("gray.100", "gray.800")}
+        alignItems="center"
+        safeAreaBottom
+        shadow={6}
+      >
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
-          const label =
-            options.tabBarLabel !== undefined
-              ? options.tabBarLabel
-              : options.title !== undefined
-              ? options.title
-              : route.name;
+          const label = options.tabBarLabel || options.title || route.name;
 
           const isFocused = state.index === index;
 
