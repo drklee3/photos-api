@@ -9,11 +9,14 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { config, theme } from "./nativebase.config";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -31,10 +34,12 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <NativeBaseProvider config={config} theme={theme}>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </NativeBaseProvider>
+        <QueryClientProvider client={queryClient}>
+          <NativeBaseProvider config={config} theme={theme}>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </NativeBaseProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>
     );
   }

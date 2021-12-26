@@ -9,6 +9,7 @@ import exif from 'exif-reader'
 import sharp from 'sharp'
 import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from '../../worker/queues'
 import type { Application, Express } from 'express'
+import { ImageResizeJob } from '../../worker/model/imageResizeJob'
 
 export const aggregatedS3 = new S3({
   endpoint: process.env.S3_ENDPOINT,
@@ -48,7 +49,7 @@ export const uploadFile = async (file: FileUpload, app: Application) => {
   // Parse raw exif buffer
   const exifData = exif(metadata.exif)
 
-  // Only upload original, resized ones are generated and uploaded out of band
+  // Only upload original, resized images are generated and uploaded out of band
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
     Key: id + extension,
@@ -64,7 +65,7 @@ export const uploadFile = async (file: FileUpload, app: Application) => {
     throw new Error('file output is invalid')
   }
 
-  const queue: Queue = app.get(NEW_PHOTOS_QUEUE)
+  const queue: Queue<ImageResizeJob> = app.get(NEW_PHOTOS_QUEUE)
   await queue.add('resize images', {
     id,
     filename,

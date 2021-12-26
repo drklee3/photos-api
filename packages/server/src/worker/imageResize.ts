@@ -6,6 +6,7 @@ import { encode } from 'blurhash'
 import { PrismaClient } from '.prisma/client'
 import { generate } from '@kenchi/nexus-plugin-prisma/dist/typegen'
 import path from 'path'
+import { ImageResizeJob } from './model/imageResizeJob'
 
 export const aggregatedS3 = new S3({
   endpoint: process.env.S3_ENDPOINT,
@@ -30,7 +31,7 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
 
 const IMG_SIZES = [1000, 800, 400, 200]
 
-export default async function (job: SandboxedJob) {
+export default async function (job: SandboxedJob<ImageResizeJob>) {
   const { id, filename, mimetype } = job.data
   const extension = path.extname(filename)
 
@@ -71,12 +72,20 @@ export default async function (job: SandboxedJob) {
   }
 
   // Generate and save blurhash to db
-  await generateBlurHash(
-    id,
+  const blurHash = await generateBlurHash(
     outputs[outputs.length - 1].buf,
     metadata.width,
     metadata.height,
   )
+
+  await prisma.photo.update({
+    where: {
+      id,
+    },
+    data: {
+      blurHash,
+    },
+  })
 
   const uploads = []
 
@@ -104,26 +113,18 @@ export default async function (job: SandboxedJob) {
 }
 
 async function generateBlurHash(
-  id: string,
   input: Buffer,
   width: number,
   height: number,
-) {
-  const blurHash = encode(
+): Promise<string> {
+  const data = new Uint8ClampedArray(input)
+
+  return encode(
     // Use the last thumbnail image for smallest encode size
-    new Uint8ClampedArray(input),
+    data,
     width,
     height,
     4,
     4,
   )
-
-  await prisma.photo.update({
-    where: {
-      id,
-    },
-    data: {
-      blurHash,
-    },
-  })
 }

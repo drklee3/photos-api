@@ -1,5 +1,6 @@
 {
   "name": "@picatch/server",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
@@ -7,7 +8,7 @@
     "clean": "rm -rf dist",
     "build": "yarn run clean && yarn run generate && tsc",
     "generate": "yarn run generate:prisma && yarn run generate:nexus",
-    "generate:prisma": "prisma generate",
+    "generate:prisma": "yarn prisma generate",
     "generate:nexus": "ts-node --transpile-only src/schema/schema.ts",
     "test": "yarn build && jest dist/"
   },

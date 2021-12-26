@@ -14,6 +14,7 @@ import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
 import Gallery from "../components/gallery/Gallery";
 import { ImageData } from "../components/gallery/ImageData";
+import useApiPhotos from "../hooks/useApiPhotos";
 
 interface ImageItemProps {
   asset: MediaLibrary.Asset;
@@ -80,6 +81,18 @@ export default function PhotosScreen({
       width: m.width,
       height: m.height,
       created: new Date(m.creationTime),
+    };
+  });
+
+  const { data, error, status } = useApiPhotos();
+
+  const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
+    return {
+      uri: photo.id,
+      alt: photo.fileName || undefined,
+      width: photo.width,
+      height: photo.height,
+      created: new Date(photo.createdAt),
     };
   });
 
