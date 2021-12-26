@@ -7,6 +7,9 @@
     "strict": true,
     // https://github.com/graphql-nexus/nexus-plugin-prisma/issues/1056
     "skipLibCheck": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src/**/*"],
 }

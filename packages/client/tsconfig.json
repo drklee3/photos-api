@@ -1,5 +1,6 @@
 {
   "references": [
+    { "path": "../server" }
   ],
   "compilerOptions": {
     "composite": true,
@@ -8,6 +9,8 @@
     "rootDir": "src",
     "lib": ["esnext"],
     "strict": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src/**/*"]
 }

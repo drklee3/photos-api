@@ -3,5 +3,10 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strict": true
-  }
+  },
+  "references": [
+    {
+      "path": "../client"
+    }
+  ]
 }
