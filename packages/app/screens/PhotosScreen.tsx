@@ -7,11 +7,13 @@ import {
   Platform,
 } from "react-native";
 
-import EditScreenInfo from "../components/EditScreenInfo";
 import { View } from "../components/Themed";
 import { Box, Flex, Text, Heading } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
+import useLocalMedia from "../hooks/useLocalMedia";
+import Gallery from "../components/gallery/Gallery";
+import { ImageData } from "../components/gallery/ImageData";
 
 interface ImageItemProps {
   asset: MediaLibrary.Asset;
@@ -69,38 +71,19 @@ function renderHeader() {
 export default function PhotosScreen({
   navigation,
 }: RootTabScreenProps<"Photos">) {
-  const [media, setMedia] = React.useState<MediaLibrary.Asset[]>([]);
+  const { media, permissionStatus } = useLocalMedia();
 
-  const getMedia = async () => {
-    let { status } = await MediaLibrary.requestPermissionsAsync();
-    let media = await MediaLibrary.getAssetsAsync({
-      mediaType: ["photo", "video"],
-      sortBy: "creationTime",
-    });
+  const images: ImageData[] = media.map((m) => {
+    return {
+      uri: m.uri,
+      alt: m.filename,
+      width: m.width,
+      height: m.height,
+      created: new Date(m.creationTime),
+    };
+  });
 
-    console.log(media);
-    let first = await MediaLibrary.getAssetInfoAsync(media.assets[0]);
-
-    console.log(first);
-
-    setMedia(media.assets);
-  };
-
-  React.useEffect(() => {
-    if (Platform.OS !== "web") {
-      getMedia();
-    }
-  }, []);
-
-  return (
-    <FlatList
-      style={styles.container}
-      ListHeaderComponent={renderHeader}
-      renderItem={({ item }) => <ImageItem asset={item} />}
-      data={media}
-      numColumns={4}
-    />
-  );
+  return <Gallery imageList={images} rowWidth={1000} minRowAspectRatio={3} />;
 }
 
 const styles = StyleSheet.create({
