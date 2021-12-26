@@ -1,6 +1,6 @@
-import { usePhotosQueryQuery } from "@picatch/client/dist/index";
+import { usePhotosQueryQuery } from "../client/reactQuery";
 import { useState } from "react";
-import { client } from "../api/graphqlClient";
+import { client } from "../client/graphqlClient";
 
 export default function useApiPhotos() {
   const [photos, setPhotos] = useState([]);

@@ -2,7 +2,7 @@ overwrite: true
 schema: "packages/server/schema.graphql"
 documents: "packages/client/src/**/*.graphql"
 generates:
-  packages/client/src/reactQuery.ts:
+  packages/app/client/reactQuery.ts:
     plugins:
       - "typescript"
       - "typescript-operations"

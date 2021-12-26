@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { client } from "../api/graphqlClient";
-import { usePhotosQueryQuery } from "@picatch/client";
+import { client } from "../client/graphqlClient";
+import { usePhotosQueryQuery } from "../client/reactQuery";
 import { Box, Flex, Text, Heading, HStack } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";

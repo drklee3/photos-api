@@ -29,18 +29,18 @@ export default function App() {
     Poppins_600SemiBold,
   });
 
-  if (!isLoadingComplete) {
+  if (!isLoadingComplete || !fontsLoaded) {
     return null;
   } else {
     return (
-      <QueryClientProvider client={queryClient} contextSharing={true}>
-        <SafeAreaProvider>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient} contextSharing={true}>
           <NativeBaseProvider config={config} theme={theme}>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
           </NativeBaseProvider>
-        </SafeAreaProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>
     );
   }
 }
