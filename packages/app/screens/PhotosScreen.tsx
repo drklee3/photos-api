@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import { View } from "../components/Themed";
-import { Box, Flex, Text, Heading } from "native-base";
+import { Box, Flex, Text, Heading, HStack } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
@@ -83,7 +83,14 @@ export default function PhotosScreen({
     };
   });
 
-  return <Gallery imageList={images} rowWidth={1000} minRowAspectRatio={3} />;
+  return (
+    <HStack p="4">
+      <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
+        Photos
+      </Heading>
+      <Gallery imageList={images} rowWidth={1000} minRowAspectRatio={3} />
+    </HStack>
+  );
 }
 
 const styles = StyleSheet.create({
