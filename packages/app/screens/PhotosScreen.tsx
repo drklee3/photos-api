@@ -1,42 +1,16 @@
 import * as React from "react";
-import {
-  StyleSheet,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
 
-import { View } from "../components/Themed";
+import { client } from "../api/graphqlClient";
+import { usePhotosQueryQuery } from "@picatch/client";
 import { Box, Flex, Text, Heading, HStack } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
 import Gallery from "../components/gallery/Gallery";
 import { ImageData } from "../components/gallery/ImageData";
-import useApiPhotos from "../hooks/useApiPhotos";
 
 interface ImageItemProps {
   asset: MediaLibrary.Asset;
-}
-
-function ImageItem({ asset }: ImageItemProps) {
-  return (
-    <TouchableOpacity key={asset.uri}>
-      <View style={styles.imageContainer}>
-        <Image
-          width={asset.width}
-          height={asset.height}
-          source={{ uri: asset.uri }}
-          style={[styles.image, {}]}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-function SectionHeader() {
-  return <Text style={styles.h2}>November</Text>;
 }
 
 function renderHeader() {
@@ -84,7 +58,7 @@ export default function PhotosScreen({
     };
   });
 
-  const { data, error, status } = useApiPhotos();
+  const { data, error, status, refetch } = usePhotosQueryQuery(client);
 
   const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
     return {
@@ -105,54 +79,3 @@ export default function PhotosScreen({
     </HStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 20,
-    paddingTop: 40,
-  },
-  h1: {
-    fontSize: 40,
-    fontWeight: "bold",
-  },
-  h2: {
-    fontSize: 30,
-  },
-  h3: {
-    fontSize: 25,
-  },
-  h4: {
-    fontSize: 18,
-  },
-  highlight: {
-    borderRadius: 16,
-    height: 16 * 10,
-    width: 9 * 10,
-    backgroundColor: "#fff",
-  },
-  highlightText: {
-    color: "#000",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  images: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  imageContainer: {
-    width: "50%",
-  },
-  image: {
-    width: 100,
-    flexGrow: 1,
-    height: undefined,
-    aspectRatio: 1,
-    margin: 6,
-    resizeMode: "cover",
-  },
-});

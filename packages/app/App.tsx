@@ -33,14 +33,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient} contextSharing={true}>
+        <SafeAreaProvider>
           <NativeBaseProvider config={config} theme={theme}>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
           </NativeBaseProvider>
-        </QueryClientProvider>
-      </SafeAreaProvider>
+        </SafeAreaProvider>
+      </QueryClientProvider>
     );
   }
 }

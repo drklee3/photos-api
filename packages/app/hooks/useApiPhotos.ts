@@ -1,4 +1,4 @@
-import { usePhotosQueryQuery } from "@picatch/client/src/";
+import { usePhotosQueryQuery } from "@picatch/client/dist/index";
 import { useState } from "react";
 import { client } from "../api/graphqlClient";
 

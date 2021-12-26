@@ -2,11 +2,11 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
   },
   "references": [
     {
       "path": "../client"
     }
-  ]
+  ],
 }
