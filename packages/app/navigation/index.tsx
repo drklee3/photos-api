@@ -40,6 +40,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import LoginScreen from "../screens/LoginScreen";
 import { useAuthContext } from "../hooks/useAuth";
+import RegisterScreen from "../screens/RegisterScreen";
 
 export default function Navigation({
   colorScheme,
@@ -81,11 +82,18 @@ function RootNavigator() {
 
 function AuthScreens() {
   return (
-    <Stack.Screen
-      name="Login"
-      component={LoginScreen}
-      options={{ headerShown: false }}
-    />
+    <>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
+    </>
   );
 }
 

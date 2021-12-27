@@ -338,6 +338,12 @@ export type AlbumWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
 };
 
+export type AuthUser = {
+  __typename?: 'AuthUser';
+  token?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+};
+
 export type Comment = {
   __typename?: 'Comment';
   author: User;
@@ -844,7 +850,7 @@ export type Mutation = {
   login?: Maybe<User>;
   logout?: Maybe<Scalars['Boolean']>;
   shareAlbum?: Maybe<Album>;
-  signup?: Maybe<User>;
+  signup?: Maybe<AuthUser>;
   updateOneAlbum?: Maybe<Album>;
   updateOneComment?: Maybe<Comment>;
   updateOnePhoto?: Maybe<Photo>;
@@ -2264,7 +2270,7 @@ export type SignupMutationMutationVariables = Exact<{
 }>;
 
 
-export type SignupMutationMutation = { __typename?: 'Mutation', signup?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type SignupMutationMutation = { __typename?: 'Mutation', signup?: { __typename?: 'AuthUser', token?: string | null | undefined, user?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined } | null | undefined };
 
 export type UploadPhotosMutationMutationVariables = Exact<{
   files: Array<Scalars['Upload']> | Scalars['Upload'];
@@ -2405,9 +2411,12 @@ export const useLogoutMutationMutation = <
 export const SignupMutationDocument = `
     mutation SignupMutation($username: String!, $password: String!, $email: String!) {
   signup(username: $username, password: $password, email: $email) {
-    id
-    username
-    email
+    user {
+      id
+      username
+      email
+    }
+    token
   }
 }
     `;

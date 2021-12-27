@@ -28,6 +28,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       Login: "login",
+      Register: "register",
       Modal: "modal",
       NotFound: "*",
     },

@@ -18,7 +18,7 @@ import { client } from "../../client/graphqlClient";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Login() {
+export default function Register() {
   const navigation = useNavigation();
 
   const authCtx = useAuthContext();
@@ -62,7 +62,7 @@ export default function Login() {
             color: "warmGray.50",
           }}
         >
-          Hi there!
+          Welcome!
         </Heading>
         <Heading
           mt="1"
@@ -73,21 +73,37 @@ export default function Login() {
           fontWeight="medium"
           size="xs"
         >
-          Please sign in to continue
+          Make a new account
         </Heading>
 
         <VStack space={3} mt="5">
           <FormControl isRequired>
-            <FormControl.Label>Username or email</FormControl.Label>
+            <FormControl.Label>Username</FormControl.Label>
             <Controller
               control={control}
-              name="emailOrUsername"
+              name="username"
+              render={({ field: { onChange, value, onBlur } }) => (
+                <Input
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  placeholder="bun"
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormControl.Label>Email</FormControl.Label>
+            <Controller
+              control={control}
+              name="email"
               render={({ field: { onChange, value, onBlur } }) => (
                 <Input
                   value={value}
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
                   placeholder="bun@example.com"
+                  type="email"
                 />
               )}
             />
@@ -106,17 +122,6 @@ export default function Login() {
                 />
               )}
             />
-            <Link
-              _text={{
-                fontSize: "xs",
-                fontWeight: "500",
-                color: "blue.400",
-              }}
-              alignSelf="flex-end"
-              mt="1"
-            >
-              Forgot Password?
-            </Link>
           </FormControl>
           <Button
             mt="2"
@@ -124,7 +129,7 @@ export default function Login() {
             isLoading={isLoading}
             onPress={handleSubmit(onSubmit)}
           >
-            Sign in
+            Register
           </Button>
           <Center mt="6">
             <Text
@@ -134,7 +139,7 @@ export default function Login() {
                 color: "warmGray.200",
               }}
             >
-              Don't have an account?
+              Already have an account?
             </Text>
             <Link
               _text={{
@@ -143,9 +148,9 @@ export default function Login() {
                 fontSize: "sm",
                 textDecoration: "none",
               }}
-              onPress={() => navigation.navigate("Register")}
+              onPress={() => navigation.navigate("Login")}
             >
-              Sign up
+              Log in
             </Link>
           </Center>
         </VStack>
