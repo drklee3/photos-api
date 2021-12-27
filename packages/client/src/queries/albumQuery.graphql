@@ -1,4 +1,4 @@
-query AlbumQuery($where: AlbumWhereUniqueInput!) {
+query Album($where: AlbumWhereUniqueInput!) {
   album(where: $where) {
     ...AlbumData
   }

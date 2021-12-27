@@ -1,4 +1,4 @@
-mutation UploadPhotosMutation($files: [Upload!]!) {
+mutation UploadPhotos($files: [Upload!]!) {
   uploadPhotos(files: $files) {
     id
     title

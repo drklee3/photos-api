@@ -1,4 +1,4 @@
-query PhotoQuery($where: PhotoWhereUniqueInput!) {
+query Photo($where: PhotoWhereUniqueInput!) {
   photo(where: $where) {
     ...PhotoData
     author {

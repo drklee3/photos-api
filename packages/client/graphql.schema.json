@@ -8496,7 +8496,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "User",
+              "name": "AuthUser",
               "ofType": null
             },
             "isDeprecated": false,

@@ -1,13 +1,15 @@
 import * as React from "react";
 
 import { client } from "../client/graphqlClient";
-import { usePhotosQueryQuery } from "../client/reactQuery";
+import { usePhotosQuery } from "../client/reactQuery";
 import { Box, Flex, Text, Heading, HStack } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
 import Gallery from "../components/gallery/Gallery";
 import { ImageData } from "../components/gallery/ImageData";
+import Button, { ButtonType } from "../components/Button";
+import Upload from "../components/Upload";
 
 interface ImageItemProps {
   asset: MediaLibrary.Asset;
@@ -58,7 +60,7 @@ export default function PhotosScreen({
     };
   });
 
-  const { data, error, status, refetch } = usePhotosQueryQuery(client);
+  const { data, error, status, refetch } = usePhotosQuery(client);
 
   const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
     return {
@@ -75,6 +77,7 @@ export default function PhotosScreen({
       <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
         Photos
       </Heading>
+      <Upload />
       <Gallery imageList={images} rowWidth={1000} minRowAspectRatio={3} />
     </HStack>
   );

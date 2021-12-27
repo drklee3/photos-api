@@ -1,4 +1,4 @@
-query PhotosQuery(
+query Photos(
   $first: Int
   $last: Int
   $before: PhotoWhereUniqueInput
