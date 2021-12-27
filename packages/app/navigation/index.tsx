@@ -38,6 +38,8 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import LoginScreen from "../screens/LoginScreen";
+import { useAuthContext } from "../hooks/useAuth";
 
 export default function Navigation({
   colorScheme,
@@ -61,8 +63,35 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const authCtx = useAuthContext();
+
+  console.log(authCtx);
+
+  if (!authCtx || authCtx.state.isLoading) {
+    // Trying to restore token, shouldn't be null
+    return <Box>Loading...</Box>;
+  }
+
   return (
     <Stack.Navigator>
+      {authCtx.state.token !== null ? MainScreens() : AuthScreens()}
+    </Stack.Navigator>
+  );
+}
+
+function AuthScreens() {
+  return (
+    <Stack.Screen
+      name="Login"
+      component={LoginScreen}
+      options={{ headerShown: false }}
+    />
+  );
+}
+
+function MainScreens() {
+  return (
+    <>
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
@@ -76,7 +105,7 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
-    </Stack.Navigator>
+    </>
   );
 }
 

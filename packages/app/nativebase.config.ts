@@ -37,18 +37,6 @@ export const theme = extendTheme({
         normal: "Poppins_600SemiBold",
         italic: "Poppins_600SemiBold_Italic",
       },
-      // Add more variants
-      //   700: {
-      //     normal: 'Poppins-Bold',
-      //   },
-      //   800: {
-      //     normal: 'Poppins-Bold',
-      //     italic: 'Poppins-BoldItalic',
-      //   },
-      //   900: {
-      //     normal: 'Poppins-Bold',
-      //     italic: 'Poppins-BoldItalic',
-      //   },
     },
   },
 
