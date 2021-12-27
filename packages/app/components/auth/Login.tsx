@@ -36,8 +36,6 @@ export default function Login() {
       email: data.emailOrUsername,
       password: data.password,
     });
-
-    console.log(data);
   };
 
   return (
@@ -70,7 +68,6 @@ export default function Login() {
             color: "warmGray.200",
           }}
           color="coolGray.600"
-          fontWeight="medium"
           size="xs"
         >
           Please sign in to continue

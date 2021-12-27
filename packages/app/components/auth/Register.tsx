@@ -13,7 +13,10 @@ import {
   Spacer,
 } from "native-base";
 import { useAuthContext } from "../../hooks/useAuth";
-import { useSignupMutationMutation } from "../../client/reactQuery";
+import {
+  SignupMutationMutationVariables,
+  useSignupMutationMutation,
+} from "../../client/reactQuery";
 import { client } from "../../client/graphqlClient";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -28,14 +31,26 @@ export default function Register() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignupMutationMutationVariables>({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: SignupMutationMutationVariables) => {
     const res = await mutateAsync({
       username: data.username,
-      email: data.emailOrUsername,
+      email: data.email,
       password: data.password,
     });
+
+    if (!res.signup?.token) {
+      throw new Error("failed to login, missing token");
+    }
+
+    authCtx?.signIn(res.signup.token);
 
     console.log(data);
   };
@@ -70,7 +85,6 @@ export default function Register() {
             color: "warmGray.200",
           }}
           color="coolGray.600"
-          fontWeight="medium"
           size="xs"
         >
           Make a new account
@@ -82,11 +96,12 @@ export default function Register() {
             <Controller
               control={control}
               name="username"
-              render={({ field: { onChange, value, onBlur } }) => (
+              render={({ field: { onChange, value, onBlur, ref } }) => (
                 <Input
                   value={value}
                   onBlur={onBlur}
-                  onChangeText={(value) => onChange(value)}
+                  onChangeText={onChange}
+                  ref={ref}
                   placeholder="bun"
                 />
               )}
@@ -97,11 +112,12 @@ export default function Register() {
             <Controller
               control={control}
               name="email"
-              render={({ field: { onChange, value, onBlur } }) => (
+              render={({ field: { onChange, value, onBlur, ref } }) => (
                 <Input
                   value={value}
                   onBlur={onBlur}
-                  onChangeText={(value) => onChange(value)}
+                  onChangeText={onChange}
+                  ref={ref}
                   placeholder="bun@example.com"
                   type="email"
                 />
@@ -113,11 +129,12 @@ export default function Register() {
             <Controller
               control={control}
               name="password"
-              render={({ field: { onChange, value, onBlur } }) => (
+              render={({ field: { onChange, value, onBlur, ref } }) => (
                 <Input
                   value={value}
                   onBlur={onBlur}
-                  onChangeText={(value) => onChange(value)}
+                  onChangeText={onChange}
+                  ref={ref}
                   type="password"
                 />
               )}
