@@ -4,8 +4,11 @@ mutation SignupMutation(
   $email: String!
 ) {
   signup(username: $username, password: $password, email: $email) {
-    id
-    username
-    email
+    user {
+      id
+      username
+      email
+    }
+    token
   }
 }

@@ -14,5 +14,17 @@ export default function registerSessionMiddleware(app: Express) {
     config.cookie!.secure = true
   }
 
+  // Use authorization header as session id if cookie not set
+  app.use((req, res, next) => {
+    if (!req.cookies?.['_sid']) {
+      const authHeader = req.header('Authorization')
+      if (authHeader) {
+        req.cookies['_sid'] = authHeader.replace('Bearer', '').trim()
+      }
+    }
+
+    next()
+  })
+
   app.use(session(config))
 }

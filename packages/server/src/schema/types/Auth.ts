@@ -6,11 +6,21 @@ import { Context } from '../../context'
 import { NexusNullDef } from 'nexus/dist/core'
 import { Prisma } from '.prisma/client'
 
+export const AuthUser = objectType({
+  name: 'AuthUser',
+  definition(t) {
+    t.field('user', {
+      type: 'User',
+    })
+    t.string('token')
+  },
+})
+
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('signup', {
-      type: 'User',
+      type: 'AuthUser',
       args: {
         username: nonNull(stringArg()),
         email: nonNull(stringArg()),
@@ -44,7 +54,11 @@ export const Mutation = extendType({
         // Save to session
         context.req.session.userId = user.id
         context.req.session.save()
-        return user
+
+        return {
+          user,
+          token: context.req.session.id,
+        }
       },
     })
 

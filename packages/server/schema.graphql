@@ -300,6 +300,11 @@ input AlbumWhereUniqueInput {
   id: String
 }
 
+type AuthUser {
+  token: String
+  user: User
+}
+
 type Comment {
   author: User!
   content: String!
@@ -807,7 +812,7 @@ type Mutation {
   login(emailOrUsername: String!, password: String!): User
   logout: Boolean
   shareAlbum(albumId: String!, role: AlbumRole!, targetUserId: String!): Album
-  signup(email: String!, password: String!, username: String!): User
+  signup(email: String!, password: String!, username: String!): AuthUser
   updateOneAlbum(data: AlbumUpdateInput!, where: AlbumWhereUniqueInput!): Album
   updateOneComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updateOnePhoto(data: PhotoUpdateInput!, where: PhotoWhereUniqueInput!): Photo
