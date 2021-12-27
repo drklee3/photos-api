@@ -1,10 +1,10 @@
 import * as React from "react";
-import Register from "../components/auth/Register";
+import SignUp from "../components/auth/SignUp";
 
 import { RootStackScreenProps } from "../types";
 
 export default function RegisterScreen({
   navigation,
-}: RootStackScreenProps<"Register">) {
-  return <Register />;
+}: RootStackScreenProps<"SignUp">) {
+  return <SignUp />;
 }

@@ -63,7 +63,7 @@ export const Mutation = extendType({
     })
 
     t.field('login', {
-      type: 'User',
+      type: 'AuthUser',
       args: {
         emailOrUsername: nonNull(stringArg()),
         password: nonNull(stringArg()),
@@ -103,7 +103,10 @@ export const Mutation = extendType({
         context.req.session.userId = user.id
         context.req.session.save()
 
-        return user
+        return {
+          user,
+          token: context.req.session.id,
+        }
       },
     })
 

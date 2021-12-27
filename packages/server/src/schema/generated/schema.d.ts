@@ -1721,7 +1721,7 @@ export interface NexusGenFieldTypes {
     deleteOnePhotoOnAlbum: NexusGenRootTypes['PhotoOnAlbum'] | null; // PhotoOnAlbum
     deleteOneUser: NexusGenRootTypes['User'] | null; // User
     incrementAlbumViewCount: NexusGenRootTypes['Album'] | null; // Album
-    login: NexusGenRootTypes['User'] | null; // User
+    login: NexusGenRootTypes['AuthUser'] | null; // AuthUser
     logout: boolean | null; // Boolean
     shareAlbum: NexusGenRootTypes['Album'] | null; // Album
     signup: NexusGenRootTypes['AuthUser'] | null; // AuthUser
@@ -1827,7 +1827,7 @@ export interface NexusGenFieldTypeNames {
     deleteOnePhotoOnAlbum: 'PhotoOnAlbum'
     deleteOneUser: 'User'
     incrementAlbumViewCount: 'Album'
-    login: 'User'
+    login: 'AuthUser'
     logout: 'Boolean'
     shareAlbum: 'Album'
     signup: 'AuthUser'

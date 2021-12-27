@@ -40,7 +40,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import LoginScreen from "../screens/LoginScreen";
 import { useAuthContext } from "../hooks/useAuth";
-import RegisterScreen from "../screens/RegisterScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 
 export default function Navigation({
   colorScheme,
@@ -89,8 +89,8 @@ function AuthScreens() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
+        name="SignUp"
+        component={SignUpScreen}
         options={{ headerShown: false }}
       />
     </>

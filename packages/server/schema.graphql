@@ -809,7 +809,7 @@ type Mutation {
   deleteOnePhotoOnAlbum(where: PhotoOnAlbumWhereUniqueInput!): PhotoOnAlbum
   deleteOneUser(where: UserWhereUniqueInput!): User
   incrementAlbumViewCount(id: String!): Album
-  login(emailOrUsername: String!, password: String!): User
+  login(emailOrUsername: String!, password: String!): AuthUser
   logout: Boolean
   shareAlbum(albumId: String!, role: AlbumRole!, targetUserId: String!): Album
   signup(email: String!, password: String!, username: String!): AuthUser

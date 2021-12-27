@@ -7,6 +7,7 @@ import {
 } from "react";
 import * as React from "react";
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 
 export const AuthContext = createContext<AuthContextData | null>(null);
 
@@ -16,13 +17,13 @@ export function useAuthContext() {
 
 export enum AuthActionType {
   RestoreToken,
-  SignIn,
+  LogIn,
   SignOut,
 }
 
 type AuthAction =
   | { type: AuthActionType.RestoreToken; token: string | null }
-  | { type: AuthActionType.SignIn; token: string }
+  | { type: AuthActionType.LogIn; token: string }
   | { type: AuthActionType.SignOut };
 
 export interface AuthActionState {
@@ -32,7 +33,7 @@ export interface AuthActionState {
 }
 
 export interface AuthContextData {
-  signIn: (token: string) => void;
+  logIn: (token: string) => void;
   signOut: () => void;
   state: AuthActionState;
 }
@@ -48,7 +49,7 @@ function authReducer(
         token: action.token,
         isLoading: false,
       };
-    case AuthActionType.SignIn:
+    case AuthActionType.LogIn:
       return {
         ...prevState,
         isSignedIn: false,
@@ -91,10 +92,12 @@ export default function useAuth(): AuthContextData {
 
   const authContext = useMemo(
     () => ({
-      signIn: async (token: string) => {
-        await SecureStore.setItemAsync("userToken", token);
+      logIn: async (token: string) => {
+        if (Platform.OS !== "web") {
+          await SecureStore.setItemAsync("userToken", token);
+        }
 
-        dispatch({ type: AuthActionType.SignIn, token });
+        dispatch({ type: AuthActionType.LogIn, token });
       },
       signOut: () => dispatch({ type: AuthActionType.SignOut }),
     }),

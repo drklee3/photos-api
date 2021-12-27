@@ -13,7 +13,10 @@ import {
   Spacer,
 } from "native-base";
 import { useAuthContext } from "../../hooks/useAuth";
-import { useSignupMutationMutation } from "../../client/reactQuery";
+import {
+  useLogInMutation,
+  LogInMutationVariables,
+} from "../../client/reactQuery";
 import { client } from "../../client/graphqlClient";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -22,20 +25,32 @@ export default function Login() {
   const navigation = useNavigation();
 
   const authCtx = useAuthContext();
-  const { mutateAsync, status, isLoading } = useSignupMutationMutation(client);
+  const { mutateAsync, status, isLoading } = useLogInMutation(client);
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<LogInMutationVariables>({
+    defaultValues: {
+      emailOrUsername: "",
+      password: "",
+    },
+  });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LogInMutationVariables) => {
     const res = await mutateAsync({
-      username: data.username,
-      email: data.emailOrUsername,
+      emailOrUsername: data.emailOrUsername,
       password: data.password,
     });
+
+    if (!res.login?.token) {
+      throw new Error("failed to login, missing token");
+    }
+
+    authCtx?.logIn(res.login.token);
+
+    console.log(data);
   };
 
   return (
@@ -85,6 +100,7 @@ export default function Login() {
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
                   placeholder="bun@example.com"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               )}
             />
@@ -100,6 +116,7 @@ export default function Login() {
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
                   type="password"
+                  onSubmitEditing={handleSubmit(onSubmit)}
                 />
               )}
             />
@@ -140,7 +157,7 @@ export default function Login() {
                 fontSize: "sm",
                 textDecoration: "none",
               }}
-              onPress={() => navigation.navigate("Register")}
+              onPress={() => navigation.navigate("SignUp")}
             >
               Sign up
             </Link>
