@@ -3,3 +3,5 @@ declare module 'express-session' {
     userId?: string
   }
 }
+
+export {}
