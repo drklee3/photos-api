@@ -4119,7 +4119,6 @@ __metadata:
     "@expo-google-fonts/poppins": ^0.2.0
     "@expo/ngrok": ^4.1.0
     "@expo/vector-icons": ^12.0.0
-    "@picatch/client": "workspace:^"
     "@react-native-async-storage/async-storage": ~1.15.0
     "@react-navigation/bottom-tabs": ^6.0.5
     "@react-navigation/native": ^6.0.2
@@ -4133,6 +4132,7 @@ __metadata:
     expo-linear-gradient: ~10.0.3
     expo-linking: ~2.4.2
     expo-media-library: ~13.0.3
+    expo-secure-store: ~11.0.3
     expo-splash-screen: ~0.13.5
     expo-status-bar: ~1.1.0
     expo-web-browser: ~10.0.3
@@ -4150,7 +4150,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@picatch/client@workspace:^, @picatch/client@workspace:packages/client":
+"@picatch/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@picatch/client@workspace:packages/client"
   dependencies:
@@ -8237,6 +8237,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"concurrently@npm:^6.5.1":
+  version: 6.5.1
+  resolution: "concurrently@npm:6.5.1"
+  dependencies:
+    chalk: ^4.1.0
+    date-fns: ^2.16.1
+    lodash: ^4.17.21
+    rxjs: ^6.6.3
+    spawn-command: ^0.0.2-1
+    supports-color: ^8.1.0
+    tree-kill: ^1.2.2
+    yargs: ^16.2.0
+  bin:
+    concurrently: bin/concurrently.js
+  checksum: 3f4d89b464fa5c9fb6f9489b46594c30ba54eff6ff10ab3cb5f30f64b74c83be664623a0f0cc731a3cb3f057a1f4a3292f7d3470c012a292c44aca31f214a3fa
+  languageName: node
+  linkType: hard
+
 "connect@npm:^3.6.5":
   version: 3.7.0
   resolution: "connect@npm:3.7.0"
@@ -8592,6 +8610,13 @@ __metadata:
   version: 1.30.1
   resolution: "date-fns@npm:1.30.1"
   checksum: 86b1f3269cbb1f3ee5ac9959775ea6600436f4ee2b78430cd427b41a0c9fabf740b1a5d401c085f3003539a6f4755c7c56c19fbd70ce11f6f673f6bc8075b710
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.16.1":
+  version: 2.27.0
+  resolution: "date-fns@npm:2.27.0"
+  checksum: db62036b3816eb0322c9532b353beac7f660a91e1a55dbd21c14893c621ebb8509f21c66ba287844dabd34dee0207edd54a9537bce6bb7cab9383dedc6b8bc90
   languageName: node
   linkType: hard
 
@@ -9503,6 +9528,15 @@ __metadata:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
   checksum: 8497d3062609d8a2924e2c78f0becae9978eb2191ceb042d4f89d49ec38f05b521cb4cf792245be8088031042d0155f71bcce961669fec2599e3e3a61eba6fed
+  languageName: node
+  linkType: hard
+
+"expo-secure-store@npm:~11.0.3":
+  version: 11.0.3
+  resolution: "expo-secure-store@npm:11.0.3"
+  dependencies:
+    expo-modules-core: ~0.4.4
+  checksum: ebc273111886b50858775ba118f859ef321c9b7cdda1025c59b7553829d39b94e187aeb2685d131ff8561f58b247d45658124485e648b43e342c6a8c493dee69
   languageName: node
   linkType: hard
 
@@ -15228,6 +15262,7 @@ __metadata:
     "@graphql-codegen/typescript-graphql-request": ^4.3.1
     "@graphql-codegen/typescript-operations": ^2.2.1
     "@graphql-codegen/typescript-react-query": ^3.2.1
+    concurrently: ^6.5.1
     graphql: ^16.0.1
     typescript: ^4.5.2
   languageName: unknown
@@ -16360,7 +16395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^6.3.3, rxjs@npm:^6.6.0":
+"rxjs@npm:^6.3.3, rxjs@npm:^6.6.0, rxjs@npm:^6.6.3":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:
@@ -16927,6 +16962,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"spawn-command@npm:^0.0.2-1":
+  version: 0.0.2
+  resolution: "spawn-command@npm:0.0.2"
+  checksum: e35c5d28177b4d461d33c88cc11f6f3a5079e2b132c11e1746453bbb7a0c0b8a634f07541a2a234fa4758239d88203b758def509161b651e81958894c0b4b64b
+  languageName: node
+  linkType: hard
+
 "spdx-correct@npm:^3.0.0":
   version: 3.1.1
   resolution: "spdx-correct@npm:3.1.1"
@@ -17335,7 +17377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^8.0.0":
+"supports-color@npm:^8.0.0, supports-color@npm:^8.1.0":
   version: 8.1.1
   resolution: "supports-color@npm:8.1.1"
   dependencies:
