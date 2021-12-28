@@ -1,37 +1,19 @@
-import { useUploadPhotosMutationMutation } from "../client/reactQuery";
+import { useUploadPhotosMutation } from "../client/reactQuery";
 import Button, { ButtonType } from "./Button";
 import { client } from "../client/graphqlClient";
 import * as ImagePicker from "expo-image-picker";
-import { Text, useToast } from "native-base";
-
-const TOAST_ID_MEDIA_LIBRARY = "toast_media_library";
-const TOAST_ID_UPLOAD_FAILED = "toast_upload_failed";
+import * as React from "react";
+import useToastAlert from "../hooks/useToastAlert";
 
 export default function Upload() {
   const { mutateAsync, status, isLoading, isError, error, reset } =
-    useUploadPhotosMutationMutation(client);
+    useUploadPhotosMutation(client);
 
-  const toast = useToast();
+  const toast = useToastAlert();
 
   const onPress = async () => {
-    const cameraRollStatus =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (cameraRollStatus.status !== "granted") {
-      if (!toast.isActive(TOAST_ID_MEDIA_LIBRARY)) {
-        toast.show({
-          id: TOAST_ID_MEDIA_LIBRARY,
-          title: "Media library permissions denied",
-          status: "warning",
-        });
-      }
-
-      return;
-    }
-
     const pickerRes = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
-      base64: true,
       exif: true,
     });
 
@@ -39,20 +21,39 @@ export default function Upload() {
       return;
     }
 
-    const res = await mutateAsync({
-      files: pickerRes.selected.map((img) => fetchImageFromUri(img.uri)),
+    const imgBlobPromises = pickerRes.selected.map(async (img) => {
+      const res = await fetch(img.uri);
+      return await res.blob();
+    });
+
+    const imgBlobs = await Promise.all(imgBlobPromises);
+
+    let res;
+    try {
+      res = await mutateAsync({
+        files: imgBlobs,
+      });
+
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+
+    toast.show({
+      id: "upload:success",
+      title: `Uploaded ${res.uploadPhotos.length} photos`,
+      status: "success",
     });
   };
 
   if (isError) {
-    if (!toast.isActive(TOAST_ID_MEDIA_LIBRARY)) {
-      toast.show({
-        id: TOAST_ID_MEDIA_LIBRARY,
-        title: "Upload failed",
-        description: `${error}`,
-        status: "error",
-      });
-    }
+    toast.show({
+      id: "upload:failed",
+      title: "Upload failed",
+      description: `${error}`,
+      status: "error",
+    });
 
     reset();
   }
@@ -62,10 +63,4 @@ export default function Upload() {
       Upload photos
     </Button>
   );
-}
-
-async function fetchImageFromUri(uri: string): Promise<Blob> {
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  return blob;
 }

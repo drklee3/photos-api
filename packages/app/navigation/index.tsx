@@ -198,6 +198,7 @@ function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
           return (
             <Pressable
+              key={route.key}
               cursor="pointer"
               opacity={isFocused ? 1 : 0.5}
               py="3"

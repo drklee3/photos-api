@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button as NButton, IButtonProps } from "native-base";
 
 export enum ButtonType {

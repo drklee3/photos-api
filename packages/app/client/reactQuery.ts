@@ -602,17 +602,6 @@ export type EnumAlbumRoleFilter = {
   notIn?: InputMaybe<Array<AlbumRole>>;
 };
 
-export type EnumMimeTypeFieldUpdateOperationsInput = {
-  set?: InputMaybe<MimeType>;
-};
-
-export type EnumMimeTypeFilter = {
-  equals?: InputMaybe<MimeType>;
-  in?: InputMaybe<Array<MimeType>>;
-  not?: InputMaybe<NestedEnumMimeTypeFilter>;
-  notIn?: InputMaybe<Array<MimeType>>;
-};
-
 export type EnumVisibilityFieldUpdateOperationsInput = {
   set?: InputMaybe<Visibility>;
 };
@@ -825,17 +814,6 @@ export type LikeWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
 };
 
-export enum MimeType {
-  Avif = 'AVIF',
-  Gif = 'GIF',
-  Jpg = 'JPG',
-  Mp4 = 'MP4',
-  Png = 'PNG',
-  Svg = 'SVG',
-  Webm = 'WEBM',
-  Webp = 'WEBP'
-}
-
 export type Mutation = {
   __typename?: 'Mutation';
   createOneAlbum: Album;
@@ -977,13 +955,6 @@ export type NestedEnumAlbumRoleFilter = {
   notIn?: InputMaybe<Array<AlbumRole>>;
 };
 
-export type NestedEnumMimeTypeFilter = {
-  equals?: InputMaybe<MimeType>;
-  in?: InputMaybe<Array<MimeType>>;
-  not?: InputMaybe<NestedEnumMimeTypeFilter>;
-  notIn?: InputMaybe<Array<MimeType>>;
-};
-
 export type NestedEnumVisibilityFilter = {
   equals?: InputMaybe<Visibility>;
   in?: InputMaybe<Array<Visibility>>;
@@ -1044,10 +1015,12 @@ export type Photo = {
   fileName?: Maybe<Scalars['String']>;
   height: Scalars['Int'];
   id: Scalars['String'];
-  mimetype: MimeType;
+  mimetype: Scalars['String'];
   size: Scalars['Int'];
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
+  /** The public s3 url to GET this image. The size default it is LARGE. */
+  url?: Maybe<Scalars['String']>;
   width: Scalars['Int'];
 };
 
@@ -1059,6 +1032,11 @@ export type PhotoAlbumsArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
+
+export type PhotoUrlArgs = {
+  size?: InputMaybe<PhotoSize>;
+};
+
 export type PhotoCreateManyAuthorInput = {
   blurHash?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1067,9 +1045,9 @@ export type PhotoCreateManyAuthorInput = {
   fileName?: InputMaybe<Scalars['String']>;
   height: Scalars['Int'];
   id?: InputMaybe<Scalars['String']>;
-  mimetype: MimeType;
+  mimetype: Scalars['String'];
   size: Scalars['Int'];
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   width: Scalars['Int'];
 };
@@ -1111,9 +1089,9 @@ export type PhotoCreateWithoutAlbumsInput = {
   fileName?: InputMaybe<Scalars['String']>;
   height: Scalars['Int'];
   id?: InputMaybe<Scalars['String']>;
-  mimetype: MimeType;
+  mimetype: Scalars['String'];
   size: Scalars['Int'];
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   width: Scalars['Int'];
 };
@@ -1127,9 +1105,9 @@ export type PhotoCreateWithoutAuthorInput = {
   fileName?: InputMaybe<Scalars['String']>;
   height: Scalars['Int'];
   id?: InputMaybe<Scalars['String']>;
-  mimetype: MimeType;
+  mimetype: Scalars['String'];
   size: Scalars['Int'];
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   width: Scalars['Int'];
 };
@@ -1477,12 +1455,22 @@ export type PhotoScalarWhereInput = {
   fileName?: InputMaybe<StringNullableFilter>;
   height?: InputMaybe<IntFilter>;
   id?: InputMaybe<StringFilter>;
-  mimetype?: InputMaybe<EnumMimeTypeFilter>;
+  mimetype?: InputMaybe<StringFilter>;
   size?: InputMaybe<IntFilter>;
-  title?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   width?: InputMaybe<IntFilter>;
 };
+
+/** The size of a photo */
+export enum PhotoSize {
+  Full = 'FULL',
+  Large = 'LARGE',
+  Medium = 'MEDIUM',
+  Original = 'ORIGINAL',
+  Small = 'SMALL',
+  Thumbnail = 'THUMBNAIL'
+}
 
 export type PhotoUpdateInput = {
   albums?: InputMaybe<PhotoOnAlbumUpdateManyWithoutPhotoInput>;
@@ -1494,9 +1482,9 @@ export type PhotoUpdateInput = {
   fileName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   height?: InputMaybe<IntFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  mimetype?: InputMaybe<EnumMimeTypeFieldUpdateOperationsInput>;
+  mimetype?: InputMaybe<StringFieldUpdateOperationsInput>;
   size?: InputMaybe<IntFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   width?: InputMaybe<IntFieldUpdateOperationsInput>;
 };
@@ -1509,9 +1497,9 @@ export type PhotoUpdateManyMutationInput = {
   fileName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   height?: InputMaybe<IntFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  mimetype?: InputMaybe<EnumMimeTypeFieldUpdateOperationsInput>;
+  mimetype?: InputMaybe<StringFieldUpdateOperationsInput>;
   size?: InputMaybe<IntFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   width?: InputMaybe<IntFieldUpdateOperationsInput>;
 };
@@ -1557,9 +1545,9 @@ export type PhotoUpdateWithoutAlbumsInput = {
   fileName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   height?: InputMaybe<IntFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  mimetype?: InputMaybe<EnumMimeTypeFieldUpdateOperationsInput>;
+  mimetype?: InputMaybe<StringFieldUpdateOperationsInput>;
   size?: InputMaybe<IntFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   width?: InputMaybe<IntFieldUpdateOperationsInput>;
 };
@@ -1573,9 +1561,9 @@ export type PhotoUpdateWithoutAuthorInput = {
   fileName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   height?: InputMaybe<IntFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  mimetype?: InputMaybe<EnumMimeTypeFieldUpdateOperationsInput>;
+  mimetype?: InputMaybe<StringFieldUpdateOperationsInput>;
   size?: InputMaybe<IntFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   width?: InputMaybe<IntFieldUpdateOperationsInput>;
 };
@@ -1604,9 +1592,9 @@ export type PhotoWhereInput = {
   fileName?: InputMaybe<StringNullableFilter>;
   height?: InputMaybe<IntFilter>;
   id?: InputMaybe<StringFilter>;
-  mimetype?: InputMaybe<EnumMimeTypeFilter>;
+  mimetype?: InputMaybe<StringFilter>;
   size?: InputMaybe<IntFilter>;
-  title?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   width?: InputMaybe<IntFilter>;
 };
@@ -2245,9 +2233,9 @@ export enum Visibility {
   Public = 'PUBLIC'
 }
 
-export type AlbumDataFragment = { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> };
+export type AlbumDataFragment = { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> };
 
-export type PhotoDataFragment = { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any };
+export type PhotoDataFragment = { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any };
 
 export type UserDataFragment = { __typename?: 'User', id: string, username: string };
 
@@ -2278,21 +2266,21 @@ export type CreateAlbumMutationVariables = Exact<{
 }>;
 
 
-export type CreateAlbumMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
+export type CreateAlbumMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
 
 export type UploadPhotosMutationVariables = Exact<{
   files: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
 
-export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, size: number, mimetype: MimeType, exif: any, createdAt: any, updatedAt: any }> };
+export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, size: number, mimetype: string, exif: any, createdAt: any, updatedAt: any }> };
 
 export type AlbumQueryVariables = Exact<{
   where: AlbumWhereUniqueInput;
 }>;
 
 
-export type AlbumQuery = { __typename?: 'Query', album?: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } | null | undefined };
+export type AlbumQuery = { __typename?: 'Query', album?: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } | null | undefined };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2301,12 +2289,14 @@ export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typenam
 
 export type PhotoQueryVariables = Exact<{
   where: PhotoWhereUniqueInput;
+  size?: InputMaybe<PhotoSize>;
 }>;
 
 
-export type PhotoQuery = { __typename?: 'Query', photo?: { __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined, albums: Array<{ __typename?: 'PhotoOnAlbum', album: { __typename?: 'Album', id: string, title: string } }> } | null | undefined };
+export type PhotoQuery = { __typename?: 'Query', photo?: { __typename?: 'Photo', url?: string | null | undefined, id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined, albums: Array<{ __typename?: 'PhotoOnAlbum', album: { __typename?: 'Album', id: string, title: string } }> } | null | undefined };
 
 export type PhotosQueryVariables = Exact<{
+  size?: InputMaybe<PhotoSize>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   before?: InputMaybe<PhotoWhereUniqueInput>;
@@ -2314,7 +2304,7 @@ export type PhotosQueryVariables = Exact<{
 }>;
 
 
-export type PhotosQuery = { __typename?: 'Query', photos: Array<{ __typename?: 'Photo', id: string, title: string, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: MimeType, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined }> };
+export type PhotosQuery = { __typename?: 'Query', photos: Array<{ __typename?: 'Photo', url?: string | null | undefined, id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: string, username: string } | null | undefined }> };
 
 export const PhotoDataFragmentDoc = `
     fragment PhotoData on Photo {
@@ -2541,9 +2531,10 @@ export const useCurrentUserQuery = <
       options
     );
 export const PhotoDocument = `
-    query Photo($where: PhotoWhereUniqueInput!) {
+    query Photo($where: PhotoWhereUniqueInput!, $size: PhotoSize) {
   photo(where: $where) {
     ...PhotoData
+    url(size: $size)
     author {
       ...UserData
     }
@@ -2572,9 +2563,10 @@ export const usePhotoQuery = <
       options
     );
 export const PhotosDocument = `
-    query Photos($first: Int, $last: Int, $before: PhotoWhereUniqueInput, $after: PhotoWhereUniqueInput) {
+    query Photos($size: PhotoSize, $first: Int, $last: Int, $before: PhotoWhereUniqueInput, $after: PhotoWhereUniqueInput) {
   photos(first: $first, last: $last, before: $before, after: $after) {
     ...PhotoData
+    url(size: $size)
     author {
       ...UserData
     }
