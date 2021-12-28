@@ -1,24 +1,14 @@
-import { createWriteStream, ReadStream, unlink } from 'fs'
+import { ReadStream } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
-import { S3 } from '@aws-sdk/client-s3'
 import { Queue } from 'bullmq'
-import { URL } from 'url'
-import path, { extname } from 'path'
 import { FileUpload } from 'graphql-upload'
 import exif from 'exif-reader'
 import sharp from 'sharp'
-import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from '../../worker/queues'
-import type { Application, Express } from 'express'
-import { ImageResizeJob } from '../../worker/model/imageResizeJob'
-
-export const aggregatedS3 = new S3({
-  endpoint: process.env.S3_ENDPOINT,
-  region: process.env.S3_REGION,
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
-  },
-})
+import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from '../worker/queues'
+import type { Application } from 'express'
+import { ImageResizeJob } from '../worker/model/imageResizeJob'
+import { aggregatedS3 } from './s3'
+import { getImageKey } from './image'
 
 function streamToBuffer(stream: ReadStream): Promise<Buffer> {
   const chunks: Array<any> = []
@@ -30,13 +20,11 @@ function streamToBuffer(stream: ReadStream): Promise<Buffer> {
   })
 }
 
-export const uploadFile = async (file: FileUpload, app: Application) => {
-  const { createReadStream, filename, mimetype, encoding } = file
-
-  const extension = path.extname(filename)
-  if (!extension) {
-    throw new Error('invalid file extension')
-  }
+export const uploadFile = async (
+  file: Promise<FileUpload>,
+  app: Application,
+) => {
+  const { createReadStream, filename, mimetype, encoding } = await file
 
   const id = uuidv4()
 
@@ -46,13 +34,15 @@ export const uploadFile = async (file: FileUpload, app: Application) => {
 
   const metadata = await sharp(buf).metadata()
 
-  // Parse raw exif buffer
-  const exifData = exif(metadata.exif)
+  // Parse raw exif buffer if exists
+  const exifData = metadata.exif ? exif(metadata.exif) : {}
+
+  const key = getImageKey(id, 'ORIGINAL')
 
   // Only upload original, resized images are generated and uploaded out of band
   const obj = await aggregatedS3.putObject({
     Bucket: process.env.S3_BUCKET,
-    Key: id + extension,
+    Key: key,
     Body: buf,
     ContentDisposition: filename,
     ContentType: mimetype,
@@ -81,6 +71,7 @@ export const uploadFile = async (file: FileUpload, app: Application) => {
       height: height,
       size: size,
       exif: exifData,
+      mimetype: mimetype,
     },
   }
 }

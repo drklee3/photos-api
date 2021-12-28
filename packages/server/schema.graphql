@@ -564,17 +564,6 @@ input EnumAlbumRoleFilter {
   notIn: [AlbumRole!]
 }
 
-input EnumMimeTypeFieldUpdateOperationsInput {
-  set: MimeType
-}
-
-input EnumMimeTypeFilter {
-  equals: MimeType
-  in: [MimeType!]
-  not: NestedEnumMimeTypeFilter
-  notIn: [MimeType!]
-}
-
 input EnumVisibilityFieldUpdateOperationsInput {
   set: Visibility
 }
@@ -788,17 +777,6 @@ input LikeWhereUniqueInput {
   id: String
 }
 
-enum MimeType {
-  AVIF
-  GIF
-  JPG
-  MP4
-  PNG
-  SVG
-  WEBM
-  WEBP
-}
-
 type Mutation {
   createOneAlbum(data: AlbumCreateInput!): Album!
   createOneComment(data: CommentCreateInput!): Comment!
@@ -837,13 +815,6 @@ input NestedEnumAlbumRoleFilter {
   in: [AlbumRole!]
   not: NestedEnumAlbumRoleFilter
   notIn: [AlbumRole!]
-}
-
-input NestedEnumMimeTypeFilter {
-  equals: MimeType
-  in: [MimeType!]
-  not: NestedEnumMimeTypeFilter
-  notIn: [MimeType!]
 }
 
 input NestedEnumVisibilityFilter {
@@ -905,10 +876,13 @@ type Photo {
   fileName: String
   height: Int!
   id: String!
-  mimetype: MimeType!
+  mimetype: String!
   size: Int!
-  title: String!
+  title: String
   updatedAt: DateTime!
+
+  """The public s3 url to GET this image. The size default it is LARGE."""
+  url(size: PhotoSize): String
   width: Int!
 }
 
@@ -920,9 +894,9 @@ input PhotoCreateManyAuthorInput {
   fileName: String
   height: Int!
   id: String
-  mimetype: MimeType!
+  mimetype: String!
   size: Int!
-  title: String!
+  title: String
   updatedAt: DateTime
   width: Int!
 }
@@ -964,9 +938,9 @@ input PhotoCreateWithoutAlbumsInput {
   fileName: String
   height: Int!
   id: String
-  mimetype: MimeType!
+  mimetype: String!
   size: Int!
-  title: String!
+  title: String
   updatedAt: DateTime
   width: Int!
 }
@@ -980,9 +954,9 @@ input PhotoCreateWithoutAuthorInput {
   fileName: String
   height: Int!
   id: String
-  mimetype: MimeType!
+  mimetype: String!
   size: Int!
-  title: String!
+  title: String
   updatedAt: DateTime
   width: Int!
 }
@@ -1313,11 +1287,21 @@ input PhotoScalarWhereInput {
   fileName: StringNullableFilter
   height: IntFilter
   id: StringFilter
-  mimetype: EnumMimeTypeFilter
+  mimetype: StringFilter
   size: IntFilter
-  title: StringFilter
+  title: StringNullableFilter
   updatedAt: DateTimeFilter
   width: IntFilter
+}
+
+"""The size of a photo"""
+enum PhotoSize {
+  FULL
+  LARGE
+  MEDIUM
+  ORIGINAL
+  SMALL
+  THUMBNAIL
 }
 
 input PhotoUpdateInput {
@@ -1330,9 +1314,9 @@ input PhotoUpdateInput {
   fileName: NullableStringFieldUpdateOperationsInput
   height: IntFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  mimetype: StringFieldUpdateOperationsInput
   size: IntFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   width: IntFieldUpdateOperationsInput
 }
@@ -1345,9 +1329,9 @@ input PhotoUpdateManyMutationInput {
   fileName: NullableStringFieldUpdateOperationsInput
   height: IntFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  mimetype: StringFieldUpdateOperationsInput
   size: IntFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   width: IntFieldUpdateOperationsInput
 }
@@ -1393,9 +1377,9 @@ input PhotoUpdateWithoutAlbumsInput {
   fileName: NullableStringFieldUpdateOperationsInput
   height: IntFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  mimetype: StringFieldUpdateOperationsInput
   size: IntFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   width: IntFieldUpdateOperationsInput
 }
@@ -1409,9 +1393,9 @@ input PhotoUpdateWithoutAuthorInput {
   fileName: NullableStringFieldUpdateOperationsInput
   height: IntFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  mimetype: EnumMimeTypeFieldUpdateOperationsInput
+  mimetype: StringFieldUpdateOperationsInput
   size: IntFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
   width: IntFieldUpdateOperationsInput
 }
@@ -1440,9 +1424,9 @@ input PhotoWhereInput {
   fileName: StringNullableFilter
   height: IntFilter
   id: StringFilter
-  mimetype: EnumMimeTypeFilter
+  mimetype: StringFilter
   size: IntFilter
-  title: StringFilter
+  title: StringNullableFilter
   updatedAt: DateTimeFilter
   width: IntFilter
 }

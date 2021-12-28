@@ -72,7 +72,7 @@ model Photo {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  title       String
+  title       String?
   description String?
   author      User?    @relation(fields: [authorId], references: [id])
   authorId    String?
@@ -82,8 +82,8 @@ model Photo {
   width    Int
   height   Int
   size     Int
-  mimetype MimeType
-  exif     Json     @default("{}")
+  mimetype String
+  exif     Json    @default("{}")
 
   blurHash String?
 
@@ -112,7 +112,7 @@ model Like {
 
   createdAt DateTime @default(now())
 
-  photo                 PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
+  photo               PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
   PhotoOnAlbumAlbumId String
   PhotoOnAlbumPhotoId String
 }
@@ -127,18 +127,7 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  photo                 PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
+  photo               PhotoOnAlbum @relation(fields: [PhotoOnAlbumAlbumId, PhotoOnAlbumPhotoId], references: [albumId, photoId])
   PhotoOnAlbumAlbumId String
   PhotoOnAlbumPhotoId String
-}
-
-enum MimeType {
-  PNG
-  JPG
-  SVG
-  WEBP
-  WEBM
-  AVIF
-  GIF
-  MP4
 }

@@ -490,15 +490,6 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumAlbumRoleFilter'] | null; // NestedEnumAlbumRoleFilter
     notIn?: NexusGenEnums['AlbumRole'][] | null; // [AlbumRole!]
   }
-  EnumMimeTypeFieldUpdateOperationsInput: { // input type
-    set?: NexusGenEnums['MimeType'] | null; // MimeType
-  }
-  EnumMimeTypeFilter: { // input type
-    equals?: NexusGenEnums['MimeType'] | null; // MimeType
-    in?: NexusGenEnums['MimeType'][] | null; // [MimeType!]
-    not?: NexusGenInputs['NestedEnumMimeTypeFilter'] | null; // NestedEnumMimeTypeFilter
-    notIn?: NexusGenEnums['MimeType'][] | null; // [MimeType!]
-  }
   EnumVisibilityFieldUpdateOperationsInput: { // input type
     set?: NexusGenEnums['Visibility'] | null; // Visibility
   }
@@ -689,12 +680,6 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumAlbumRoleFilter'] | null; // NestedEnumAlbumRoleFilter
     notIn?: NexusGenEnums['AlbumRole'][] | null; // [AlbumRole!]
   }
-  NestedEnumMimeTypeFilter: { // input type
-    equals?: NexusGenEnums['MimeType'] | null; // MimeType
-    in?: NexusGenEnums['MimeType'][] | null; // [MimeType!]
-    not?: NexusGenInputs['NestedEnumMimeTypeFilter'] | null; // NestedEnumMimeTypeFilter
-    notIn?: NexusGenEnums['MimeType'][] | null; // [MimeType!]
-  }
   NestedEnumVisibilityFilter: { // input type
     equals?: NexusGenEnums['Visibility'] | null; // Visibility
     in?: NexusGenEnums['Visibility'][] | null; // [Visibility!]
@@ -748,9 +733,9 @@ export interface NexusGenInputs {
     fileName?: string | null; // String
     height: number; // Int!
     id?: string | null; // String
-    mimetype: NexusGenEnums['MimeType']; // MimeType!
+    mimetype: string; // String!
     size: number; // Int!
-    title: string; // String!
+    title?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     width: number; // Int!
   }
@@ -786,9 +771,9 @@ export interface NexusGenInputs {
     fileName?: string | null; // String
     height: number; // Int!
     id?: string | null; // String
-    mimetype: NexusGenEnums['MimeType']; // MimeType!
+    mimetype: string; // String!
     size: number; // Int!
-    title: string; // String!
+    title?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     width: number; // Int!
   }
@@ -801,9 +786,9 @@ export interface NexusGenInputs {
     fileName?: string | null; // String
     height: number; // Int!
     id?: string | null; // String
-    mimetype: NexusGenEnums['MimeType']; // MimeType!
+    mimetype: string; // String!
     size: number; // Int!
-    title: string; // String!
+    title?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     width: number; // Int!
   }
@@ -1080,9 +1065,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     height?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    mimetype?: NexusGenInputs['EnumMimeTypeFilter'] | null; // EnumMimeTypeFilter
+    mimetype?: NexusGenInputs['StringFilter'] | null; // StringFilter
     size?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     width?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
@@ -1096,9 +1081,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     height?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    mimetype?: NexusGenInputs['EnumMimeTypeFieldUpdateOperationsInput'] | null; // EnumMimeTypeFieldUpdateOperationsInput
+    mimetype?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     size?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    title?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     updatedAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     width?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
   }
@@ -1110,9 +1095,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     height?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    mimetype?: NexusGenInputs['EnumMimeTypeFieldUpdateOperationsInput'] | null; // EnumMimeTypeFieldUpdateOperationsInput
+    mimetype?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     size?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    title?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     updatedAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     width?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
   }
@@ -1153,9 +1138,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     height?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    mimetype?: NexusGenInputs['EnumMimeTypeFieldUpdateOperationsInput'] | null; // EnumMimeTypeFieldUpdateOperationsInput
+    mimetype?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     size?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    title?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     updatedAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     width?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
   }
@@ -1168,9 +1153,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     height?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    mimetype?: NexusGenInputs['EnumMimeTypeFieldUpdateOperationsInput'] | null; // EnumMimeTypeFieldUpdateOperationsInput
+    mimetype?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     size?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    title?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     updatedAt?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
     width?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
   }
@@ -1196,9 +1181,9 @@ export interface NexusGenInputs {
     fileName?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     height?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    mimetype?: NexusGenInputs['EnumMimeTypeFilter'] | null; // EnumMimeTypeFilter
+    mimetype?: NexusGenInputs['StringFilter'] | null; // StringFilter
     size?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     width?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
@@ -1633,7 +1618,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AlbumPermissions: "COMMENTER" | "EDITOR" | "VIEWER"
   AlbumRole: prisma.AlbumRole
-  MimeType: prisma.MimeType
+  PhotoSize: "FULL" | "LARGE" | "MEDIUM" | "ORIGINAL" | "SMALL" | "THUMBNAIL"
   QueryMode: prisma.QueryMode
   SortOrder: prisma.SortOrder
   Visibility: prisma.Visibility
@@ -1741,10 +1726,11 @@ export interface NexusGenFieldTypes {
     fileName: string | null; // String
     height: number; // Int!
     id: string; // String!
-    mimetype: NexusGenEnums['MimeType']; // MimeType!
+    mimetype: string; // String!
     size: number; // Int!
-    title: string; // String!
+    title: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    url: string | null; // String
     width: number; // Int!
   }
   PhotoOnAlbum: { // field return type
@@ -1847,10 +1833,11 @@ export interface NexusGenFieldTypeNames {
     fileName: 'String'
     height: 'Int'
     id: 'String'
-    mimetype: 'MimeType'
+    mimetype: 'String'
     size: 'Int'
     title: 'String'
     updatedAt: 'DateTime'
+    url: 'String'
     width: 'Int'
   }
   PhotoOnAlbum: { // field return type name
@@ -1979,6 +1966,9 @@ export interface NexusGenArgTypes {
       before?: NexusGenInputs['PhotoOnAlbumWhereUniqueInput'] | null; // PhotoOnAlbumWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
+    }
+    url: { // args
+      size?: NexusGenEnums['PhotoSize'] | null; // PhotoSize
     }
   }
   PhotoOnAlbum: {

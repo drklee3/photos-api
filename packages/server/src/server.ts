@@ -61,6 +61,9 @@ export async function getApp() {
       ],
       credentials: true,
     },
+    bodyParserConfig: {
+      limit: '250mb',
+    },
   })
 
   return { app, httpServer, apolloServer }

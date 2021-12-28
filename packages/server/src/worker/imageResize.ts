@@ -7,6 +7,7 @@ import { PrismaClient } from '.prisma/client'
 import { generate } from '@kenchi/nexus-plugin-prisma/dist/typegen'
 import path from 'path'
 import { ImageResizeJob } from './model/imageResizeJob'
+import { getImageKey, PhotoSizeEnum, sizeToWidth } from '../store/image'
 
 export const aggregatedS3 = new S3({
   endpoint: process.env.S3_ENDPOINT,
@@ -29,7 +30,7 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
   })
 }
 
-const IMG_SIZES = [1000, 800, 400, 200]
+const IMG_SIZES: PhotoSizeEnum[] = ['LARGE', 'MEDIUM', 'SMALL', 'THUMBNAIL']
 
 export default async function (job: SandboxedJob<ImageResizeJob>) {
   const { id, filename, mimetype } = job.data
@@ -55,16 +56,24 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
     throw new Error('image dimensions not found')
   }
 
-  const outputs = []
+  const outputs: {
+    size: PhotoSizeEnum
+    buf: Buffer
+  }[] = []
 
   // Full res optimized webp image
   const fullRes = await sharp().webp({ quality: 80 }).withMetadata().toBuffer()
-  outputs.push({ size: null, buf: fullRes })
+  outputs.push({ size: 'FULL', buf: fullRes })
 
   // First do all image resizing sequentially, CPU bound
   for (const size of IMG_SIZES) {
+    const width = sizeToWidth(size)
+    if (!width) {
+      continue
+    }
+
     const output = await sharp(buffer)
-      .resize(size)
+      .resize(width)
       .webp({ quality: 80 })
       .toBuffer()
 
@@ -90,11 +99,7 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
   const uploads = []
 
   for (const output of outputs) {
-    // Add output size to end of filename, extension already has a . in front
-    let key = id + '.full' + extension
-    if (output.size) {
-      key = `${id}.${output.size}${extension}`
-    }
+    const key = getImageKey(id, output.size)
 
     // Upload each small pic
     const uploadPromise = aggregatedS3.putObject({

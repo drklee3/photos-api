@@ -220,7 +220,7 @@ interface NexusPrismaOutputs {
     width: 'Int'
     height: 'Int'
     size: 'Int'
-    mimetype: 'MimeType'
+    mimetype: 'String'
     exif: 'Json'
     blurHash: 'String'
     albums: 'PhotoOnAlbum'
