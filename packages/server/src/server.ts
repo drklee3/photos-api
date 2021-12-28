@@ -1,15 +1,19 @@
 import { createContext } from './context'
 import schema from './schema/schema'
-import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
+import { ExpressAdapter } from '@bull-board/express'
+import { createBullBoard } from '@bull-board/api'
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 
 import { registerMiddlewares } from './middleware'
-import { buildContext } from 'graphql-passport'
-import prisma from './prisma'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from './worker/queues'
+// Start worker
+import './worker'
+import { worker } from './worker'
 
 let origin: string
 
@@ -41,7 +45,17 @@ export async function getApp() {
   registerMiddlewares(app)
 
   // Add bullmq queue
-  app.set(NEW_PHOTOS_QUEUE, NewPhotosQueue())
+  app.set(NEW_PHOTOS_QUEUE, NewPhotosQueue)
+
+  const serverAdapter = new ExpressAdapter()
+
+  createBullBoard({
+    queues: [new BullMQAdapter(NewPhotosQueue)],
+    serverAdapter: serverAdapter,
+  })
+
+  serverAdapter.setBasePath('/admin/queues')
+  app.use('/admin/queues', serverAdapter.getRouter())
 
   const httpServer = http.createServer(app)
   const apolloServer = new ApolloServer({
@@ -68,3 +82,16 @@ export async function getApp() {
 
   return { app, httpServer, apolloServer }
 }
+
+function shutdown() {
+  console.log('Shutting down...')
+  shutdownAsync()
+  process.exit()
+}
+
+async function shutdownAsync() {
+  await worker.close()
+}
+
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)

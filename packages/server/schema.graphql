@@ -881,7 +881,7 @@ type Photo {
   title: String
   updatedAt: DateTime!
 
-  """The public s3 url to GET this image. The size default it is LARGE."""
+  """The public s3 url to GET this image. The size by default is LARGE."""
   url(size: PhotoSize): String
   width: Int!
 }

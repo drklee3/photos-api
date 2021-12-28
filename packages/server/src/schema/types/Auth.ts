@@ -30,7 +30,6 @@ export const Mutation = extendType({
         const hashedPassword = await hash(args.password)
 
         let user
-
         try {
           user = await context.prisma.user.create({
             data: {

@@ -1,10 +1,9 @@
-import { SandboxedJob } from 'bullmq'
+import { SandboxedJob, Job } from 'bullmq'
 import { S3 } from '@aws-sdk/client-s3'
-import sharp, { Metadata } from 'sharp'
-import { Readable, Stream } from 'stream'
+import sharp from 'sharp'
+import { Readable } from 'stream'
 import { encode } from 'blurhash'
 import { PrismaClient } from '.prisma/client'
-import { generate } from '@kenchi/nexus-plugin-prisma/dist/typegen'
 import path from 'path'
 import { ImageResizeJob } from './model/imageResizeJob'
 import { getImageKey, PhotoSizeEnum, sizeToWidth } from '../store/image'
@@ -32,15 +31,16 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
 
 const IMG_SIZES: PhotoSizeEnum[] = ['LARGE', 'MEDIUM', 'SMALL', 'THUMBNAIL']
 
-export default async function (job: SandboxedJob<ImageResizeJob>) {
+export default async function (job: Job<ImageResizeJob>) {
   const { id, filename, mimetype } = job.data
-  const extension = path.extname(filename)
 
   // Get original image
   const img = await aggregatedS3.getObject({
     Bucket: process.env.S3_BUCKET,
-    Key: id + extension,
+    Key: getImageKey(id, 'ORIGINAL'),
   })
+
+  job.log('downloaded image')
 
   if (!img.Body) {
     throw new Error('image has no body! spooky...')
@@ -56,14 +56,21 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
     throw new Error('image dimensions not found')
   }
 
+  job.log('parsed metadata')
+
   const outputs: {
     size: PhotoSizeEnum
     buf: Buffer
   }[] = []
 
   // Full res optimized webp image
-  const fullRes = await sharp().webp({ quality: 80 }).withMetadata().toBuffer()
+  const fullRes = await sharp(buffer)
+    .webp({ quality: 80 })
+    .withMetadata()
+    .toBuffer()
   outputs.push({ size: 'FULL', buf: fullRes })
+
+  job.log('created full resolution webp')
 
   // First do all image resizing sequentially, CPU bound
   for (const size of IMG_SIZES) {
@@ -78,14 +85,16 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
       .toBuffer()
 
     outputs.push({ size, buf: output })
+
+    job.log(`created ${size} resolution webp`)
   }
 
+  job.log('creating blurhash')
+
   // Generate and save blurhash to db
-  const blurHash = await generateBlurHash(
-    outputs[outputs.length - 1].buf,
-    metadata.width,
-    metadata.height,
-  )
+  const blurHash = await generateBlurHash(outputs[outputs.length - 1].buf)
+
+  job.log('created blurhash')
 
   await prisma.photo.update({
     where: {
@@ -95,6 +104,8 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
       blurHash,
     },
   })
+
+  job.log('updated photo db entry with blurhash')
 
   const uploads = []
 
@@ -113,23 +124,19 @@ export default async function (job: SandboxedJob<ImageResizeJob>) {
     uploads.push(uploadPromise)
   }
 
+  job.log(`uploading ${uploads.length} photos...`)
+
   // Uploads can be concurrent
   await Promise.all(uploads)
+  job.log('photos uploaded')
 }
 
-async function generateBlurHash(
-  input: Buffer,
-  width: number,
-  height: number,
-): Promise<string> {
-  const data = new Uint8ClampedArray(input)
+async function generateBlurHash(input: Buffer): Promise<string> {
+  const { data, info } = await sharp(input).raw().ensureAlpha().toBuffer({
+    resolveWithObject: true,
+  })
 
-  return encode(
-    // Use the last thumbnail image for smallest encode size
-    data,
-    width,
-    height,
-    4,
-    4,
-  )
+  const clamped = new Uint8ClampedArray(data)
+
+  return encode(clamped, info.width, info.height, 4, 4)
 }

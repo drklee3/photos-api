@@ -20,6 +20,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.42.0",
     "@aws-sdk/s3-request-presigner": "^3.45.0",
+    "@bull-board/express": "^3.8.1",
     "@kenchi/nexus-plugin-prisma": "^0.39.0",
     "@prisma/client": "3.7.0",
     "apollo-server": "3.5.0",

@@ -56,11 +56,17 @@ export const uploadFile = async (
   }
 
   const queue: Queue<ImageResizeJob> = app.get(NEW_PHOTOS_QUEUE)
-  await queue.add('resize images', {
-    id,
-    filename,
-    mimetype,
-  })
+  await queue.add(
+    `new image ID ${id}`,
+    {
+      id,
+      filename,
+      mimetype,
+    },
+    {
+      timeout: 300000,
+    },
+  )
 
   return {
     filename,
