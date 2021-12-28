@@ -1,6 +1,7 @@
-query Photo($where: PhotoWhereUniqueInput!) {
+query Photo($where: PhotoWhereUniqueInput!, $size: PhotoSize) {
   photo(where: $where) {
     ...PhotoData
+    url(size: $size)
     author {
       ...UserData
     }

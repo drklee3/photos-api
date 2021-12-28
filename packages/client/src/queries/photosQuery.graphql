@@ -1,4 +1,5 @@
 query Photos(
+  $size: PhotoSize
   $first: Int
   $last: Int
   $before: PhotoWhereUniqueInput
@@ -6,6 +7,7 @@ query Photos(
 ) {
   photos(first: $first, last: $last, before: $before, after: $after) {
     ...PhotoData
+    url(size: $size)
     author {
       ...UserData
     }
