@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Box, Flex } from "native-base";
 import GalleryImage from "./GalleryImage";
 import { ImageData } from "./ImageData";

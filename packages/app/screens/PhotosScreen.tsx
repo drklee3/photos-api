@@ -78,7 +78,9 @@ export default function PhotosScreen({
         Photos
       </Heading>
       <Upload />
-      <Gallery imageList={images} rowWidth={1000} minRowAspectRatio={3} />
+      {apiImages && (
+        <Gallery imageList={apiImages} rowWidth={1000} minRowAspectRatio={3} />
+      )}
     </HStack>
   );
 }

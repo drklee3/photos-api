@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Image } from "native-base";
 import { ImageData } from "./ImageData";
 

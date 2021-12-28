@@ -75,7 +75,7 @@ function RootNavigator() {
 
   return (
     <Stack.Navigator>
-      {authCtx.state.token !== null ? MainScreens() : AuthScreens()}
+      {authCtx.state.isLoggedIn ? MainScreens() : AuthScreens()}
     </Stack.Navigator>
   );
 }
