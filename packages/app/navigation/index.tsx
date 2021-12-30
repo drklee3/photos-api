@@ -157,71 +157,68 @@ function BottomTabNavigator() {
 
 function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
-    <Box flex={1} bg="black" safeAreaTop>
-      <Center flex={1}></Center>
-      <HStack
-        borderTopWidth={1}
-        borderTopColor={useColorModeValue("gray.100", "gray.800")}
-        alignItems="center"
-        safeAreaBottom
-        shadow={6}
-      >
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const label = options.tabBarLabel || options.title || route.name;
+    <HStack
+      borderTopWidth={1}
+      borderTopColor={useColorModeValue("gray.100", "gray.800")}
+      alignItems="center"
+      safeAreaBottom
+      shadow={6}
+    >
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label = options.tabBarLabel || options.title || route.name;
 
-          const isFocused = state.index === index;
+        const isFocused = state.index === index;
 
-          const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            navigation.navigate({
+              name: route.name,
+              params: [],
+              merge: true,
             });
+          }
+        };
 
-            if (!isFocused && !event.defaultPrevented) {
-              // The `merge: true` option makes sure that the params inside the tab screen are preserved
-              navigation.navigate({
-                name: route.name,
-                params: [],
-                merge: true,
-              });
-            }
-          };
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key,
+          });
+        };
 
-          const onLongPress = () => {
-            navigation.emit({
-              type: "tabLongPress",
-              target: route.key,
-            });
-          };
-
-          return (
-            <Pressable
-              key={route.key}
-              cursor="pointer"
-              opacity={isFocused ? 1 : 0.5}
-              py="3"
-              flex={1}
-              onPress={onPress}
-              onLongPress={onLongPress}
-            >
-              <Center>
-                {options.tabBarIcon &&
-                  options.tabBarIcon({
-                    color: "white",
-                    focused: isFocused,
-                    size: 30,
-                  })}
-                <Text color="white" fontSize="sm" mt="1">
-                  {label}
-                </Text>
-              </Center>
-            </Pressable>
-          );
-        })}
-      </HStack>
-    </Box>
+        return (
+          <Pressable
+            key={route.key}
+            cursor="pointer"
+            opacity={isFocused ? 1 : 0.5}
+            py="3"
+            flex={1}
+            onPress={onPress}
+            onLongPress={onLongPress}
+          >
+            <Center>
+              {options.tabBarIcon &&
+                options.tabBarIcon({
+                  color: "white",
+                  focused: isFocused,
+                  size: 30,
+                })}
+              <Text color="white" fontSize="sm" mt="1">
+                {label}
+              </Text>
+            </Center>
+          </Pressable>
+        );
+      })}
+    </HStack>
   );
 }
 
