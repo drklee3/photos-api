@@ -57,7 +57,7 @@ export const uploadFile = async (
 
   const queue: Queue<ImageResizeJob> = app.get(NEW_PHOTOS_QUEUE)
   await queue.add(
-    `new image ID ${id}`,
+    `Resize new image`,
     {
       id,
       filename,
