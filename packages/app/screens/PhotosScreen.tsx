@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { client } from "../client/graphqlClient";
 import { usePhotosQuery } from "../client/reactQuery";
-import { Box, Flex, Text, Heading, HStack } from "native-base";
+import { Box, Flex, Text, Heading, HStack, VStack } from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
@@ -64,7 +64,7 @@ export default function PhotosScreen({
 
   const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
     return {
-      uri: photo.id,
+      uri: photo.url,
       alt: photo.fileName || undefined,
       width: photo.width,
       height: photo.height,
@@ -73,7 +73,7 @@ export default function PhotosScreen({
   });
 
   return (
-    <HStack p="4">
+    <VStack p="4">
       <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
         Photos
       </Heading>
@@ -81,6 +81,6 @@ export default function PhotosScreen({
       {apiImages && (
         <Gallery imageList={apiImages} rowWidth={1000} minRowAspectRatio={3} />
       )}
-    </HStack>
+    </VStack>
   );
 }
