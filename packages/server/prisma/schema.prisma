@@ -131,3 +131,8 @@ model Comment {
   PhotoOnAlbumAlbumId String
   PhotoOnAlbumPhotoId String
 }
+
+model ApiToken {
+  token      String   @id @unique
+  allowedIPs String[]
+}

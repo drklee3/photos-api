@@ -21,6 +21,7 @@ interface PrismaModels {
   PhotoOnAlbum: Prisma.PhotoOnAlbum
   Like: Prisma.Like
   Comment: Prisma.Comment
+  ApiToken: Prisma.ApiToken
 }
 
 // Prisma input types metadata
@@ -53,6 +54,10 @@ interface NexusPrismaInputs {
     comments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'content' | 'author' | 'authorId' | 'createdAt' | 'updatedAt' | 'photo' | 'PhotoOnAlbumAlbumId' | 'PhotoOnAlbumPhotoId'
       ordering: 'id' | 'content' | 'author' | 'authorId' | 'createdAt' | 'updatedAt' | 'photo' | 'PhotoOnAlbumAlbumId' | 'PhotoOnAlbumPhotoId'
+    }
+    apiTokens: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'token' | 'allowedIPs'
+      ordering: 'token' | 'allowedIPs'
     }
   },
   User: {
@@ -112,6 +117,9 @@ interface NexusPrismaInputs {
   Comment: {
 
   }
+  ApiToken: {
+
+  }
 }
 
 // Prisma output types metadata
@@ -131,6 +139,8 @@ interface NexusPrismaOutputs {
     likes: 'Like'
     comment: 'Comment'
     comments: 'Comment'
+    apiToken: 'ApiToken'
+    apiTokens: 'ApiToken'
   },
   Mutation: {
     createOneUser: 'User'
@@ -175,6 +185,12 @@ interface NexusPrismaOutputs {
     deleteOneComment: 'Comment'
     deleteManyComment: 'AffectedRowsOutput'
     upsertOneComment: 'Comment'
+    createOneApiToken: 'ApiToken'
+    updateOneApiToken: 'ApiToken'
+    updateManyApiToken: 'AffectedRowsOutput'
+    deleteOneApiToken: 'ApiToken'
+    deleteManyApiToken: 'AffectedRowsOutput'
+    upsertOneApiToken: 'ApiToken'
   },
   User: {
     id: 'String'
@@ -254,6 +270,10 @@ interface NexusPrismaOutputs {
     PhotoOnAlbumAlbumId: 'String'
     PhotoOnAlbumPhotoId: 'String'
   }
+  ApiToken: {
+    token: 'String'
+    allowedIPs: 'String'
+  }
 }
 
 // Helper to gather all methods relative to a model
@@ -265,6 +285,7 @@ interface NexusPrismaMethods {
   PhotoOnAlbum: Typegen.NexusPrismaFields<'PhotoOnAlbum'>
   Like: Typegen.NexusPrismaFields<'Like'>
   Comment: Typegen.NexusPrismaFields<'Comment'>
+  ApiToken: Typegen.NexusPrismaFields<'ApiToken'>
   Query: Typegen.NexusPrismaFields<'Query'>
   Mutation: Typegen.NexusPrismaFields<'Mutation'>
 }
