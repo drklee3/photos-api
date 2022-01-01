@@ -4290,6 +4290,7 @@ __metadata:
     "@types/graphql-upload": ^8.0.7
     "@types/jest": ^27.0.3
     "@types/mime-types": ^2.1.1
+    "@types/morgan": ^1.9.3
     "@types/node": ^16.11.10
     "@types/react": ^17.0.37
     "@types/sharp": ^0.29.4
@@ -4317,6 +4318,7 @@ __metadata:
     graphql-upload: ^12.0.0
     jest: ^27.3.1
     mime-types: ^2.1.34
+    morgan: ^1.10.0
     nexus: 1.1.0
     prisma: 3.5.0
     react: ^17.0.2
@@ -4326,6 +4328,7 @@ __metadata:
     tough-cookie: ^4.0.0
     ts-node: 10.4.0
     ts-node-dev: 1.1.8
+    tslog: ^3.3.1
     typescript: 4.5.2
     uuid: ^8.3.2
   languageName: unknown
@@ -6186,6 +6189,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/morgan@npm:^1.9.3":
+  version: 1.9.3
+  resolution: "@types/morgan@npm:1.9.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 0b9bc8641ce03f7176f617523b8da300e5d47225b1667396749950ac7fdfa1f990447d490648fbaff050c2b0ef5fa60c3f2f00c6b76efec06fe5148de5020813
+  languageName: node
+  linkType: hard
+
 "@types/node-fetch@npm:^3.0.2":
   version: 3.0.3
   resolution: "@types/node-fetch@npm:3.0.3"
@@ -7408,6 +7420,15 @@ __metadata:
     mixin-deep: ^1.2.0
     pascalcase: ^0.1.1
   checksum: a4a146b912e27eea8f66d09cb0c9eab666f32ce27859a7dfd50f38cd069a2557b39f16dba1bc2aecb3b44bf096738dd207b7970d99b0318423285ab1b1994edd
+  languageName: node
+  linkType: hard
+
+"basic-auth@npm:~2.0.1":
+  version: 2.0.1
+  resolution: "basic-auth@npm:2.0.1"
+  dependencies:
+    safe-buffer: 5.1.2
+  checksum: 3419b805d5dfc518f3a05dcf42aa53aa9ce820e50b6df5097f9e186322e1bc733c36722b624802cd37e791035aa73b828ed814d8362333d42d7f5cd04d7a5e48
   languageName: node
   linkType: hard
 
@@ -14508,6 +14529,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"morgan@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "morgan@npm:1.10.0"
+  dependencies:
+    basic-auth: ~2.0.1
+    debug: 2.6.9
+    depd: ~2.0.0
+    on-finished: ~2.3.0
+    on-headers: ~1.0.2
+  checksum: fb41e226ab5a1abf7e8909e486b387076534716d60207e361acfb5df78b84d703a7b7ea58f3046a9fd0b83d3c94bfabde32323341a1f1b26ce50680abd2ea5dd
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -17296,7 +17330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.6":
+"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.21, source-map-support@npm:^0.5.6":
   version: 0.5.21
   resolution: "source-map-support@npm:0.5.21"
   dependencies:
@@ -18237,6 +18271,15 @@ __metadata:
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
+"tslog@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "tslog@npm:3.3.1"
+  dependencies:
+    source-map-support: ^0.5.21
+  checksum: 137eb3cce94e44a8af410618769c08609578e5f161d74d140828bc91a797531a279e08ed45b3ac67fd094fb70b482454dd02149eddb58d7493090148939a74cd
   languageName: node
   linkType: hard
 

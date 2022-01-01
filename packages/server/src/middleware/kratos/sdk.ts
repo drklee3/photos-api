@@ -3,6 +3,7 @@ import {
   V0alpha2Api as OpenSourceV0alpha2Api,
   V0alpha2ApiInterface,
 } from '@ory/kratos-client'
+import { log } from '../../utils/logger'
 
 const apiBaseUrlInternal =
   process.env.KRATOS_PUBLIC_URL ||
@@ -10,6 +11,9 @@ const apiBaseUrlInternal =
   'https://playground.projects.oryapis.com'
 
 export const apiBaseUrl = process.env.KRATOS_BROWSER_URL || apiBaseUrlInternal
+
+log.debug('apiBaseUrlInternal', apiBaseUrlInternal)
+log.debug('apiBaseUrl', apiBaseUrl)
 
 // Sets up the SDK using Ory Cloud
 let sdk: V0alpha2ApiInterface = new V0alpha2Api(
