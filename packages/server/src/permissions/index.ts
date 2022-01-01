@@ -67,6 +67,11 @@ const rules = {
         return false
       }
 
+      // No allowed IPs mean no IP enforcement
+      if (foundToken.allowedIPs.length === 0) {
+        return true
+      }
+
       // Should trust proxy in order to get real client IP
       return foundToken.allowedIPs.includes(context.req.ip)
     },
