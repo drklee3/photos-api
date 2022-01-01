@@ -1,6 +1,6 @@
 import { enumType, mutationField, nonNull, objectType, stringArg } from 'nexus'
 import { Context } from '../../context'
-import { getUserId } from '../../utils'
+import { getUserId } from '../../utils/getUserId'
 
 const Album = objectType({
   name: 'Album',

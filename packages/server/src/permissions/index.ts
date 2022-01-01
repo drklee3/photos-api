@@ -1,5 +1,5 @@
 import { allow, deny, not, rule, shield } from 'graphql-shield'
-import { getUserId } from '../utils'
+import { getUserId } from '../utils/getUserId'
 import { Context } from '../context'
 
 const rules = {

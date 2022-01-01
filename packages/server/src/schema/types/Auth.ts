@@ -1,4 +1,4 @@
-import { getUserId } from '../../utils'
+import { getUserId } from '../../utils/getUserId'
 import { hash, verify } from 'argon2'
 
 import { intArg, nonNull, objectType, stringArg, arg, extendType } from 'nexus'

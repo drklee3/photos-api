@@ -1,6 +1,6 @@
 import { enumType, queryType } from 'nexus'
 import { Context } from '../../../context'
-import { getUserId } from '../../../utils'
+import { getUserId } from '../../../utils/getUserId'
 
 export default queryType({
   definition(t) {

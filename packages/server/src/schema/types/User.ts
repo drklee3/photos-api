@@ -1,6 +1,4 @@
-import { objectType, queryType } from 'nexus'
-import { Context } from '../../context'
-import { getUserId } from '../../utils'
+import { objectType } from 'nexus'
 
 export const User = objectType({
   name: 'User',
