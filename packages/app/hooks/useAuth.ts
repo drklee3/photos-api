@@ -10,7 +10,15 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
-export const AuthContext = createContext<AuthContextData | null>(null);
+export const AuthContext = createContext<AuthContextData>({
+  logIn: (token: string) => {},
+  signOut: () => {},
+  state: {
+    isLoading: true,
+    isLoggedIn: false,
+    token: "",
+  },
+});
 
 export function useAuthContext() {
   return useContext(AuthContext);

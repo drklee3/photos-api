@@ -6,68 +6,119 @@ import AsyncStore from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
 // The key under which the session is being stored
-const userSessionName = "user_session";
+const userSessionKey = "user_session";
 
-// The session type
-export type SessionContext = {
+export interface KratosSessionWithToken {
   // The session token
   session_token: string;
 
   // The session itself
   session: KratosSession;
-} | null;
+}
+
+export interface SessionState {
+  session: KratosSessionWithToken | null;
+  isLoading: boolean;
+  didFetch: boolean;
+  isAuthenticated: boolean;
+}
+
+export enum AuthActionType {
+  RestoreSession,
+  LogIn,
+  SignOut,
+}
+
+type AuthAction =
+  | {
+      type: AuthActionType.RestoreSession;
+      session: KratosSessionWithToken | null;
+    }
+  | { type: AuthActionType.LogIn; session: KratosSessionWithToken }
+  | { type: AuthActionType.SignOut };
+
+export interface AuthContextData {
+  logIn: (session: KratosSessionWithToken) => void;
+  signOut: () => void;
+
+  state: SessionState;
+}
+
+export function sessionStateReducer(
+  prevState: SessionState,
+  action: AuthAction
+): SessionState {
+  switch (action.type) {
+    case AuthActionType.RestoreSession:
+      return {
+        ...prevState,
+        session: action.session,
+        isLoading: false,
+        isAuthenticated: action.session !== null,
+      };
+    case AuthActionType.LogIn:
+      return {
+        ...prevState,
+        isAuthenticated: true,
+        session: action.session,
+      };
+    case AuthActionType.SignOut:
+      return {
+        ...prevState,
+        isAuthenticated: false,
+        session: null,
+      };
+  }
+}
 
 // getAuthenticatedSession returns a promise with the session of the authenticated user, if the
 // user is authenticated or null is the user is not authenticated.
 //
 // If an error (e.g. network error) occurs, the promise rejects with an error.
-export const getAuthenticatedSession = (): Promise<SessionContext> => {
-  const parse = (sessionRaw: string | null): SessionContext => {
-    if (!sessionRaw) {
-      return null;
-    }
-
-    // sessionRaw is a JSON String that needs to be parsed.
-    return JSON.parse(sessionRaw);
-  };
-
-  let p = AsyncStore.getItem(userSessionName);
+export async function getLocalAuthenticatedSession(): Promise<KratosSessionWithToken | null> {
+  let sessionStr;
   if (Platform.OS !== "web") {
     // We can use SecureStore if not on web instead!
-    p = SecureStore.getItemAsync(userSessionName);
+    sessionStr = await SecureStore.getItemAsync(userSessionKey);
+  } else {
+    sessionStr = await AsyncStore.getItem(userSessionKey);
   }
 
-  return p.then(parse);
-};
+  if (!sessionStr) {
+    return null;
+  }
+
+  return JSON.parse(sessionStr);
+}
 
 // Sets the session.
-export const setAuthenticatedSession = (
-  session: SessionContext
+export const setLocalAuthenticatedSession = async (
+  session: KratosSessionWithToken
 ): Promise<void> => {
   if (!session) {
-    return killAuthenticatedSession();
+    return deleteLocalAuthenticatedSession();
   }
 
   if (Platform.OS === "web") {
     // SecureStore is not available on the web platform. We need to use AsyncStore
     // instead.
-    return AsyncStore.setItem(userSessionName, JSON.stringify(session));
+    return AsyncStore.setItem(userSessionKey, JSON.stringify(session));
   }
 
   return (
     SecureStore
       // The SecureStore only supports strings so we encode the session.
-      .setItemAsync(userSessionName, JSON.stringify(session))
+      .setItemAsync(userSessionKey, JSON.stringify(session))
   );
 };
 
 // Removes the session from the store.
-export const killAuthenticatedSession = () => {
+export const deleteLocalAuthenticatedSession = () => {
   if (Platform.OS === "web") {
     // SecureStore is not available on the web platform. We need to use AsyncStore
     // instead.
-    return AsyncStore.removeItem(userSessionName);
+    return AsyncStore.removeItem(userSessionKey);
   }
 
-  return SecureStore.deleteItemAsync(userSessionName);
+  return SecureStore.deleteItemAsync(userSessionKey);
 };
