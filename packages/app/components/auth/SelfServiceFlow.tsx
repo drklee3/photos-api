@@ -10,7 +10,7 @@ import {
 } from "@ory/kratos-client";
 import { getNodeId, isUiNodeInputAttributes } from "./helpers/form";
 import { Node, TextInputOverride } from "./Node";
-import { Box, Text } from "native-base";
+import { Box, Text, VStack } from "native-base";
 
 interface Props<T> {
   flow?:
@@ -22,17 +22,12 @@ interface Props<T> {
   textInputOverride?: TextInputOverride;
 }
 
-export const SelfServiceFlow = <
+export function SelfServiceFlow<
   T extends
     | SubmitSelfServiceSettingsFlowBody
     | SubmitSelfServiceLoginFlowBody
     | SubmitSelfServiceRegistrationFlowBody
->({
-  flow,
-  only,
-  onSubmit,
-  textInputOverride,
-}: Props<T>) => {
+>({ flow, only, onSubmit, textInputOverride }: Props<T>) {
   const [inProgress, setInProgress] = useState(false);
   const [values, setValues] = useState<T>({} as T);
   const [nodes, setNodes] = useState<Array<UiNode>>([]);
@@ -84,22 +79,29 @@ export const SelfServiceFlow = <
   };
 
   const getValue = (name: string) => values[name as keyof T];
-  const onPress = (key: string, value: any) => {
+  const onPress = async (key: string, value: any) => {
+    // Prevent double send
+    if (inProgress) {
+      return;
+    }
+
     setInProgress(true);
-    onSubmit({ ...values, [key]: value }).then(() => {
-      setInProgress(false);
-    });
+
+    await onSubmit({ ...values, [key]: value });
+    setInProgress(false);
   };
 
   return (
-    <>
-      <Box testID="form-messages">
-        {flow.ui.messages?.map(({ text, id }, k) => (
-          <Text testID={`ui/message/${id}`} key={`${id}${k}`}>
-            {text}
-          </Text>
-        ))}
-      </Box>
+    <VStack space={3}>
+      {flow.ui.messages?.length && (
+        <Box testID="form-messages">
+          {flow.ui.messages?.map(({ text, id }, k) => (
+            <Text testID={`ui/message/${id}`} key={`${id}${k}`}>
+              {text}
+            </Text>
+          ))}
+        </Box>
+      )}
 
       {nodes.map((node: UiNode, k) => {
         const name = getNodeId(node);
@@ -116,6 +118,6 @@ export const SelfServiceFlow = <
           />
         );
       })}
-    </>
+    </VStack>
   );
-};
+}

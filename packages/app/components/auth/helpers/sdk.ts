@@ -10,23 +10,21 @@ resilience(axios); // Adds retry mechanism to axios
 const canonicalize = (url: string = "") => url.replace(/\/+$/, "");
 
 // This value comes from ../../app.config.js
-export const kratosUrl = (project: string = "playground") => {
-  const url = canonicalize(Constants.manifest?.extra?.kratosUrl) || "";
+export const getKratosUrl = (project: string = "playground") => {
+  const url =
+    canonicalize(Constants.manifest?.extra?.kratosUrl) ||
+    "https://playground.projects.oryapis.com";
 
-  if (url.indexOf("https://playground.projects.oryapis.com/") == -1) {
-    // The URL is not from Ory, so let's just return it.
-    return url;
-  }
-
-  // We handle a special case where we allow the project to be changed
-  // if you use an ory project.
-  return url.replace("playground.", `${project}.`);
+  return url;
 };
 
-export const newKratosSdk = (project: string) =>
-  new V0alpha2Api(
+export const newKratosSdk = (project: string) => {
+  const kratosUrl = getKratosUrl(project);
+  console.log("using kratos url", kratosUrl);
+
+  return new V0alpha2Api(
     new Configuration({
-      basePath: kratosUrl(project),
+      basePath: kratosUrl,
       baseOptions: {
         // Setting this is very important as axios will send the CSRF cookie otherwise
         // which causes problems with ORY Kratos' security detection.
@@ -40,3 +38,4 @@ export const newKratosSdk = (project: string) =>
     // Ensure that we are using the axios client with retry.
     axios
   );
+};

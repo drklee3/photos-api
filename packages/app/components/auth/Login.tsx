@@ -13,7 +13,6 @@ import {
   Spacer,
   WarningOutlineIcon,
 } from "native-base";
-import { useAuthContext } from "../../hooks/useAuth";
 import {
   useLogInMutation,
   LogInMutationVariables,
@@ -22,6 +21,7 @@ import { client } from "../../client/graphqlClient";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import useToastAlert from "../../hooks/useToastAlert";
+import { useAuthContext } from "./AuthProvider";
 
 export default function Login() {
   const navigation = useNavigation();

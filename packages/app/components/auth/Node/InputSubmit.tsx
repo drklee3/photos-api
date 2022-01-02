@@ -1,7 +1,6 @@
 import { UiNode, UiNodeInputAttributes } from "@ory/kratos-client";
-import { Button } from "native-base";
+import { Button, View } from "native-base";
 import React from "react";
-import { View } from "react-native";
 import { getNodeId, getNodeTitle } from "../helpers/form";
 
 interface Props extends InputSubmitProps {
@@ -30,10 +29,11 @@ export const NodeInputSubmit = ({
   const title = getNodeTitle(node);
 
   return (
-    <View testID={`field/${name}/${attributes.value}`}>
+    <View testID={`field/${name}/${attributes.value}`} mt="2">
       <Button
         testID="submit-form"
-        disabled={isSubmitting}
+        isLoading={isSubmitting}
+        colorScheme="blue"
         onPress={() => {
           onSubmitPress(attributes.name, attributes.value);
         }}

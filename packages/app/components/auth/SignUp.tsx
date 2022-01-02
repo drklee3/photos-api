@@ -12,7 +12,6 @@ import {
   Text,
   Spacer,
 } from "native-base";
-import { useAuthContext } from "../../hooks/useAuth";
 import {
   SignupMutationVariables,
   useSignupMutation,
@@ -20,6 +19,7 @@ import {
 import { client } from "../../client/graphqlClient";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
+import { useAuthContext } from "./AuthProvider";
 
 export default function Register() {
   const navigation = useNavigation();

@@ -14,8 +14,8 @@ import { handleFormSubmitError } from "./helpers/form";
 import ProjectPicker from "./ProjectPicker";
 import axios from "axios";
 import { ProjectContext } from "./ProjectProvider";
-import { KratosSessionWithToken } from "./helpers/state";
-import { Box, Center, Heading, Link, Text } from "native-base";
+import Loader from "./Loader";
+import { Box, Center, Heading, Link, Text, VStack } from "native-base";
 import useToastAlert from "../../hooks/useToastAlert";
 
 interface Params {
@@ -106,37 +106,69 @@ const Login = () => {
   };
 
   return (
-    <Box>
-      <Box>
-        <Heading>Sign in to your account</Heading>
-        <SelfServiceFlow flow={flow} onSubmit={onSubmit} />
-      </Box>
-
-      <Center mt="6">
-        <Text
-          fontSize="sm"
-          color="coolGray.600"
+    <Center justifyContent="center" flex={1}>
+      <Box
+        safeArea
+        p="8"
+        py="12"
+        w="90%"
+        mb="24"
+        maxW="380"
+        bg="gray.900"
+        borderWidth={1}
+        borderColor="gray.800"
+        rounded="xl"
+      >
+        <Heading
+          size="xl"
+          fontWeight="600"
+          color="coolGray.800"
+          _dark={{
+            color: "warmGray.50",
+          }}
+        >
+          Hi there!
+        </Heading>
+        <Heading
+          mt="1"
           _dark={{
             color: "warmGray.200",
           }}
+          color="coolGray.600"
+          size="xs"
         >
-          Don't have an account?
-        </Text>
-        <Link
-          _text={{
-            color: "blue.400",
-            fontWeight: "medium",
-            fontSize: "sm",
-            textDecoration: "none",
-          }}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          Sign up
-        </Link>
-      </Center>
+          Please sign in to continue
+        </Heading>
 
-      <ProjectPicker />
-    </Box>
+        <VStack space={3} mt="5">
+          <Loader visible={flow !== undefined}>
+            <SelfServiceFlow flow={flow} onSubmit={onSubmit} />
+          </Loader>
+          <Center mt="6">
+            <Text
+              fontSize="sm"
+              color="coolGray.600"
+              _dark={{
+                color: "warmGray.200",
+              }}
+            >
+              Don't have an account?
+            </Text>
+            <Link
+              _text={{
+                color: "blue.400",
+                fontWeight: "medium",
+                fontSize: "sm",
+                textDecoration: "none",
+              }}
+              onPress={() => navigation.navigate("SignUp")}
+            >
+              Sign up
+            </Link>
+          </Center>
+        </VStack>
+      </Box>
+    </Center>
   );
 };
 

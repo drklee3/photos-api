@@ -114,6 +114,7 @@ export const NodeInput = ({
       testID={`field/${name}`}
       isDisabled={disabled}
       isInvalid={node.messages?.length > 0}
+      height={attributes.type === "hidden" ? "0" : undefined}
     >
       <FormControl.Label>{title}</FormControl.Label>
       <Input

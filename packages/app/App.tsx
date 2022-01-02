@@ -15,14 +15,13 @@ import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { config, theme } from "./nativebase.config";
-import useAuth, { AuthContext } from "./hooks/useAuth";
+import AuthProvider from "./components/auth/AuthProvider";
 
 const queryClient = new QueryClient();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  const authContextData = useAuth();
 
   let [fontsLoaded] = useFonts({
     Poppins_300Light,
@@ -36,14 +35,14 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <AuthContext.Provider value={authContextData}>
+        <AuthProvider>
           <QueryClientProvider client={queryClient} contextSharing={true}>
             <NativeBaseProvider config={config} theme={theme}>
               <Navigation colorScheme={colorScheme} />
               <StatusBar />
             </NativeBaseProvider>
           </QueryClientProvider>
-        </AuthContext.Provider>
+        </AuthProvider>
       </SafeAreaProvider>
     );
   }

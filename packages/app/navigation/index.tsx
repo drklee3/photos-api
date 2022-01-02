@@ -39,8 +39,8 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import LoginScreen from "../screens/LoginScreen";
-import { useAuthContext } from "../hooks/useAuth";
 import SignUpScreen from "../screens/SignUpScreen";
+import { useAuthContext } from "../components/auth/AuthProvider";
 
 export default function Navigation({
   colorScheme,
@@ -64,18 +64,18 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const authCtx = useAuthContext();
+  const {
+    state: { isLoading, isAuthenticated },
+  } = useAuthContext();
 
-  console.log(authCtx);
-
-  if (!authCtx || authCtx.state.isLoading) {
-    // Trying to restore token, shouldn't be null
+  if (isLoading) {
+    // Trying to restore token
     return <Box>Loading...</Box>;
   }
 
   return (
     <Stack.Navigator>
-      {authCtx.state.isLoggedIn ? MainScreens() : AuthScreens()}
+      {isAuthenticated ? MainScreens() : AuthScreens()}
     </Stack.Navigator>
   );
 }
