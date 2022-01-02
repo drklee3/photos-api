@@ -2,14 +2,14 @@ import { Job, Worker } from 'bullmq'
 import path from 'path'
 import { NEW_PHOTOS_QUEUE } from './queues'
 import { ImageResizeJob } from './model/imageResizeJob'
-import imageResize from './imageResize'
+import {} from './imageResize'
 import { redisConnectionInfo } from './connection'
 
 const processorFile = path.join(__dirname, 'imageResize.ts')
 
 export const worker = new Worker<ImageResizeJob>(
   NEW_PHOTOS_QUEUE,
-  imageResize,
+  processorFile,
   {
     ...redisConnectionInfo,
     autorun: true,

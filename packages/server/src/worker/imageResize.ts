@@ -4,7 +4,6 @@ import sharp from 'sharp'
 import { Readable } from 'stream'
 import { encode } from 'blurhash'
 import { PrismaClient } from '.prisma/client'
-import path from 'path'
 import { ImageResizeJob } from './model/imageResizeJob'
 import { getImageKey, PhotoSizeEnum, sizeToWidth } from '../store/image'
 
@@ -19,6 +18,8 @@ export const aggregatedS3 = new S3({
 
 const prisma = new PrismaClient()
 
+console.log('test')
+
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Array<any> = []
 
@@ -31,7 +32,8 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
 
 const IMG_SIZES: PhotoSizeEnum[] = ['LARGE', 'MEDIUM', 'SMALL', 'THUMBNAIL']
 
-export default async function (job: Job<ImageResizeJob>) {
+module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
+  console.log('worker process: got new job:', job)
   const { id, filename, mimetype } = job.data
 
   // Get original image
@@ -40,6 +42,7 @@ export default async function (job: Job<ImageResizeJob>) {
     Key: getImageKey(id, 'ORIGINAL'),
   })
 
+  job.updateProgress(10)
   job.log('downloaded image')
 
   if (!img.Body) {
@@ -70,6 +73,7 @@ export default async function (job: Job<ImageResizeJob>) {
     .toBuffer()
   outputs.push({ size: 'FULL', buf: fullRes })
 
+  job.updateProgress(20)
   job.log('created full resolution webp')
 
   // First do all image resizing sequentially, CPU bound
@@ -89,6 +93,7 @@ export default async function (job: Job<ImageResizeJob>) {
     job.log(`created ${size} resolution webp`)
   }
 
+  job.updateProgress(70)
   job.log('creating blurhash')
 
   // Generate and save blurhash to db
@@ -128,6 +133,7 @@ export default async function (job: Job<ImageResizeJob>) {
 
   // Uploads can be concurrent
   await Promise.all(uploads)
+  job.updateProgress(100)
   job.log('photos uploaded')
 }
 

@@ -10,7 +10,7 @@ export function generateApiToken() {
 }
 
 export function getApiTokenFromReq(req: Request): string | undefined {
-  const authHeader = req.header('authorization')?.replace('Bearer', '')
+  const authHeader = req.header('authorization')?.replace('Bearer', '').trim()
 
   return authHeader
 }
