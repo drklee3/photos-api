@@ -32,6 +32,10 @@ export const AuthContext = createContext<AuthContextData>({
   },
 });
 
+export function useAuthContext() {
+  return useContext(AuthContext);
+}
+
 interface AuthContextProps {
   children: ReactNode;
 }
