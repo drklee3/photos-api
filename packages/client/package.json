@@ -1,8 +1,15 @@
 {
   "name": "@picatch/client",
   "version": "1.0.0",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "directory": "dist"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "yarn run clean && tsc",

@@ -9736,7 +9736,7 @@
           },
           {
             "name": "url",
-            "description": "The public s3 url to GET this image. The size default it is LARGE.",
+            "description": "The public s3 url to GET this image. The size by default is LARGE.",
             "args": [
               {
                 "name": "size",

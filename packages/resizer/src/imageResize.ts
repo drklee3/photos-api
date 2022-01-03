@@ -1,24 +1,11 @@
-import { SandboxedJob, Job } from 'bullmq'
-import { S3 } from '@aws-sdk/client-s3'
+import type { S3 } from '@aws-sdk/client-s3'
 import sharp from 'sharp'
 import { Readable } from 'stream'
 import { encode } from 'blurhash'
-import { PrismaClient } from '.prisma/client'
 import { ImageResizeJob } from './model/imageResizeJob'
-import { getImageKey, PhotoSizeEnum, sizeToWidth } from '../store/image'
-
-export const aggregatedS3 = new S3({
-  endpoint: process.env.S3_ENDPOINT,
-  region: process.env.S3_REGION,
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
-  },
-})
-
-const prisma = new PrismaClient()
-
-console.log('test')
+import { getImageKey, sizeToWidth } from './image'
+import type { Sdk } from '@picatch/client/src/graphqlRequest'
+import { PhotoSize } from '@picatch/client/src/graphqlRequest'
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Array<any> = []
@@ -30,20 +17,28 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
   })
 }
 
-const IMG_SIZES: PhotoSizeEnum[] = ['LARGE', 'MEDIUM', 'SMALL', 'THUMBNAIL']
+const IMG_SIZES: PhotoSize[] = [
+  PhotoSize.Large,
+  PhotoSize.Medium,
+  PhotoSize.Small,
+  PhotoSize.Thumbnail,
+]
 
-module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
+export async function resizeImage(
+  s3client: S3,
+  queryClient: Sdk,
+  job: ImageResizeJob,
+) {
   console.log('worker process: got new job:', job)
-  const { id, filename, mimetype } = job.data
+  const { id, filename, mimetype } = job
 
   // Get original image
-  const img = await aggregatedS3.getObject({
+  const img = await s3client.getObject({
     Bucket: process.env.S3_BUCKET,
-    Key: getImageKey(id, 'ORIGINAL'),
+    Key: getImageKey(id, PhotoSize.Original),
   })
 
-  job.updateProgress(10)
-  job.log('downloaded image')
+  console.log('downloaded image')
 
   if (!img.Body) {
     throw new Error('image has no body! spooky...')
@@ -59,10 +54,10 @@ module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
     throw new Error('image dimensions not found')
   }
 
-  job.log('parsed metadata')
+  console.log('parsed metadata')
 
   const outputs: {
-    size: PhotoSizeEnum
+    size: PhotoSize
     buf: Buffer
   }[] = []
 
@@ -71,10 +66,9 @@ module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
     .webp({ quality: 80 })
     .withMetadata()
     .toBuffer()
-  outputs.push({ size: 'FULL', buf: fullRes })
+  outputs.push({ size: PhotoSize.Full, buf: fullRes })
 
-  job.updateProgress(20)
-  job.log('created full resolution webp')
+  console.log('created full resolution webp')
 
   // First do all image resizing sequentially, CPU bound
   for (const size of IMG_SIZES) {
@@ -90,27 +84,32 @@ module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
 
     outputs.push({ size, buf: output })
 
-    job.log(`created ${size} resolution webp`)
+    console.log(`created ${size} resolution webp`)
   }
 
-  job.updateProgress(70)
-  job.log('creating blurhash')
+  console.log('creating blurhash')
 
   // Generate and save blurhash to db
   const blurHash = await generateBlurHash(outputs[outputs.length - 1].buf)
 
-  job.log('created blurhash')
+  console.log('created blurhash')
 
-  await prisma.photo.update({
-    where: {
-      id,
-    },
-    data: {
-      blurHash,
-    },
-  })
+  try {
+    await queryClient.UpdateOnePhoto({
+      data: {
+        blurHash: {
+          set: blurHash,
+        },
+      },
+      where: {
+        id,
+      },
+    })
+  } catch (e) {
+    console.error('failed to update photo', e)
+  }
 
-  job.log('updated photo db entry with blurhash')
+  console.log('updated photo db entry with blurhash')
 
   const uploads = []
 
@@ -118,7 +117,7 @@ module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
     const key = getImageKey(id, output.size)
 
     // Upload each small pic
-    const uploadPromise = aggregatedS3.putObject({
+    const uploadPromise = s3client.putObject({
       Bucket: process.env.S3_BUCKET,
       Key: key,
       Body: output.buf,
@@ -129,12 +128,11 @@ module.exports = async (job: SandboxedJob<ImageResizeJob>) => {
     uploads.push(uploadPromise)
   }
 
-  job.log(`uploading ${uploads.length} photos...`)
+  console.log(`uploading ${uploads.length} photos...`)
 
   // Uploads can be concurrent
   await Promise.all(uploads)
-  job.updateProgress(100)
-  job.log('photos uploaded')
+  console.log('photos uploaded')
 }
 
 async function generateBlurHash(input: Buffer): Promise<string> {

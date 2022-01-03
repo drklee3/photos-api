@@ -113,8 +113,6 @@ export default ({ children }: AuthContextProps) => {
     syncSession(state.session);
   }, [state.session]);
 
-  console.log("state", state);
-
   const signOut = async () => {
     // Can't sign out if there isn't already a session. Token can be undefined
     // if on web

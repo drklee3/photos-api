@@ -4,9 +4,7 @@ import { Queue } from 'bullmq'
 import { FileUpload } from 'graphql-upload'
 import exif from 'exif-reader'
 import sharp from 'sharp'
-import { NewPhotosQueue, NEW_PHOTOS_QUEUE } from '../worker/queues'
 import type { Application } from 'express'
-import { ImageResizeJob } from '../worker/model/imageResizeJob'
 import { aggregatedS3 } from './s3'
 import { getImageKey } from './image'
 
@@ -55,18 +53,7 @@ export const uploadFile = async (
     throw new Error('file output is invalid')
   }
 
-  const queue: Queue<ImageResizeJob> = app.get(NEW_PHOTOS_QUEUE)
-  await queue.add(
-    `Resize new image`,
-    {
-      id,
-      filename,
-      mimetype,
-    },
-    {
-      timeout: 300000,
-    },
-  )
+  // TODO: Add to RabbitMQ queue
 
   return {
     filename,

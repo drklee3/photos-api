@@ -1,0 +1,8 @@
+mutation UpdateOnePhoto(
+  $data: PhotoUpdateInput!
+  $where: PhotoWhereUniqueInput!
+) {
+  updateOnePhoto(data: $data, where: $where) {
+    ...PhotoData
+  }
+}

@@ -53,11 +53,11 @@ describe("auth", () => {
   });
 
   test("query currentUser before signup", async () => {
-    await expect(sdk.CurrentUserQuery()).rejects.toThrow("Not Authorised!");
+    await expect(sdk.CurrentUser()).rejects.toThrow("Not Authorised!");
   });
 
   test("signup", async () => {
-    const res = await sdk.SignupMutation({
+    const res = await sdk.Signup({
       username: "bob",
       password: "Hunter2",
       email: "me@example.com",
@@ -65,12 +65,12 @@ describe("auth", () => {
 
     expect(res.signup).toBeDefined();
 
-    expect(res.signup?.username).toBe("bob");
-    expect(res.signup?.email).toBe("me@example.com");
+    expect(res.signup?.user?.username).toBe("bob");
+    expect(res.signup?.user?.email).toBe("me@example.com");
   });
 
   test("query currentUser", async () => {
-    const res = await sdk.CurrentUserQuery();
+    const res = await sdk.CurrentUser();
 
     expect(res.currentUser).toBeDefined();
 
@@ -80,7 +80,7 @@ describe("auth", () => {
 
   test("signup when already signed in", async () => {
     await expect(
-      sdk.SignupMutation({
+      sdk.Signup({
         username: "bob",
         password: "Hunter2",
         email: "me@example.com",
@@ -89,9 +89,9 @@ describe("auth", () => {
   });
 
   test("signout", async () => {
-    await sdk.LogoutMutation();
+    await sdk.Logout();
 
     // Should actually sign out
-    await expect(sdk.CurrentUserQuery()).rejects.toThrow("Not Authorised!");
+    await expect(sdk.CurrentUser()).rejects.toThrow("Not Authorised!");
   });
 });

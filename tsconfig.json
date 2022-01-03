@@ -1,19 +1,15 @@
 {
- "include": [],
- "files": [],
+  "include": [],
+  "files": [],
   "exclude": [
-    "packages/**/tests/**",
-    "packages/**/dist/**"
+     "node_modules",
+     "packages/**/tests/**",
+     "packages/**/dist/**"
  ],
   "references": [
-   {
-      "path": "./packages/app"
-   },
-   {
-      "path": "./packages/server"
-   },
-   {
-      "path": "./packages/client"
-   }
- ],
- }
+   { "path": "./packages/app" },
+   { "path": "./packages/server" },
+   { "path": "./packages/client" },
+   { "path": "./packages/shared" }
+ ]
+}

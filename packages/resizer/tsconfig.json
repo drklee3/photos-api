@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "lib": ["esnext"],
+    "strict": true,
+    // @aws-sdk/client-s3 has some type errors
+    "skipLibCheck": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "src/**/*",
+  ],
+  "references": [
+    {
+      "path": "../client"
+    },
+    {
+      "path": "../shared"
+    }
+  ],
+}

@@ -1019,7 +1019,7 @@ export type Photo = {
   size: Scalars['Int'];
   title?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
-  /** The public s3 url to GET this image. The size default it is LARGE. */
+  /** The public s3 url to GET this image. The size by default is LARGE. */
   url?: Maybe<Scalars['String']>;
   width: Scalars['Int'];
 };
@@ -2268,12 +2268,20 @@ export type CreateAlbumMutationVariables = Exact<{
 
 export type CreateAlbumMutation = { __typename?: 'Mutation', createOneAlbum: { __typename?: 'Album', id: string, title: string, description?: string | null | undefined, viewCount: number, visibility: Visibility, createdAt: any, updatedAt: any, photos: Array<{ __typename?: 'PhotoOnAlbum', photo: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }, comments: Array<{ __typename?: 'Comment', content: string, createdAt: any, updatedAt: any, author: { __typename?: 'User', id: string, username: string } }>, likes: Array<{ __typename?: 'Like', id: string, author: { __typename?: 'User', id: string, username: string } }> }>, author: { __typename?: 'User', id: string, username: string }, members: Array<{ __typename?: 'UserOnAlbum', role: AlbumRole, user: { __typename?: 'User', id: string, username: string } }> } };
 
+export type UpdateOnePhotoMutationVariables = Exact<{
+  data: PhotoUpdateInput;
+  where: PhotoWhereUniqueInput;
+}>;
+
+
+export type UpdateOnePhotoMutation = { __typename?: 'Mutation', updateOnePhoto?: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any } | null | undefined };
+
 export type UploadPhotosMutationVariables = Exact<{
   files: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
 
-export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, size: number, mimetype: string, exif: any, createdAt: any, updatedAt: any }> };
+export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }> };
 
 export type AlbumQueryVariables = Exact<{
   where: AlbumWhereUniqueInput;
@@ -2456,23 +2464,33 @@ export const useCreateAlbumMutation = <
       (variables?: CreateAlbumMutationVariables) => fetcher<CreateAlbumMutation, CreateAlbumMutationVariables>(client, CreateAlbumDocument, variables, headers)(),
       options
     );
+export const UpdateOnePhotoDocument = `
+    mutation UpdateOnePhoto($data: PhotoUpdateInput!, $where: PhotoWhereUniqueInput!) {
+  updateOnePhoto(data: $data, where: $where) {
+    ...PhotoData
+  }
+}
+    ${PhotoDataFragmentDoc}`;
+export const useUpdateOnePhotoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateOnePhotoMutation, TError, UpdateOnePhotoMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateOnePhotoMutation, TError, UpdateOnePhotoMutationVariables, TContext>(
+      'UpdateOnePhoto',
+      (variables?: UpdateOnePhotoMutationVariables) => fetcher<UpdateOnePhotoMutation, UpdateOnePhotoMutationVariables>(client, UpdateOnePhotoDocument, variables, headers)(),
+      options
+    );
 export const UploadPhotosDocument = `
     mutation UploadPhotos($files: [Upload!]!) {
   uploadPhotos(files: $files) {
-    id
-    title
-    description
-    fileName
-    width
-    height
-    size
-    mimetype
-    exif
-    createdAt
-    updatedAt
+    ...PhotoData
   }
 }
-    `;
+    ${PhotoDataFragmentDoc}`;
 export const useUploadPhotosMutation = <
       TError = unknown,
       TContext = unknown
