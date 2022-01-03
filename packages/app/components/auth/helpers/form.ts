@@ -129,6 +129,13 @@ export function handleFormSubmitError<T>(
         });
         signOut();
         return;
+      case 410:
+        showToast({
+          title: "Session expired",
+          description: "Please try again.",
+          status: "warning",
+        });
+        return;
     }
 
     showToast({

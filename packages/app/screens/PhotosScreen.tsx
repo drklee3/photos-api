@@ -10,6 +10,7 @@ import Gallery from "../components/gallery/Gallery";
 import { ImageData } from "../components/gallery/ImageData";
 import Button, { ButtonType } from "../components/Button";
 import Upload from "../components/Upload";
+import LogOut from "../components/auth/LogOut";
 
 interface ImageItemProps {
   asset: MediaLibrary.Asset;
@@ -77,6 +78,7 @@ export default function PhotosScreen({
       <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
         Photos
       </Heading>
+      <LogOut />
       <Upload />
       {apiImages && (
         <Gallery imageList={apiImages} rowWidth={1000} minRowAspectRatio={3} />

@@ -65,8 +65,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const {
+    state,
     state: { isLoading, isAuthenticated },
   } = useAuthContext();
+
+  console.log("nav state", state);
 
   if (isLoading) {
     // Trying to restore token

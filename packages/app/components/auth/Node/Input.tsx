@@ -111,8 +111,6 @@ export const NodeInput = ({
   const name = getNodeId(node);
   const title = getNodeTitle(node);
 
-  console.log("node", name, "messages", node.messages);
-
   return (
     <FormControl
       testID={`field/${name}`}

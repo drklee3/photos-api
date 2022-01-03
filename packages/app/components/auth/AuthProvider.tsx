@@ -4,21 +4,18 @@ import React, {
   useContext,
   useEffect,
   useReducer,
-  useState,
 } from "react";
 import {
   deleteLocalAuthenticatedSession,
   sessionStateReducer,
   getLocalAuthenticatedSession,
   AuthActionType,
-  SessionState,
   KratosSessionWithToken,
   setLocalAuthenticatedSession,
   AuthContextData,
 } from "./helpers/state";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { newKratosSdk } from "./helpers/sdk";
-import { Session as KratosSession } from "@ory/kratos-client";
 import { ProjectContext } from "./ProjectProvider";
 
 export const AuthContext = createContext<AuthContextData>({
@@ -26,7 +23,6 @@ export const AuthContext = createContext<AuthContextData>({
   signOut: () => {},
   state: {
     isLoading: true,
-    didFetch: false,
     isAuthenticated: false,
     session: null,
   },
@@ -46,13 +42,13 @@ export default ({ children }: AuthContextProps) => {
   const [state, dispatch] = useReducer(sessionStateReducer, {
     session: null,
     isLoading: true,
-    didFetch: false,
     isAuthenticated: false,
   });
 
   useEffect(() => {
     const bootstrapAsync = async () => {
       const session = await getLocalAuthenticatedSession();
+      console.log("fetched local session:", session?.session.id);
 
       // This might be signed in or not, fetches locally saved state
       dispatch({
@@ -72,6 +68,7 @@ export default ({ children }: AuthContextProps) => {
       }
 
       if (state.session) {
+        console.log("saving session id:", state.session.session.id);
         await setLocalAuthenticatedSession(state.session);
       }
     };
@@ -87,16 +84,9 @@ export default ({ children }: AuthContextProps) => {
           auth.session_token
         );
 
-        // Logged in!
-        dispatch({
-          type: AuthActionType.LogIn,
-          session: {
-            // New session data
-            session: session,
-            // Reuse old token
-            session_token: auth.session_token,
-          },
-        });
+        console.log("current session", session);
+
+        // Don't need to do anything with this really, just to check if it's valid
       } catch (err) {
         if (!axios.isAxiosError(err)) {
           console.error(err);
@@ -123,6 +113,8 @@ export default ({ children }: AuthContextProps) => {
     syncSession(state.session);
   }, [state.session]);
 
+  console.log("state", state);
+
   const signOut = async () => {
     // Can't sign out if there isn't already a session. Token can be undefined
     // if on web
@@ -142,10 +134,8 @@ export default ({ children }: AuthContextProps) => {
       value={{
         signOut,
         logIn,
-
         state: {
-          didFetch: state.isLoading,
-          isAuthenticated: !!state.session?.session_token,
+          isAuthenticated: Boolean(state.session?.session),
           isLoading: state.isLoading,
           session: state.session,
         },

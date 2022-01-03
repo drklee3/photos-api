@@ -11,11 +11,8 @@ export default function LogOut() {
   const { project } = useContext(ProjectContext);
   const {
     signOut,
-    state,
     state: { session, isAuthenticated },
   } = useAuthContext();
-
-  console.log(state);
 
   const isWeb = Platform.OS === "web";
   const toast = useToastAlert();

@@ -21,7 +21,6 @@ export interface KratosSessionWithToken {
 export interface SessionState {
   session: KratosSessionWithToken | null;
   isLoading: boolean;
-  didFetch: boolean;
   isAuthenticated: boolean;
 }
 

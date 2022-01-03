@@ -17,6 +17,7 @@ import { ProjectContext } from "./ProjectProvider";
 import Loader from "./Loader";
 import { Box, Center, Heading, Link, Text, VStack } from "native-base";
 import useToastAlert from "../../hooks/useToastAlert";
+import { Platform } from "react-native";
 
 interface Params {
   refresh: boolean;
@@ -33,22 +34,27 @@ interface RouteOptions {
 const Login = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteOptions>();
+  const isWeb = Platform.OS === "web";
 
   const { project } = useContext(ProjectContext);
   const { logIn, signOut, state } = useAuthContext();
   const [flow, setFlow] = useState<SelfServiceLoginFlow | undefined>(undefined);
 
   const toast = useToastAlert();
+  const sdk = newKratosSdk(project);
 
   const initializeFlow = async () => {
     try {
-      const res = await newKratosSdk(
-        project
-      ).initializeSelfServiceLoginFlowWithoutBrowser(
-        route.params?.refresh,
-        route.params?.aal,
-        state.session?.session_token
-      );
+      const res = isWeb
+        ? await sdk.initializeSelfServiceLoginFlowForBrowsers(
+            route.params?.refresh,
+            route.params?.aal
+          )
+        : await sdk.initializeSelfServiceLoginFlowWithoutBrowser(
+            route.params?.refresh,
+            route.params?.aal,
+            state.session?.session_token
+          );
 
       // Set form data
       setFlow(res.data);
@@ -75,14 +81,15 @@ const Login = () => {
     }
 
     try {
-      const res = await newKratosSdk(project).submitSelfServiceLoginFlow(
+      const res = await sdk.submitSelfServiceLoginFlow(
         flow.id,
         state.session?.session_token,
         payload
       );
 
-      if (!res.data.session_token) {
-        console.error("missing session token");
+      // Session token not provided on web
+      if (!res.data.session) {
+        console.error("missing session");
         return;
       }
 
