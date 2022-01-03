@@ -131,6 +131,12 @@ export function handleFormSubmitError<T>(
         return;
     }
 
+    showToast({
+      title: "Unknown Error",
+      description: err.response.data,
+      status: "error",
+    });
+
     console.error(err, err.response?.data);
   };
 }

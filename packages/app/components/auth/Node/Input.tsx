@@ -1,5 +1,5 @@
 import { UiNode, UiNodeInputAttributes } from "@ory/kratos-client";
-import { FormControl, Input } from "native-base";
+import { FormControl, Input, View, Text } from "native-base";
 import React from "react";
 import { TextInputProps } from "react-native";
 import {
@@ -7,8 +7,9 @@ import {
   getNodeTitle,
   isUiNodeInputAttributes,
 } from "../helpers/form";
+import { InputSubmitProps } from "./InputSubmit";
 
-interface Props extends InputProps {
+interface Props extends InputSubmitProps, InputProps {
   node: UiNode;
   attributes: UiNodeInputAttributes;
 }
@@ -70,6 +71,7 @@ export const NodeInput = ({
   attributes,
   value,
   onChange,
+  onSubmitPress,
   disabled,
   textInputOverride,
 }: Props) => {
@@ -109,11 +111,14 @@ export const NodeInput = ({
   const name = getNodeId(node);
   const title = getNodeTitle(node);
 
+  console.log("node", name, "messages", node.messages);
+
   return (
     <FormControl
       testID={`field/${name}`}
       isDisabled={disabled}
-      isInvalid={node.messages?.length > 0}
+      isRequired={attributes.required}
+      isInvalid={node.messages && node.messages.length > 0}
       height={attributes.type === "hidden" ? "0" : undefined}
     >
       <FormControl.Label>{title}</FormControl.Label>
@@ -126,7 +131,13 @@ export const NodeInput = ({
         {...extraProps}
       />
       {node.messages?.map(({ text, id, type }, k) => (
-        <FormControl.ErrorMessage key={`${id}${k}`}>
+        <FormControl.ErrorMessage
+          key={`${id}${k}`}
+          _stack={{
+            // Prevent text overflow
+            display: "block",
+          }}
+        >
           {text}
         </FormControl.ErrorMessage>
       ))}

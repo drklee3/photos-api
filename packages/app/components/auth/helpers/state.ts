@@ -9,10 +9,12 @@ import { Platform } from "react-native";
 const userSessionKey = "user_session";
 
 export interface KratosSessionWithToken {
-  // The session token
-  session_token: string;
+  // The session token, undefined if this is on web or if the user is not logged in
+  // Session token is not needed on web as it is stored in cookies and should
+  // not be accessible via js
+  session_token?: string;
 
-  // The session itself
+  // The session itself, undefined only if user is not logged in.
   session: KratosSession;
 }
 

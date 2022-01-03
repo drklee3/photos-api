@@ -8,7 +8,7 @@ export const resilience = (axios: AxiosInstance) => {
     async (error) => {
       if (!error.config) {
         console.error("Received network error without axios details", error);
-        throw new Error(error);
+        throw error;
       }
 
       if (
@@ -21,7 +21,7 @@ export const resilience = (axios: AxiosInstance) => {
           config: error.config,
           error,
         });
-        throw new Error(error);
+        throw error;
       }
 
       if (
@@ -33,7 +33,7 @@ export const resilience = (axios: AxiosInstance) => {
           config: error.config,
           error,
         });
-        throw new Error(error);
+        throw error;
       }
 
       const config = {

@@ -124,15 +124,11 @@ export default ({ children }: AuthContextProps) => {
   }, [state.session]);
 
   const signOut = async () => {
-    // Can't sign out if there isn't already a session token
-    if (!state.session?.session_token) {
+    // Can't sign out if there isn't already a session. Token can be undefined
+    // if on web
+    if (!state.session?.session) {
       return;
     }
-
-    const sdk = newKratosSdk(project);
-    await sdk.submitSelfServiceLogoutFlowWithoutBrowser({
-      session_token: state.session?.session_token,
-    });
 
     dispatch({ type: AuthActionType.SignOut });
   };
