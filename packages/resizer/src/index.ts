@@ -3,7 +3,7 @@ import { getSdk } from '@picatch/client'
 import { GraphQLClient } from 'graphql-request'
 import amqp, { Channel } from 'amqp-connection-manager'
 import { ConsumeMessage } from 'amqplib'
-import { ImageResizeJob } from '@picatch/shared'
+import { ImageResizeJob, IMAGE_RESIZE_QUEUE_NAME } from '@picatch/shared'
 import { resizeImage } from './imageResize'
 
 // S3
@@ -21,8 +21,6 @@ const graphqlClient = new GraphQLClient(process.env.GRAPHQL_ENDPOINT!)
 const queryClient = getSdk(graphqlClient)
 
 // AMQP
-const QUEUE_NAME = 'new_images'
-
 const amqpConn = amqp.connect(process.env.AMQP_ENDPOINT!)
 amqpConn.on('connect', () => {
   console.log('amqp connected')
@@ -36,9 +34,9 @@ const channelWrapper = amqpConn.createChannel({
   json: true,
   setup: (channel: Channel) => {
     return Promise.all([
-      channel.assertQueue(QUEUE_NAME, { durable: true }),
+      channel.assertQueue(IMAGE_RESIZE_QUEUE_NAME, { durable: true }),
       channel.prefetch(1),
-      channel.consume(QUEUE_NAME, onMessage),
+      channel.consume(IMAGE_RESIZE_QUEUE_NAME, onMessage),
     ])
   },
 })

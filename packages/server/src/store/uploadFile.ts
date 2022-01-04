@@ -1,12 +1,32 @@
 import { ReadStream } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
-import { Queue } from 'bullmq'
+import amqp, { Channel } from 'amqp-connection-manager'
 import { FileUpload } from 'graphql-upload'
 import exif from 'exif-reader'
 import sharp from 'sharp'
 import type { Application } from 'express'
 import { aggregatedS3 } from './s3'
+import { ImageResizeJob, IMAGE_RESIZE_QUEUE_NAME } from '@picatch/shared'
 import { getImageKey } from './image'
+
+// AMQP
+const amqpConn = amqp.connect(process.env.AMQP_ENDPOINT!)
+amqpConn.on('connect', () => {
+  console.log('amqp connected')
+})
+
+amqpConn.on('disconnect', (err) => {
+  console.log('amqp disconnected', err)
+})
+
+const channelWrapper = amqpConn.createChannel({
+  json: true,
+  setup: (channel: Channel) => {
+    return Promise.all([
+      channel.assertQueue(IMAGE_RESIZE_QUEUE_NAME, { durable: true }),
+    ])
+  },
+})
 
 function streamToBuffer(stream: ReadStream): Promise<Buffer> {
   const chunks: Array<any> = []
@@ -54,6 +74,14 @@ export const uploadFile = async (
   }
 
   // TODO: Add to RabbitMQ queue
+
+  const job: ImageResizeJob = {
+    id,
+    filename,
+    mimetype,
+  }
+
+  await channelWrapper.sendToQueue(IMAGE_RESIZE_QUEUE_NAME, job)
 
   return {
     filename,
