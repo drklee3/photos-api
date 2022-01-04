@@ -4,12 +4,10 @@ import { ApolloServer } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import express from 'express'
 import http from 'http'
-import { ExpressAdapter } from '@bull-board/express'
-import { createBullBoard } from '@bull-board/api'
-import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 
 import { registerMiddlewares } from './middleware'
 import { graphqlUploadExpress } from 'graphql-upload'
+import { channelWrapper } from './store/uploadFile'
 
 let origin: string
 
@@ -73,7 +71,7 @@ function shutdown() {
 }
 
 async function shutdownAsync() {
-  // await worker.close()
+  await channelWrapper.close()
 }
 
 process.on('SIGINT', shutdown)

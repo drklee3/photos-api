@@ -300,11 +300,6 @@ input AlbumWhereUniqueInput {
   id: String
 }
 
-type AuthUser {
-  token: String
-  user: User
-}
-
 type Comment {
   author: User!
   content: String!
@@ -787,10 +782,7 @@ type Mutation {
   deleteOnePhotoOnAlbum(where: PhotoOnAlbumWhereUniqueInput!): PhotoOnAlbum
   deleteOneUser(where: UserWhereUniqueInput!): User
   incrementAlbumViewCount(id: String!): Album
-  login(emailOrUsername: String!, password: String!): AuthUser
-  logout: Boolean
   shareAlbum(albumId: String!, role: AlbumRole!, targetUserId: String!): Album
-  signup(email: String!, password: String!, username: String!): AuthUser
   updateOneAlbum(data: AlbumUpdateInput!, where: AlbumWhereUniqueInput!): Album
   updateOneComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updateOnePhoto(data: PhotoUpdateInput!, where: PhotoWhereUniqueInput!): Photo
@@ -1569,7 +1561,6 @@ input UserCreateWithoutAlbumsInput {
   comments: CommentCreateNestedManyWithoutAuthorInput
   email: String!
   id: String
-  password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
@@ -1580,7 +1571,6 @@ input UserCreateWithoutCommentsInput {
   albums: AlbumCreateNestedManyWithoutAuthorInput
   email: String!
   id: String
-  password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
@@ -1591,7 +1581,6 @@ input UserCreateWithoutLikeInput {
   comments: CommentCreateNestedManyWithoutAuthorInput
   email: String!
   id: String
-  password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
@@ -1603,7 +1592,6 @@ input UserCreateWithoutPhotosInput {
   comments: CommentCreateNestedManyWithoutAuthorInput
   email: String!
   id: String
-  password: String!
   sharedAlbums: UserOnAlbumCreateNestedManyWithoutUserInput
   username: String!
 }
@@ -1614,7 +1602,6 @@ input UserCreateWithoutSharedAlbumsInput {
   comments: CommentCreateNestedManyWithoutAuthorInput
   email: String!
   id: String
-  password: String!
   photos: PhotoCreateNestedManyWithoutAuthorInput
   username: String!
 }
@@ -1808,7 +1795,6 @@ input UserOrderByWithRelationInput {
   comments: CommentOrderByRelationAggregateInput
   email: SortOrder
   id: SortOrder
-  password: SortOrder
   photos: PhotoOrderByRelationAggregateInput
   sharedAlbums: UserOnAlbumOrderByRelationAggregateInput
   username: SortOrder
@@ -1820,7 +1806,6 @@ input UserUpdateInput {
   comments: CommentUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
@@ -1873,7 +1858,6 @@ input UserUpdateWithoutAlbumsInput {
   comments: CommentUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
@@ -1884,7 +1868,6 @@ input UserUpdateWithoutCommentsInput {
   albums: AlbumUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
@@ -1895,7 +1878,6 @@ input UserUpdateWithoutLikeInput {
   comments: CommentUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
   sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
@@ -1907,7 +1889,6 @@ input UserUpdateWithoutPhotosInput {
   comments: CommentUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   sharedAlbums: UserOnAlbumUpdateManyWithoutUserInput
   username: StringFieldUpdateOperationsInput
 }
@@ -1918,7 +1899,6 @@ input UserUpdateWithoutSharedAlbumsInput {
   comments: CommentUpdateManyWithoutAuthorInput
   email: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
-  password: StringFieldUpdateOperationsInput
   photos: PhotoUpdateManyWithoutAuthorInput
   username: StringFieldUpdateOperationsInput
 }
@@ -1957,7 +1937,6 @@ input UserWhereInput {
   comments: CommentListRelationFilter
   email: StringFilter
   id: StringFilter
-  password: StringFilter
   photos: PhotoListRelationFilter
   sharedAlbums: UserOnAlbumListRelationFilter
   username: StringFilter

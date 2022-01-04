@@ -68,7 +68,7 @@ const UploadPhoto = mutationField('uploadPhotos', {
     const promises = args.files.map((file) => uploadFile(file, context.req.app))
     const results = await Promise.allSettled(promises)
 
-    const userId = getUserId(context)
+    const userId = await getUserId(context)
     if (!userId) {
       throw new Error("user id not found, this shouldn't happen")
     }

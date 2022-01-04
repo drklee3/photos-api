@@ -1271,7 +1271,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentCreateNestedManyWithoutAuthorInput'] | null; // CommentCreateNestedManyWithoutAuthorInput
     email: string; // String!
     id?: string | null; // String
-    password: string; // String!
     photos?: NexusGenInputs['PhotoCreateNestedManyWithoutAuthorInput'] | null; // PhotoCreateNestedManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumCreateNestedManyWithoutUserInput'] | null; // UserOnAlbumCreateNestedManyWithoutUserInput
     username: string; // String!
@@ -1281,7 +1280,6 @@ export interface NexusGenInputs {
     albums?: NexusGenInputs['AlbumCreateNestedManyWithoutAuthorInput'] | null; // AlbumCreateNestedManyWithoutAuthorInput
     email: string; // String!
     id?: string | null; // String
-    password: string; // String!
     photos?: NexusGenInputs['PhotoCreateNestedManyWithoutAuthorInput'] | null; // PhotoCreateNestedManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumCreateNestedManyWithoutUserInput'] | null; // UserOnAlbumCreateNestedManyWithoutUserInput
     username: string; // String!
@@ -1291,7 +1289,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentCreateNestedManyWithoutAuthorInput'] | null; // CommentCreateNestedManyWithoutAuthorInput
     email: string; // String!
     id?: string | null; // String
-    password: string; // String!
     photos?: NexusGenInputs['PhotoCreateNestedManyWithoutAuthorInput'] | null; // PhotoCreateNestedManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumCreateNestedManyWithoutUserInput'] | null; // UserOnAlbumCreateNestedManyWithoutUserInput
     username: string; // String!
@@ -1302,7 +1299,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentCreateNestedManyWithoutAuthorInput'] | null; // CommentCreateNestedManyWithoutAuthorInput
     email: string; // String!
     id?: string | null; // String
-    password: string; // String!
     sharedAlbums?: NexusGenInputs['UserOnAlbumCreateNestedManyWithoutUserInput'] | null; // UserOnAlbumCreateNestedManyWithoutUserInput
     username: string; // String!
   }
@@ -1312,7 +1308,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentCreateNestedManyWithoutAuthorInput'] | null; // CommentCreateNestedManyWithoutAuthorInput
     email: string; // String!
     id?: string | null; // String
-    password: string; // String!
     photos?: NexusGenInputs['PhotoCreateNestedManyWithoutAuthorInput'] | null; // PhotoCreateNestedManyWithoutAuthorInput
     username: string; // String!
   }
@@ -1471,7 +1466,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentOrderByRelationAggregateInput'] | null; // CommentOrderByRelationAggregateInput
     email?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
-    password?: NexusGenEnums['SortOrder'] | null; // SortOrder
     photos?: NexusGenInputs['PhotoOrderByRelationAggregateInput'] | null; // PhotoOrderByRelationAggregateInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumOrderByRelationAggregateInput'] | null; // UserOnAlbumOrderByRelationAggregateInput
     username?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -1482,7 +1476,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentUpdateManyWithoutAuthorInput'] | null; // CommentUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     photos?: NexusGenInputs['PhotoUpdateManyWithoutAuthorInput'] | null; // PhotoUpdateManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumUpdateManyWithoutUserInput'] | null; // UserOnAlbumUpdateManyWithoutUserInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -1529,7 +1522,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentUpdateManyWithoutAuthorInput'] | null; // CommentUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     photos?: NexusGenInputs['PhotoUpdateManyWithoutAuthorInput'] | null; // PhotoUpdateManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumUpdateManyWithoutUserInput'] | null; // UserOnAlbumUpdateManyWithoutUserInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -1539,7 +1531,6 @@ export interface NexusGenInputs {
     albums?: NexusGenInputs['AlbumUpdateManyWithoutAuthorInput'] | null; // AlbumUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     photos?: NexusGenInputs['PhotoUpdateManyWithoutAuthorInput'] | null; // PhotoUpdateManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumUpdateManyWithoutUserInput'] | null; // UserOnAlbumUpdateManyWithoutUserInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -1549,7 +1540,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentUpdateManyWithoutAuthorInput'] | null; // CommentUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     photos?: NexusGenInputs['PhotoUpdateManyWithoutAuthorInput'] | null; // PhotoUpdateManyWithoutAuthorInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumUpdateManyWithoutUserInput'] | null; // UserOnAlbumUpdateManyWithoutUserInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -1560,7 +1550,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentUpdateManyWithoutAuthorInput'] | null; // CommentUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     sharedAlbums?: NexusGenInputs['UserOnAlbumUpdateManyWithoutUserInput'] | null; // UserOnAlbumUpdateManyWithoutUserInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
@@ -1570,7 +1559,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentUpdateManyWithoutAuthorInput'] | null; // CommentUpdateManyWithoutAuthorInput
     email?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    password?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     photos?: NexusGenInputs['PhotoUpdateManyWithoutAuthorInput'] | null; // PhotoUpdateManyWithoutAuthorInput
     username?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
@@ -1603,7 +1591,6 @@ export interface NexusGenInputs {
     comments?: NexusGenInputs['CommentListRelationFilter'] | null; // CommentListRelationFilter
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    password?: NexusGenInputs['StringFilter'] | null; // StringFilter
     photos?: NexusGenInputs['PhotoListRelationFilter'] | null; // PhotoListRelationFilter
     sharedAlbums?: NexusGenInputs['UserOnAlbumListRelationFilter'] | null; // UserOnAlbumListRelationFilter
     username?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -1637,10 +1624,6 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   Album: prisma.Album;
-  AuthUser: { // root type
-    token?: string | null; // String
-    user?: NexusGenRootTypes['User'] | null; // User
-  }
   Comment: prisma.Comment;
   Like: prisma.Like;
   Mutation: {};
@@ -1678,10 +1661,6 @@ export interface NexusGenFieldTypes {
     viewCount: number; // Int!
     visibility: NexusGenEnums['Visibility']; // Visibility!
   }
-  AuthUser: { // field return type
-    token: string | null; // String
-    user: NexusGenRootTypes['User'] | null; // User
-  }
   Comment: { // field return type
     author: NexusGenRootTypes['User']; // User!
     content: string; // String!
@@ -1706,10 +1685,7 @@ export interface NexusGenFieldTypes {
     deleteOnePhotoOnAlbum: NexusGenRootTypes['PhotoOnAlbum'] | null; // PhotoOnAlbum
     deleteOneUser: NexusGenRootTypes['User'] | null; // User
     incrementAlbumViewCount: NexusGenRootTypes['Album'] | null; // Album
-    login: NexusGenRootTypes['AuthUser'] | null; // AuthUser
-    logout: boolean | null; // Boolean
     shareAlbum: NexusGenRootTypes['Album'] | null; // Album
-    signup: NexusGenRootTypes['AuthUser'] | null; // AuthUser
     updateOneAlbum: NexusGenRootTypes['Album'] | null; // Album
     updateOneComment: NexusGenRootTypes['Comment'] | null; // Comment
     updateOnePhoto: NexusGenRootTypes['Photo'] | null; // Photo
@@ -1785,10 +1761,6 @@ export interface NexusGenFieldTypeNames {
     viewCount: 'Int'
     visibility: 'Visibility'
   }
-  AuthUser: { // field return type name
-    token: 'String'
-    user: 'User'
-  }
   Comment: { // field return type name
     author: 'User'
     content: 'String'
@@ -1813,10 +1785,7 @@ export interface NexusGenFieldTypeNames {
     deleteOnePhotoOnAlbum: 'PhotoOnAlbum'
     deleteOneUser: 'User'
     incrementAlbumViewCount: 'Album'
-    login: 'AuthUser'
-    logout: 'Boolean'
     shareAlbum: 'Album'
-    signup: 'AuthUser'
     updateOneAlbum: 'Album'
     updateOneComment: 'Comment'
     updateOnePhoto: 'Photo'
@@ -1922,19 +1891,10 @@ export interface NexusGenArgTypes {
     incrementAlbumViewCount: { // args
       id: string; // String!
     }
-    login: { // args
-      emailOrUsername: string; // String!
-      password: string; // String!
-    }
     shareAlbum: { // args
       albumId: string; // String!
       role: NexusGenEnums['AlbumRole']; // AlbumRole!
       targetUserId: string; // String!
-    }
-    signup: { // args
-      email: string; // String!
-      password: string; // String!
-      username: string; // String!
     }
     updateOneAlbum: { // args
       data: NexusGenInputs['AlbumUpdateInput']; // AlbumUpdateInput!

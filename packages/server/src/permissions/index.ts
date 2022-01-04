@@ -4,16 +4,18 @@ import { Context } from '../context'
 import { getApiTokenFromReq } from '../utils/apiToken'
 
 const rules = {
-  isAuthenticatedUser: rule()((_parent, _args, context: Context): boolean => {
-    const userId = getUserId(context)
+  isAuthenticatedUser: rule()(
+    async (_parent, _args, context: Context): Promise<boolean> => {
+      const userId = await getUserId(context)
 
-    console.log('is authenticated user: ', !!userId, userId)
+      console.log('is authenticated user: ', !!userId, userId)
 
-    return !!userId
-  }),
+      return !!userId
+    },
+  ),
   isAlbumOwner: rule()(
     async (_parent, args, context: Context): Promise<boolean> => {
-      const userId = getUserId(context)
+      const userId = await getUserId(context)
 
       if (!userId) {
         return false
@@ -32,7 +34,7 @@ const rules = {
   ),
   isPhotoOwner: rule()(
     async (_parent, args, context: Context): Promise<boolean> => {
-      const userId = getUserId(context)
+      const userId = await getUserId(context)
 
       if (!userId) {
         return false
@@ -86,9 +88,6 @@ export const permissions = shield(
       currentUser: rules.isAuthenticatedUser,
     },
     Mutation: {
-      signup: not(rules.isAuthenticatedUser),
-      login: not(rules.isAuthenticatedUser),
-      logout: rules.isAuthenticatedUser,
       deleteOneAlbum: rules.isAlbumOwner,
       updateOnePhoto: or(rules.isPhotoOwner, rules.isValidApiToken),
     },

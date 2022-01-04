@@ -20,7 +20,8 @@ amqpConn.on('disconnect', (err) => {
   console.log('amqp disconnected', err)
 })
 
-const channelWrapper = amqpConn.createChannel({
+export const channelWrapper = amqpConn.createChannel({
+  name: IMAGE_RESIZE_QUEUE_NAME,
   json: true,
   setup: (channel: Channel) => {
     return Promise.all([

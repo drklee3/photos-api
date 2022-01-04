@@ -81,4 +81,21 @@ const ShareAlbum = mutationField('shareAlbum', {
   },
 })
 
-export { Album, Visibility, ShareAlbum }
+const IncrementAlbumViewcount = mutationField('incrementAlbumViewCount', {
+  type: 'Album',
+  args: {
+    id: nonNull(stringArg()),
+  },
+  resolve: (_, args, context: Context) => {
+    return context.prisma.album.update({
+      where: { id: args.id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    })
+  },
+})
+
+export { Album, Visibility, ShareAlbum, IncrementAlbumViewcount }

@@ -28,8 +28,8 @@ interface PrismaModels {
 interface NexusPrismaInputs {
   Query: {
     users: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'email' | 'username' | 'password' | 'albums' | 'sharedAlbums' | 'photos' | 'comments' | 'Like'
-      ordering: 'id' | 'email' | 'username' | 'password' | 'albums' | 'sharedAlbums' | 'photos' | 'comments' | 'Like'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'email' | 'username' | 'albums' | 'sharedAlbums' | 'photos' | 'comments' | 'Like'
+      ordering: 'id' | 'email' | 'username' | 'albums' | 'sharedAlbums' | 'photos' | 'comments' | 'Like'
     }
     albums: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'title' | 'description' | 'visibility' | 'viewCount' | 'author' | 'authorId' | 'createdAt' | 'updatedAt' | 'photos' | 'members'
@@ -196,7 +196,6 @@ interface NexusPrismaOutputs {
     id: 'String'
     email: 'String'
     username: 'String'
-    password: 'String'
     albums: 'Album'
     sharedAlbums: 'UserOnAlbum'
     photos: 'Photo'

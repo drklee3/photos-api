@@ -1,5 +1,4 @@
 export * as Album from './Album'
-export * as Auth from './Auth'
 export * as Comment from './Comment'
 export * as Crud from './crud'
 export * as Like from './Like'

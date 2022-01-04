@@ -7,7 +7,7 @@ export default queryType({
     t.field('currentUser', {
       type: 'User',
       async resolve(source, args, context: Context) {
-        const userId = getUserId(context)
+        const userId = await getUserId(context)
 
         if (!userId) {
           return null
