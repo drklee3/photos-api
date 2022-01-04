@@ -31,6 +31,7 @@ amqpConn.on('disconnect', (err) => {
 })
 
 const channelWrapper = amqpConn.createChannel({
+  name: IMAGE_RESIZE_QUEUE_NAME,
   json: true,
   setup: (channel: Channel) => {
     return Promise.all([
@@ -53,3 +54,17 @@ async function onMessage(msg: ConsumeMessage | null) {
   await resizeImage(aggregatedS3, queryClient, job)
   channelWrapper.ack(msg)
 }
+
+function shutdown() {
+  console.log('Shutting down...')
+  shutdownAsync()
+  process.exit()
+}
+
+async function shutdownAsync() {
+  await channelWrapper.close()
+  await amqpConn.close()
+}
+
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)

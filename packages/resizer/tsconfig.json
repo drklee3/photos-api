@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "outDir": "dist",
+    "rootDir": "src",
     "lib": ["esnext"],
     "strict": true,
     // @aws-sdk/client-s3 has some type errors
@@ -14,7 +15,7 @@
     ]
   },
   "include": [
-    "src/**/*",
+    "**/*",
   ],
   "references": [
     {

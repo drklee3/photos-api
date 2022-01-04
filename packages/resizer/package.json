@@ -2,9 +2,11 @@
   "name": "@picatch/resizer",
   "version": "1.0.0",
   "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
-    "start": "node dist/index.ts",
+    "start": "node dist/index.js",
     "clean": "rm -rf dist",
     "build": "yarn run clean && tsc -b",
     "test": "yarn build && jest dist/"

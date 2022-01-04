@@ -4,8 +4,8 @@ import { Readable } from 'stream'
 import { encode } from 'blurhash'
 import { ImageResizeJob } from './model/imageResizeJob'
 import { getImageKey, sizeToWidth } from './image'
-import type { Sdk } from '@picatch/client/src/graphqlRequest'
-import { PhotoSize } from '@picatch/client/src/graphqlRequest'
+import type { Sdk } from '@picatch/client'
+import { PhotoSize } from '@picatch/client'
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Array<any> = []
