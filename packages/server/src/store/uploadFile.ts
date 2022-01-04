@@ -8,6 +8,7 @@ import type { Application } from 'express'
 import { aggregatedS3 } from './s3'
 import { ImageResizeJob, IMAGE_RESIZE_QUEUE_NAME } from '@picatch/shared'
 import { getImageKey } from './image'
+import { retryAsync } from 'ts-retry'
 
 // AMQP
 const amqpConn = amqp.connect(process.env.AMQP_ENDPOINT!)
@@ -57,23 +58,26 @@ export const uploadFile = async (
 
   const key = getImageKey(id, 'ORIGINAL')
 
-  // Only upload original, resized images are generated and uploaded out of band
-  const obj = await aggregatedS3.putObject({
-    Bucket: process.env.S3_BUCKET,
-    Key: key,
-    Body: buf,
-    ContentDisposition: filename,
-    ContentType: mimetype,
-    ContentEncoding: encoding,
-  })
+  // Only upload original, resized images are generated and uploaded out of band.
+  // Retry this max 5 times.
+  const obj = await retryAsync(
+    async () =>
+      aggregatedS3.putObject({
+        Bucket: process.env.S3_BUCKET,
+        Key: key,
+        Body: buf,
+        ContentDisposition: filename,
+        ContentType: mimetype,
+        ContentEncoding: encoding,
+      }),
+    { delay: 250, maxTry: 5 },
+  )
 
   const { width, height, size } = metadata
 
   if (!width || !height || !size) {
     throw new Error('file output is invalid')
   }
-
-  // TODO: Add to RabbitMQ queue
 
   const job: ImageResizeJob = {
     id,

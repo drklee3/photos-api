@@ -4732,6 +4732,7 @@ __metadata:
     tough-cookie: ^4.0.0
     ts-node: 10.4.0
     ts-node-dev: 1.1.8
+    ts-retry: ^2.3.9
     tslog: ^3.3.1
     typescript: 4.5.2
     uuid: ^8.3.2
@@ -23969,6 +23970,13 @@ __metadata:
     typescript:
       optional: true
   checksum: c2a698b85d521298fe6f2435fbf2d3dc5834b423ea25abd321805ead3f399dbeedce7ca09492d7eb005b9d2c009c6b9587055bc3ab273dc6b9e40eefd7edb5b2
+  languageName: node
+  linkType: hard
+
+"ts-retry@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "ts-retry@npm:2.3.9"
+  checksum: 01dbdff43e96556d3074891811d4598d3d64ad1f76b81380447de3897ec768244ea2bfb54db42c68dac8fe6c83e919e4f79e0344c45cfff70aaff931b8bdbe3b
   languageName: node
   linkType: hard
 
