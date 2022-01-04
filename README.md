@@ -8,7 +8,7 @@ Still an early WIP.
 
 ## Stack
 
-## Frontend
+### Frontend
 
 - React Native via Expo
 - NativeBase
@@ -22,3 +22,5 @@ Still an early WIP.
 - [**Prisma Client**](https://www.prisma.io/docs/concepts/components/prisma-client): Databases access (ORM)
 - [**Prisma Migrate**](https://www.prisma.io/docs/concepts/components/prisma-migrate): Database migrations
 - [**PostgreSQL**](https://www.postgresql.org/)
+- [**RabbitMQ**](https://www.rabbitmq.com/): Message broker for resizing service
+- [**Ory Kratos**](https://github.com/ory/kratos/): Identity and User Management API
