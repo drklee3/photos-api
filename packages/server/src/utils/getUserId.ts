@@ -2,7 +2,7 @@ import { Context } from '../context'
 
 // Returns a user ID and ensures the user exists
 export async function getUserId(context: Context): Promise<string | undefined> {
-  const kratosSession = context.req.session.kratos
+  const kratosSession = context.req.kratosSession
 
   if (!kratosSession) {
     return

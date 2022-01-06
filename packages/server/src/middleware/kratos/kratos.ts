@@ -23,7 +23,7 @@ export function setSession(createHelpers: RouteOptionsCreator) {
 
     try {
       const session = await sdk.toSession(authHeader, cookieHeader)
-      req.session.kratos = session.data
+      req.kratosSession = session.data
       log.debug('user is authorized', session.data)
     } catch (e) {
       log.debug('user is unauthorized')
