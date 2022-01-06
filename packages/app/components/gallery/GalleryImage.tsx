@@ -1,16 +1,24 @@
 import * as React from "react";
-import { Image } from "native-base";
+import { Box, Image } from "native-base";
 import { ImageData } from "./ImageData";
 
-export default function GalleryImage({ uri, alt, width, height }: ImageData) {
+export default function GalleryImage({
+  uri,
+  alt,
+  aspectRatio,
+  height,
+}: ImageData) {
   return (
-    <Image
-      source={{
-        uri,
-      }}
-      alt={alt}
-      width={width}
-      height={height}
-    />
+    <Box width={aspectRatio * height} height={height} flexShrink={1}>
+      <Image
+        source={{
+          uri,
+        }}
+        alt={alt}
+        width={aspectRatio * height}
+        height={height}
+        resizeMode="contain"
+      />
+    </Box>
   );
 }

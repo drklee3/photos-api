@@ -1,23 +1,27 @@
 import * as React from "react";
 import { SectionList, Heading, Center, NativeBaseProvider } from "native-base";
+import { useWindowDimensions } from "react-native";
 import GalleryRow from "./GalleryRow";
-import { ImageData } from "./ImageData";
+import { ImageData, ImageRow } from "./ImageData";
+import { useMeasure } from "react-use";
 
 function calculateRowItems(
   rowWidth: number,
   minRowAspectRatio: number,
   imgs: ImageData[]
-): ImageData[][] {
-  const rows: ImageData[][] = [];
-
+): ImageRow[] {
+  const rows: ImageRow[] = [];
   let curRow: ImageData[] = [];
 
   let curHeight = 0;
 
   for (const img of imgs) {
     if (curHeight !== 0 && curHeight / rowWidth > minRowAspectRatio) {
-      // Aspect ratio is lower than
-      rows.push(curRow);
+      // Aspect ratio is lower than min
+      rows.push({
+        images: curRow,
+        aspectRatio: curHeight / rowWidth,
+      });
       // Reset height
       curHeight = 0;
     }
@@ -53,25 +57,25 @@ function groupImagesByMonth(imgs: ImageData[]): GroupedImageList {
 
 interface GallerySection {
   title: string;
-  data: ImageData[][];
+  data: ImageRow[];
 }
 
 interface GalleryProps {
   imageList: ImageData[];
-  rowWidth: number;
   minRowAspectRatio: number;
 }
 
 export default function Gallery({
   imageList,
-  rowWidth,
   minRowAspectRatio,
 }: GalleryProps) {
+  const windowWidth = useWindowDimensions().width - 240;
+
   const groupedImages = groupImagesByMonth(imageList);
 
   const sections: GallerySection[] = Object.entries(groupedImages).map(
     ([title, imgs]) => {
-      const rows = calculateRowItems(rowWidth, minRowAspectRatio, imgs);
+      const rows = calculateRowItems(windowWidth, minRowAspectRatio, imgs);
       return {
         title,
         data: rows,
@@ -85,7 +89,7 @@ export default function Gallery({
       mb="4"
       sections={sections}
       keyExtractor={(item, index) => item + index}
-      renderItem={(data) => <GalleryRow imgs={data.item} />}
+      renderItem={(data) => <GalleryRow row={data.item} width={windowWidth} />}
       renderSectionHeader={({ section: { title } }) => (
         <Center>
           <Heading fontSize="xl" mt="8" pb="4">

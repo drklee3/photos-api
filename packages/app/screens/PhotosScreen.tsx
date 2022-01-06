@@ -69,6 +69,7 @@ export default function PhotosScreen({
       alt: photo.fileName || undefined,
       width: photo.width,
       height: photo.height,
+      aspectRatio: photo.width / photo.height,
       created: new Date(photo.createdAt),
     };
   });
@@ -80,9 +81,7 @@ export default function PhotosScreen({
       </Heading>
       <LogOut />
       <Upload />
-      {apiImages && (
-        <Gallery imageList={apiImages} rowWidth={1000} minRowAspectRatio={3} />
-      )}
+      {apiImages && <Gallery imageList={apiImages} minRowAspectRatio={0.2} />}
     </VStack>
   );
 }
