@@ -2,10 +2,11 @@ import type { S3 } from '@aws-sdk/client-s3'
 import sharp from 'sharp'
 import { Readable } from 'stream'
 import { encode } from 'blurhash'
-import { ImageResizeJob } from './model/imageResizeJob'
+import { ImageResizeJob } from '@picatch/shared'
 import { getImageKey, sizeToWidth } from './image'
 import type { Sdk } from '@picatch/client'
 import { PhotoSize } from '@picatch/client'
+import { log } from './logger'
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Array<any> = []
@@ -29,7 +30,7 @@ export async function resizeImage(
   queryClient: Sdk,
   job: ImageResizeJob,
 ) {
-  console.log('worker process: got new job:', job)
+  log.debug('worker process: got new job:', job)
   const { id, filename, mimetype } = job
 
   // Get original image
@@ -38,7 +39,7 @@ export async function resizeImage(
     Key: getImageKey(id, PhotoSize.Original),
   })
 
-  console.log('downloaded image')
+  log.debug('downloaded image')
 
   if (!img.Body) {
     throw new Error('image has no body! spooky...')
@@ -54,7 +55,7 @@ export async function resizeImage(
     throw new Error('image dimensions not found')
   }
 
-  console.log('parsed metadata')
+  log.debug('parsed metadata')
 
   const outputs: {
     size: PhotoSize
@@ -68,7 +69,7 @@ export async function resizeImage(
     .toBuffer()
   outputs.push({ size: PhotoSize.Full, buf: fullRes })
 
-  console.log('created full resolution webp')
+  log.debug('created full resolution webp')
 
   // First do all image resizing sequentially, CPU bound
   for (const size of IMG_SIZES) {
@@ -84,15 +85,15 @@ export async function resizeImage(
 
     outputs.push({ size, buf: output })
 
-    console.log(`created ${size} resolution webp`)
+    log.debug(`created ${size} resolution webp`)
   }
 
-  console.log('creating blurhash')
+  log.debug('creating blurhash')
 
   // Generate and save blurhash to db
   const blurHash = await generateBlurHash(outputs[outputs.length - 1].buf)
 
-  console.log('created blurhash')
+  log.debug('created blurhash')
 
   try {
     await queryClient.UpdateOnePhoto({
@@ -106,10 +107,10 @@ export async function resizeImage(
       },
     })
   } catch (e) {
-    console.error('failed to update photo', e)
+    log.error('failed to update photo via graphql', e)
   }
 
-  console.log('updated photo db entry with blurhash')
+  log.debug('updated photo db entry with blurhash')
 
   const uploads = []
 
@@ -128,11 +129,12 @@ export async function resizeImage(
     uploads.push(uploadPromise)
   }
 
-  console.log(`uploading ${uploads.length} photos...`)
+  log.debug(`uploading ${uploads.length} photos...`)
 
   // Uploads can be concurrent
   await Promise.all(uploads)
-  console.log('photos uploaded')
+
+  log.debug(`${uploads.length} photos uploaded`)
 }
 
 async function generateBlurHash(input: Buffer): Promise<string> {

@@ -9,13 +9,14 @@
     "skipLibCheck": true,
     "composite": true,
     "declaration": true,
+    "sourceMap": true,
     "declarationMap": true,
     "typeRoots": [
       "./node_modules/@types",
     ]
   },
   "include": [
-    "**/*",
+    "src/**/*",
   ],
   "references": [
     {
