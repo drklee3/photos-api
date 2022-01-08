@@ -75,7 +75,7 @@ export default function PhotosScreen({
   });
 
   return (
-    <VStack p="4">
+    <VStack p="4" flex={1}>
       <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
         Photos
       </Heading>

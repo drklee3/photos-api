@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import {
   SectionList,
   Heading,
@@ -40,11 +40,15 @@ function calculateRowItems(
       rowAspectRatio = Math.max(rowAspectRatio, minRowAspectRatio);
 
       const rowHeight = getHeight(rowAspectRatio, rowWidth);
+      console.log("rowWidth", rowWidth, "rowHeight", rowHeight);
 
       curRow = curRow.map((img) => {
         const imageAspectRatio = getAspectRatio(img.width, img.height);
         const width = getWidth(imageAspectRatio, rowHeight);
         const height = getHeight(imageAspectRatio, width);
+
+        console.log("imageAspectRatio", imageAspectRatio);
+        console.log("width", width, "height", height);
 
         return {
           ...img,
@@ -108,20 +112,21 @@ export default function Gallery({
   imageList,
   minRowAspectRatio,
 }: GalleryProps) {
-  const windowWidth = useWindowDimensions().width - 240;
+  // Measure just an empty box to get the width
   const [ref, { width }] = useMeasure();
+  console.log("measured width", width);
 
-  const groupedImages = groupImagesByMonth(imageList);
+  const sections: GallerySection[] = useMemo(() => {
+    const groupedImages = groupImagesByMonth(imageList);
 
-  const sections: GallerySection[] = Object.entries(groupedImages).map(
-    ([title, imgs]) => {
+    return Object.entries(groupedImages).map(([title, imgs]) => {
       const rows = calculateRowItems(width, minRowAspectRatio, imgs);
       return {
         title,
         data: rows,
       };
-    }
-  );
+    });
+  }, [imageList, width]);
 
   console.log("sections", sections);
 
