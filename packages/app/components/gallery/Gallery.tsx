@@ -1,8 +1,21 @@
 import * as React from "react";
-import { SectionList, Heading, Center, NativeBaseProvider } from "native-base";
+import {
+  SectionList,
+  Heading,
+  Center,
+  NativeBaseProvider,
+  Box,
+} from "native-base";
 import { useWindowDimensions } from "react-native";
 import GalleryRow from "./GalleryRow";
-import { ImageData, ImageRow } from "./ImageData";
+import {
+  getAspectRatio,
+  getHeight,
+  getResizedImageDimensions,
+  getWidth,
+  ImageData,
+  ImageRow,
+} from "./ImageData";
 import { useMeasure } from "react-use";
 
 function calculateRowItems(
@@ -13,21 +26,47 @@ function calculateRowItems(
   const rows: ImageRow[] = [];
   let curRow: ImageData[] = [];
 
-  let curHeight = 0;
+  let rowAspectRatio = 0;
 
-  for (const img of imgs) {
-    if (curHeight !== 0 && curHeight / rowWidth > minRowAspectRatio) {
-      // Aspect ratio is lower than min
+  for (const [i, img] of imgs.entries()) {
+    curRow.push(img);
+
+    // Compute aspect ratio
+    rowAspectRatio += getAspectRatio(img.width, img.height);
+
+    // If exceeds min aspect ratio or if we're on the last image
+    if (rowAspectRatio > minRowAspectRatio || i + 1 == imgs.length) {
+      // Make sure last row has the same aspect ratio
+      rowAspectRatio = Math.max(rowAspectRatio, minRowAspectRatio);
+
+      const rowHeight = getHeight(rowAspectRatio, rowWidth);
+
+      curRow = curRow.map((img) => {
+        const imageAspectRatio = getAspectRatio(img.width, img.height);
+        const width = getWidth(imageAspectRatio, rowHeight);
+        const height = getHeight(imageAspectRatio, width);
+
+        return {
+          ...img,
+          resizedDimensions: {
+            width,
+            height,
+          },
+        };
+      });
+
+      console.log("resized images", curRow);
+
       rows.push({
         images: curRow,
-        aspectRatio: curHeight / rowWidth,
+        aspectRatio: rowAspectRatio,
+        height: rowHeight,
       });
-      // Reset height
-      curHeight = 0;
-    }
 
-    curHeight += img.height;
-    curRow.push(img);
+      // Reset curRow
+      curRow = [];
+      rowAspectRatio = 0;
+    }
   }
 
   return rows;
@@ -70,12 +109,13 @@ export default function Gallery({
   minRowAspectRatio,
 }: GalleryProps) {
   const windowWidth = useWindowDimensions().width - 240;
+  const [ref, { width }] = useMeasure();
 
   const groupedImages = groupImagesByMonth(imageList);
 
   const sections: GallerySection[] = Object.entries(groupedImages).map(
     ([title, imgs]) => {
-      const rows = calculateRowItems(windowWidth, minRowAspectRatio, imgs);
+      const rows = calculateRowItems(width, minRowAspectRatio, imgs);
       return {
         title,
         data: rows,
@@ -83,20 +123,24 @@ export default function Gallery({
     }
   );
 
+  console.log("sections", sections);
+
   return (
-    <SectionList
-      px="12"
-      mb="4"
-      sections={sections}
-      keyExtractor={(item, index) => item + index}
-      renderItem={(data) => <GalleryRow row={data.item} width={windowWidth} />}
-      renderSectionHeader={({ section: { title } }) => (
-        <Center>
-          <Heading fontSize="xl" mt="8" pb="4">
-            {title}
-          </Heading>
-        </Center>
-      )}
-    />
+    <>
+      <Box ref={ref} width="100%"></Box>
+      <SectionList
+        mb="4"
+        sections={sections}
+        keyExtractor={(item, index) => item + index}
+        renderItem={(data) => <GalleryRow row={data.item} width={width} />}
+        renderSectionHeader={({ section: { title } }) => (
+          <Center>
+            <Heading fontSize="xl" mt="8" pb="4">
+              {title}
+            </Heading>
+          </Center>
+        )}
+      />
+    </>
   );
 }

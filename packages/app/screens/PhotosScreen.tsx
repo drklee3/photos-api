@@ -81,7 +81,7 @@ export default function PhotosScreen({
       </Heading>
       <LogOut />
       <Upload />
-      {apiImages && <Gallery imageList={apiImages} minRowAspectRatio={0.2} />}
+      {apiImages && <Gallery imageList={apiImages} minRowAspectRatio={2} />}
     </VStack>
   );
 }
