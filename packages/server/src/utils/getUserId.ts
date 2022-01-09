@@ -10,16 +10,21 @@ export async function getUserId(context: Context): Promise<string | undefined> {
 
   const userId = kratosSession.identity.id
 
+  // Fallback username to the user ID -- this only happens with existing users rn
+  // TODO: remove this after db is reset
+  const { email, username = kratosSession.identity.id } =
+    kratosSession.identity.traits
+
   // Make sure user exists or is up to date
   await context.prisma.user.upsert({
     create: {
       id: userId,
-      email: kratosSession.identity.traits.email,
-      username: kratosSession.identity.traits.username,
+      email: email,
+      username: username,
     },
     update: {
-      email: kratosSession.identity.traits.email,
-      username: kratosSession.identity.traits.username,
+      email: email,
+      username: username,
     },
     where: { id: userId },
   })
