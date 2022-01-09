@@ -1,7 +1,7 @@
 {
   "name": "@picatch/resizer",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
