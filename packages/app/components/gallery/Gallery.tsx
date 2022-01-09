@@ -1,12 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import {
   SectionList,
   Heading,
   Center,
   NativeBaseProvider,
   Box,
+  HStack,
 } from "native-base";
-import { useWindowDimensions } from "react-native";
+import { Animated, useWindowDimensions } from "react-native";
 import GalleryRow from "./GalleryRow";
 import {
   getAspectRatio,
@@ -17,6 +18,7 @@ import {
   ImageRow,
 } from "./ImageData";
 import { useMeasure } from "react-use";
+import ScrollBar from "./ScrollBar";
 
 function calculateRowItems(
   rowWidth: number,
@@ -130,22 +132,32 @@ export default function Gallery({
 
   console.log("sections", sections);
 
+  const scrollIndicator = useRef(new Animated.Value(0)).current;
+
   return (
-    <>
-      <Box ref={ref} width="100%"></Box>
-      <SectionList
-        mb="4"
-        sections={sections}
-        keyExtractor={(item, index) => item + index}
-        renderItem={(data) => <GalleryRow row={data.item} width={width} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <Center>
-            <Heading fontSize="xl" mt="8" pb="4">
-              {title}
-            </Heading>
-          </Center>
-        )}
-      />
-    </>
+    <HStack flex={1}>
+      <Box flexGrow={1}>
+        <Box ref={ref} width="100%"></Box>
+        <SectionList
+          mb="4"
+          showsVerticalScrollIndicator={false}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollIndicator } } }],
+            { useNativeDriver: false }
+          )}
+          sections={sections}
+          keyExtractor={(item, index) => item + index}
+          renderItem={(data) => <GalleryRow row={data.item} width={width} />}
+          renderSectionHeader={({ section: { title } }) => (
+            <Box my="2">
+              <Heading fontWeight="normal" size="md" fontFamily="Poppins">
+                {title}
+              </Heading>
+            </Box>
+          )}
+        />
+      </Box>
+      <ScrollBar value={scrollIndicator} />
+    </HStack>
   );
 }

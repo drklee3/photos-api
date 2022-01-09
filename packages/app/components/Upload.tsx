@@ -4,10 +4,17 @@ import { client } from "../client/graphqlClient";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import useToastAlert from "../hooks/useToastAlert";
+import { useQueryClient } from "react-query";
 
 export default function Upload() {
+  const queryClient = useQueryClient();
+
   const { mutateAsync, status, isLoading, isError, error, reset } =
-    useUploadPhotosMutation(client);
+    useUploadPhotosMutation(client, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("photos");
+      },
+    });
 
   const toast = useToastAlert();
 
