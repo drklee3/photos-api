@@ -1,6 +1,8 @@
 import * as React from "react";
-import { Box, Image } from "native-base";
+import { Box, Image, Pressable } from "native-base";
 import { getWidth, ImageData } from "./ImageData";
+import { useNavigation } from "@react-navigation/core";
+import { useLinkProps } from "@react-navigation/native";
 
 export interface GalleryImageProps {
   image: ImageData;
@@ -8,7 +10,7 @@ export interface GalleryImageProps {
 }
 
 export default function GalleryImage({
-  image: { uri, alt, resizedDimensions },
+  image: { id, uri, alt, resizedDimensions },
   rowHeight,
 }: GalleryImageProps) {
   // This shouldn't happen
@@ -16,19 +18,48 @@ export default function GalleryImage({
     return null;
   }
 
+  const { onPress, ...linkProps } = useLinkProps({
+    to: {
+      screen: "Root",
+      params: {
+        screen: "Photos",
+        params: {
+          id,
+        },
+        path: `/photos/${id}`,
+      },
+    },
+  });
+
   const { width, height } = resizedDimensions;
 
   return (
     <Box width={width} height={height}>
-      <Image
-        source={{
-          uri,
+      <Pressable onPress={onPress}>
+        {({ isHovered, isFocused, isPressed }) => {
+          return (
+            <Box
+              style={{
+                transform: [
+                  {
+                    scale: isPressed ? 0.97 : 1,
+                  },
+                ],
+              }}
+            >
+              <Image
+                source={{
+                  uri,
+                }}
+                alt={alt}
+                width={width}
+                height={height}
+                resizeMode="contain"
+              />
+            </Box>
+          );
         }}
-        alt={alt}
-        width={width}
-        height={height}
-        resizeMode="contain"
-      />
+      </Pressable>
     </Box>
   );
 }

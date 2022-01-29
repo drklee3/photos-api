@@ -7,7 +7,7 @@ export interface ScrollBarProps {
 
 export default function ScrollBar({ value }: ScrollBarProps) {
   return (
-    <Box height="100%" w="2" backgroundColor="blue.800">
+    <Box height="100%" w="2" ml="2" backgroundColor="blue.800">
       <Animated.View
         style={{
           width: 6,

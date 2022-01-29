@@ -28,7 +28,9 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
 export type RootTabParamList = {
-  Photos: undefined;
+  Photos: {
+    id?: string;
+  };
   Albums: undefined;
 };
 

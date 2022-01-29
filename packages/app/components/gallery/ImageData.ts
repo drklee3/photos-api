@@ -1,4 +1,5 @@
 export interface ImageData {
+  id: string;
   uri: string;
   alt?: string;
   width: number;

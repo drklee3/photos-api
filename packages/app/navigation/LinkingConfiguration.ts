@@ -10,15 +10,13 @@ import * as Linking from "expo-linking";
 import { RootStackParamList } from "../types";
 
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.makeUrl("/")],
+  prefixes: [Linking.createURL("/")],
   config: {
     screens: {
       Root: {
         screens: {
           Photos: {
-            screens: {
-              PhotosScreen: "photos",
-            },
+            path: "photos/:id?",
           },
           Albums: {
             screens: {

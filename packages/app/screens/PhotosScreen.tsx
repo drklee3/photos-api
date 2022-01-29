@@ -53,6 +53,7 @@ export default function PhotosScreen({
 
   const images: ImageData[] = media.map((m) => {
     return {
+      id: m.uri,
       uri: m.uri,
       alt: m.filename,
       width: m.width,
@@ -65,6 +66,7 @@ export default function PhotosScreen({
 
   const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
     return {
+      id: photo.id,
       uri: photo.url,
       alt: photo.fileName || undefined,
       width: photo.width,
