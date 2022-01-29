@@ -2,7 +2,16 @@ import * as React from "react";
 
 import { client } from "../client/graphqlClient";
 import { usePhotosQuery } from "../client/reactQuery";
-import { Box, Flex, Text, Heading, HStack, VStack } from "native-base";
+import {
+  Box,
+  Flex,
+  Text,
+  Heading,
+  HStack,
+  VStack,
+  Spinner,
+  Center,
+} from "native-base";
 import { RootTabScreenProps } from "../types";
 import * as MediaLibrary from "expo-media-library";
 import useLocalMedia from "../hooks/useLocalMedia";
@@ -48,6 +57,7 @@ function renderHeader() {
 
 export default function PhotosScreen({
   navigation,
+  route,
 }: RootTabScreenProps<"Photos">) {
   const { media, permissionStatus } = useLocalMedia();
 
@@ -83,7 +93,19 @@ export default function PhotosScreen({
       </Heading>
       <LogOut />
       <Upload />
-      {apiImages && <Gallery imageList={apiImages} minRowAspectRatio={2} />}
+      {status === "loading" && (
+        <HStack space={2} justifyContent="center">
+          <Spinner accessibilityLabel="Loading photos" />
+          <Heading fontSize="md">Loading...</Heading>
+        </HStack>
+      )}
+      {apiImages && (
+        <Gallery
+          imageList={apiImages}
+          minRowAspectRatio={2}
+          activeImageId={route.params.id}
+        />
+      )}
     </VStack>
   );
 }

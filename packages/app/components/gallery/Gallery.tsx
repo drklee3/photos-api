@@ -6,6 +6,7 @@ import {
   NativeBaseProvider,
   Box,
   HStack,
+  FlatList,
 } from "native-base";
 import { Animated, useWindowDimensions } from "react-native";
 import GalleryRow from "./GalleryRow";
@@ -108,6 +109,7 @@ interface GallerySection {
 interface GalleryProps {
   imageList: ImageData[];
   minRowAspectRatio: number;
+  activeImageId?: string;
 }
 
 export default function Gallery({
@@ -139,6 +141,7 @@ export default function Gallery({
       <Box flexGrow={1}>
         <Box ref={ref} width="100%"></Box>
         <SectionList
+          zIndex={0}
           mb="4"
           showsVerticalScrollIndicator={false}
           onScroll={Animated.event(
@@ -153,6 +156,21 @@ export default function Gallery({
               <Heading fontWeight="normal" size="md" fontFamily="Poppins">
                 {title}
               </Heading>
+            </Box>
+          )}
+          ListEmptyComponent={<Center>Hmm there's nothing here</Center>}
+        />
+        <FlatList
+          width={width}
+          backgroundColor="gray.800"
+          zIndex={3}
+          position="absolute"
+          data={imageList}
+          pagingEnabled={true}
+          horizontal={true}
+          renderItem={(d) => (
+            <Box width={width} m="4">
+              {d.item.id}
             </Box>
           )}
         />
