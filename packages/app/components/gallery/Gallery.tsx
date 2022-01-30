@@ -7,6 +7,7 @@ import {
   Box,
   HStack,
   FlatList,
+  Image,
 } from "native-base";
 import {
   Animated,
@@ -204,6 +205,42 @@ export default function Gallery({
     });
   };
 
+  const updateImageIndex = (diff: number) => {
+    if (!route.params?.id) {
+      return;
+    }
+
+    const currentIndex = imageIndexMap[route.params?.id];
+
+    if (currentIndex === undefined) {
+      return;
+    }
+
+    const nextIndex = currentIndex + diff;
+
+    if (nextIndex < 0 || nextIndex >= imageList.length) {
+      return;
+    }
+
+    const nextImageId = imageList[nextIndex].id;
+
+    navigate("Root", {
+      screen: "Photos",
+      params: {
+        id: nextImageId,
+      },
+      path: `/photos/${nextImageId}`,
+    });
+  };
+
+  const prevImage = () => {
+    updateImageIndex(-1);
+  };
+
+  const nextImage = () => {
+    updateImageIndex(1);
+  };
+
   return (
     <HStack flex={1}>
       <Box flexGrow={1}>
@@ -247,6 +284,12 @@ export default function Gallery({
           <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
             Close
           </Button>
+          <Button type={ButtonType.Primary} onPress={prevImage}>
+            Previous
+          </Button>
+          <Button type={ButtonType.Primary} onPress={nextImage}>
+            Next
+          </Button>
           <FlatList
             width="full"
             height="full"
@@ -255,19 +298,27 @@ export default function Gallery({
             horizontal={true}
             ref={flatlistRef}
             onContentSizeChange={() => {
+              // Scroll to the image on load if one is selected,
+              // initialScrollIndex doesn't work here
               scrollToId(route.params?.id);
             }}
-            initialScrollIndex={
-              route.params?.id ? imageIndexMap[route.params.id] : 0
-            }
             getItemLayout={(data, index) => ({
               index,
               offset: windowWidth * index,
               length: windowWidth,
             })}
             renderItem={(d) => (
-              <Box width={windowWidth} m="4">
+              <Box width={windowWidth} height={windowHeight} m="4">
                 {d.item.id}
+                <Image
+                  source={{
+                    uri: d.item.uri,
+                  }}
+                  alt={d.item.id}
+                  width={windowWidth}
+                  height={windowHeight}
+                  resizeMode="contain"
+                />
               </Box>
             )}
           />
