@@ -101,6 +101,7 @@ export default function PhotosScreen({
       )}
       {apiImages && (
         <Gallery
+          route={route}
           imageList={apiImages}
           minRowAspectRatio={2}
           activeImageId={route.params.id}

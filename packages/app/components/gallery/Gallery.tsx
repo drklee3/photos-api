@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   SectionList,
   Heading,
@@ -24,7 +24,8 @@ import {
 } from "./ImageData";
 import { useMeasure } from "react-use";
 import ScrollBar from "./ScrollBar";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { RootTabScreenProps } from "../../types";
 
 function calculateRowItems(
   rowWidth: number,
@@ -115,16 +116,25 @@ interface GalleryProps {
   imageList: ImageData[];
   minRowAspectRatio: number;
   activeImageId?: string;
+  route: RootTabScreenProps<"Photos">["route"];
 }
 
 export default function Gallery({
   imageList,
   minRowAspectRatio,
+  route,
 }: GalleryProps) {
   // Measure just an empty box to get the width
   const [ref, { width }] = useMeasure();
-  console.log("measured width", width);
 
+  // Nativebase doesn't have the method types apparently and can't use FlatList as type here
+  const flatlistRef = useRef<RNFlatList>();
+  const scrollIndicator = useRef(new Animated.Value(0)).current;
+
+  const { navigate } = useNavigation();
+
+  // -------------------------------------------------
+  // Gallery sections
   const sections: GallerySection[] = useMemo(() => {
     const groupedImages = groupImagesByMonth(imageList);
 
@@ -137,20 +147,40 @@ export default function Gallery({
     });
   }, [imageList, width]);
 
-  console.log("sections", sections);
+  // -------------------------------------------------
+  // Single photo view
 
-  const scrollIndicator = useRef(new Animated.Value(0)).current;
+  // Mapping from photo ID to index in the list, used for single photo view scrollToIndex
+  const imageIndexMap = useMemo(() => {
+    const map: { [id: string]: number } = {};
 
-  // Nativebase doesn't have the method types apparently and can't use FlatList as type here
-  const flatlistRef = useRef<RNFlatList>();
+    for (const [i, img] of imageList.entries()) {
+      map[img.id] = i;
+    }
 
-  const { navigate } = useNavigation();
+    return map;
+  }, [imageList]);
+
+  useEffect(() => {
+    if (route.params?.id) {
+      const index = imageIndexMap[route.params.id];
+
+      // Don't use falsey check as 0 is still a valid index
+      if (index === undefined) {
+        return;
+      }
+
+      console.log(
+        `route.params.id ${route.params.id} changed, scrolling to index ${index}`
+      );
+
+      flatlistRef.current?.scrollToIndex({
+        index,
+      });
+    }
+  }, [route.params.id]);
 
   const onImageClick = (imageId: string) => {
-    flatlistRef.current?.scrollToIndex({
-      index: imageList.findIndex(({ id }) => id === imageId),
-    });
-
     navigate("Root", {
       screen: "Photos",
       params: {
