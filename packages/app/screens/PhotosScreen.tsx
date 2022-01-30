@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useMemo } from "react";
 
 import { client } from "../client/graphqlClient";
 import { usePhotosQuery } from "../client/reactQuery";
@@ -60,31 +60,39 @@ export default function PhotosScreen({
   route,
 }: RootTabScreenProps<"Photos">) {
   const { media, permissionStatus } = useLocalMedia();
-
-  const images: ImageData[] = media.map((m) => {
-    return {
-      id: m.uri,
-      uri: m.uri,
-      alt: m.filename,
-      width: m.width,
-      height: m.height,
-      created: new Date(m.creationTime),
-    };
-  });
-
   const { data, error, status, refetch } = usePhotosQuery(client);
 
-  const apiImages: ImageData[] | undefined = data?.photos.map((photo) => {
-    return {
-      id: photo.id,
-      uri: photo.url,
-      alt: photo.fileName || undefined,
-      width: photo.width,
-      height: photo.height,
-      aspectRatio: photo.width / photo.height,
-      created: new Date(photo.createdAt),
-    };
-  });
+  // Memoize images to avoid re-rendering when array map is used as dependency in useMemo later
+  const allImages = useMemo(() => {
+    const localImages: ImageData[] = media.map((m) => {
+      return {
+        id: m.uri,
+        uri: m.uri,
+        alt: m.filename,
+        width: m.width,
+        height: m.height,
+        created: new Date(m.creationTime),
+      };
+    });
+
+    let apiImages: ImageData[] = [];
+
+    if (data) {
+      apiImages = data?.photos.map((photo) => {
+        return {
+          id: photo.id,
+          uri: photo.url,
+          alt: photo.fileName || undefined,
+          width: photo.width,
+          height: photo.height,
+          aspectRatio: photo.width / photo.height,
+          created: new Date(photo.createdAt),
+        };
+      });
+    }
+
+    return [...localImages, ...apiImages];
+  }, [media, data]);
 
   return (
     <VStack p="4" flex={1}>
@@ -99,10 +107,10 @@ export default function PhotosScreen({
           <Heading fontSize="md">Loading...</Heading>
         </HStack>
       )}
-      {apiImages && (
+      {allImages && (
         <Gallery
           route={route}
-          imageList={apiImages}
+          imageList={allImages}
           minRowAspectRatio={2}
           activeImageId={route.params.id}
         />

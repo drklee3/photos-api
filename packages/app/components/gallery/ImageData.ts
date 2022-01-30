@@ -4,7 +4,6 @@ export interface ImageData {
   alt?: string;
   width: number;
   height: number;
-  aspectRatio: number;
   created: Date;
   resizedDimensions?: {
     width: number;
