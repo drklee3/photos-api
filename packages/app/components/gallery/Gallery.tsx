@@ -161,23 +161,25 @@ export default function Gallery({
     return map;
   }, [imageList]);
 
-  useEffect(() => {
-    if (route.params?.id) {
-      const index = imageIndexMap[route.params.id];
+  const scrollToId = (id?: string) => {
+    if (id) {
+      const index = imageIndexMap[id];
 
       // Don't use falsey check as 0 is still a valid index
       if (index === undefined) {
         return;
       }
 
-      console.log(
-        `route.params.id ${route.params.id} changed, scrolling to index ${index}`
-      );
+      console.log(`route.params.id ${id} changed, scrolling to index ${index}`);
 
       flatlistRef.current?.scrollToIndex({
         index,
       });
     }
+  };
+
+  useEffect(() => {
+    scrollToId(route.params?.id);
   }, [route.params.id]);
 
   const onImageClick = (imageId: string) => {
@@ -229,6 +231,12 @@ export default function Gallery({
           pagingEnabled={true}
           horizontal={true}
           ref={flatlistRef}
+          onContentSizeChange={() => {
+            scrollToId(route.params?.id);
+          }}
+          initialScrollIndex={
+            route.params.id ? imageIndexMap[route.params.id] : 0
+          }
           getItemLayout={(data, index) => ({
             index,
             offset: width * index,
