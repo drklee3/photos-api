@@ -8,7 +8,11 @@ import {
   HStack,
   FlatList,
 } from "native-base";
-import { Animated, useWindowDimensions } from "react-native";
+import {
+  Animated,
+  FlatList as RNFlatList,
+  useWindowDimensions,
+} from "react-native";
 import GalleryRow from "./GalleryRow";
 import {
   getAspectRatio,
@@ -20,6 +24,7 @@ import {
 } from "./ImageData";
 import { useMeasure } from "react-use";
 import ScrollBar from "./ScrollBar";
+import { useNavigation } from "@react-navigation/native";
 
 function calculateRowItems(
   rowWidth: number,
@@ -136,6 +141,25 @@ export default function Gallery({
 
   const scrollIndicator = useRef(new Animated.Value(0)).current;
 
+  // Nativebase doesn't have the method types apparently and can't use FlatList as type here
+  const flatlistRef = useRef<RNFlatList>();
+
+  const { navigate } = useNavigation();
+
+  const onImageClick = (imageId: string) => {
+    flatlistRef.current?.scrollToIndex({
+      index: imageList.findIndex(({ id }) => id === imageId),
+    });
+
+    navigate("Root", {
+      screen: "Photos",
+      params: {
+        id: imageId,
+      },
+      path: `/photos/${imageId}`,
+    });
+  };
+
   return (
     <HStack flex={1}>
       <Box flexGrow={1}>
@@ -150,7 +174,13 @@ export default function Gallery({
           )}
           sections={sections}
           keyExtractor={(item, index) => item + index}
-          renderItem={(data) => <GalleryRow row={data.item} width={width} />}
+          renderItem={(data) => (
+            <GalleryRow
+              row={data.item}
+              width={width}
+              onImageClick={onImageClick}
+            />
+          )}
           renderSectionHeader={({ section: { title } }) => (
             <Box my="2">
               <Heading fontWeight="normal" size="md" fontFamily="Poppins">
@@ -168,6 +198,12 @@ export default function Gallery({
           data={imageList}
           pagingEnabled={true}
           horizontal={true}
+          ref={flatlistRef}
+          getItemLayout={(data, index) => ({
+            index,
+            offset: width * index,
+            length: width,
+          })}
           renderItem={(d) => (
             <Box width={width} m="4">
               {d.item.id}

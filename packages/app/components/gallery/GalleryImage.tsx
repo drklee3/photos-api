@@ -7,35 +7,24 @@ import { useLinkProps } from "@react-navigation/native";
 export interface GalleryImageProps {
   image: ImageData;
   rowHeight: number;
+  onImageClick: (imageId: string) => void;
 }
 
 export default function GalleryImage({
   image: { id, uri, alt, resizedDimensions },
   rowHeight,
+  onImageClick,
 }: GalleryImageProps) {
   // This shouldn't happen
   if (!resizedDimensions) {
     return null;
   }
 
-  const { onPress, ...linkProps } = useLinkProps({
-    to: {
-      screen: "Root",
-      params: {
-        screen: "Photos",
-        params: {
-          id,
-        },
-        path: `/photos/${id}`,
-      },
-    },
-  });
-
   const { width, height } = resizedDimensions;
 
   return (
     <Box width={width} height={height}>
-      <Pressable onPress={onPress}>
+      <Pressable onPress={() => onImageClick(id)}>
         {({ isHovered, isFocused, isPressed }) => {
           return (
             <Box
