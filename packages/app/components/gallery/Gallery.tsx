@@ -22,10 +22,11 @@ import {
   ImageData,
   ImageRow,
 } from "./ImageData";
-import { useMeasure } from "react-use";
+import { useMeasure, useWindowSize } from "react-use";
 import ScrollBar from "./ScrollBar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabScreenProps } from "../../types";
+import Button, { ButtonType } from "../Button";
 
 function calculateRowItems(
   rowWidth: number,
@@ -126,6 +127,7 @@ export default function Gallery({
 }: GalleryProps) {
   // Measure just an empty box to get the width
   const [ref, { width }] = useMeasure();
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   // Nativebase doesn't have the method types apparently and can't use FlatList as type here
   const flatlistRef = useRef<RNFlatList>();
@@ -180,8 +182,9 @@ export default function Gallery({
 
   useEffect(() => {
     scrollToId(route.params?.id);
-  }, [route.params.id]);
+  }, [route.params]);
 
+  // Only updates url param, side effect listens for route parameter changes
   const onImageClick = (imageId: string) => {
     navigate("Root", {
       screen: "Photos",
@@ -189,6 +192,15 @@ export default function Gallery({
         id: imageId,
       },
       path: `/photos/${imageId}`,
+    });
+  };
+
+  // Just removes the image ID param
+  const closeSinglePhoto = () => {
+    navigate("Root", {
+      screen: "Photos",
+      params: {},
+      path: `/photos`,
     });
   };
 
@@ -222,32 +234,44 @@ export default function Gallery({
           )}
           ListEmptyComponent={<Center>Hmm there's nothing here</Center>}
         />
-        <FlatList
-          width={width}
-          backgroundColor="gray.800"
+        <Box
+          width={windowWidth}
+          height={windowHeight}
+          display={route.params?.id === undefined ? "none" : "initial"}
           zIndex={3}
-          position="absolute"
-          data={imageList}
-          pagingEnabled={true}
-          horizontal={true}
-          ref={flatlistRef}
-          onContentSizeChange={() => {
-            scrollToId(route.params?.id);
-          }}
-          initialScrollIndex={
-            route.params.id ? imageIndexMap[route.params.id] : 0
-          }
-          getItemLayout={(data, index) => ({
-            index,
-            offset: width * index,
-            length: width,
-          })}
-          renderItem={(d) => (
-            <Box width={width} m="4">
-              {d.item.id}
-            </Box>
-          )}
-        />
+          position="fixed"
+          top={0}
+          left={0}
+          backgroundColor="gray.800"
+        >
+          <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
+            Close
+          </Button>
+          <FlatList
+            width="full"
+            height="full"
+            data={imageList}
+            pagingEnabled={true}
+            horizontal={true}
+            ref={flatlistRef}
+            onContentSizeChange={() => {
+              scrollToId(route.params?.id);
+            }}
+            initialScrollIndex={
+              route.params?.id ? imageIndexMap[route.params.id] : 0
+            }
+            getItemLayout={(data, index) => ({
+              index,
+              offset: windowWidth * index,
+              length: windowWidth,
+            })}
+            renderItem={(d) => (
+              <Box width={windowWidth} m="4">
+                {d.item.id}
+              </Box>
+            )}
+          />
+        </Box>
       </Box>
       <ScrollBar value={scrollIndicator} />
     </HStack>

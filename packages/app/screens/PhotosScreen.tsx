@@ -112,7 +112,7 @@ export default function PhotosScreen({
           route={route}
           imageList={allImages}
           minRowAspectRatio={2}
-          activeImageId={route.params.id}
+          activeImageId={route.params?.id}
         />
       )}
     </VStack>
