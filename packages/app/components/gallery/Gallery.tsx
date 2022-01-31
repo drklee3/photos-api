@@ -276,90 +276,92 @@ export default function Gallery({
   });
 
   return (
-    <HStack flex={1}>
-      <Box flexGrow={1} flex={1}>
-        <Box ref={ref} width="100%"></Box>
-        <SectionList
-          zIndex={0}
-          mb="4"
-          showsVerticalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollIndicator } } }],
-            { useNativeDriver: false }
-          )}
-          sections={sections}
-          keyExtractor={(item, index) => item + index}
-          renderItem={(data) => (
-            <GalleryRow
-              row={data.item}
-              width={width}
-              onImageClick={updateUrlToImage}
-            />
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <Box my="2">
-              <Heading fontWeight="normal" size="md" fontFamily="Poppins">
-                {title}
-              </Heading>
-            </Box>
-          )}
-          ListEmptyComponent={<Center>Hmm there's nothing here</Center>}
-        />
-        <VStack
-          width={windowWidth}
-          height={windowHeight}
-          display={route.params?.id === undefined ? "none" : "flex"}
-          zIndex={3}
-          position="fixed"
-          top={0}
-          left={0}
-          backgroundColor="gray.800"
-          alignItems="center"
-          flexGrow={1}
-        >
-          <HStack>
-            <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
-              Close
-            </Button>
-            <Button type={ButtonType.Primary} onPress={prevImage}>
-              Previous
-            </Button>
-            <Button type={ButtonType.Primary} onPress={nextImage}>
-              Next
-            </Button>
-          </HStack>
-          <FlatList
-            flex={1}
-            width="full"
-            data={imageList}
-            pagingEnabled={true}
-            horizontal={true}
-            ref={flatlistRef}
-            keyExtractor={(item) => item.id}
-            onViewableItemsChanged={onViewRef.current}
-            viewabilityConfig={viewConfigRef.current}
-            onContentSizeChange={() => {
-              // Scroll to the image on load if one is selected,
-              // initialScrollIndex doesn't work here
-              scrollToId(route.params?.id);
-            }}
-            getItemLayout={(data, index) => ({
-              index,
-              offset: windowWidth * index,
-              length: windowWidth,
-            })}
-            CellRendererComponent={(d) => {
-              // Force the item to be full height
-              return <Box {...d} flexGrow={1} />;
-            }}
-            renderItem={(d) => (
-              <FullScreenPhoto windowWidth={windowWidth} item={d.item} />
+    <>
+      <HStack flex={1}>
+        <Box flexGrow={1} flex={1}>
+          <Box ref={ref} width="100%"></Box>
+          <SectionList
+            zIndex={0}
+            mb="4"
+            showsVerticalScrollIndicator={false}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollIndicator } } }],
+              { useNativeDriver: false }
             )}
+            sections={sections}
+            keyExtractor={(item, index) => item + index}
+            renderItem={(data) => (
+              <GalleryRow
+                row={data.item}
+                width={width}
+                onImageClick={updateUrlToImage}
+              />
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+              <Box my="2">
+                <Heading fontWeight="normal" size="md" fontFamily="Poppins">
+                  {title}
+                </Heading>
+              </Box>
+            )}
+            ListEmptyComponent={<Center>Hmm there's nothing here</Center>}
           />
-        </VStack>
-      </Box>
-      <ScrollBar value={scrollIndicator} />
-    </HStack>
+        </Box>
+        <ScrollBar value={scrollIndicator} />
+      </HStack>
+      <VStack
+        width={windowWidth}
+        height={windowHeight}
+        display={route.params?.id === undefined ? "none" : "flex"}
+        zIndex={3}
+        position="fixed"
+        top={0}
+        left={0}
+        backgroundColor="black"
+        alignItems="center"
+        flexGrow={1}
+      >
+        <HStack>
+          <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
+            Close
+          </Button>
+          <Button type={ButtonType.Primary} onPress={prevImage}>
+            Previous
+          </Button>
+          <Button type={ButtonType.Primary} onPress={nextImage}>
+            Next
+          </Button>
+        </HStack>
+        <FlatList
+          flex={1}
+          width="full"
+          data={imageList}
+          pagingEnabled={true}
+          horizontal={true}
+          ref={flatlistRef}
+          keyExtractor={(item) => item.id}
+          onViewableItemsChanged={onViewRef.current}
+          viewabilityConfig={viewConfigRef.current}
+          onContentSizeChange={() => {
+            // Scroll to the image on load if one is selected,
+            // initialScrollIndex doesn't work here
+            scrollToId(route.params?.id);
+          }}
+          getItemLayout={(data, index) => ({
+            index,
+            offset: windowWidth * index,
+            length: windowWidth,
+          })}
+          CellRendererComponent={(d) => {
+            // Force the item to be full height
+            return <Box {...d} flexGrow={1} />;
+          }}
+          renderItem={(d) => (
+            <FullScreenPhoto windowWidth={windowWidth} item={d.item} />
+          )}
+        />
+      </VStack>
+    </>
   );
 }
 
@@ -374,8 +376,6 @@ function FullScreenPhoto({ windowWidth, item }: FullScreenPhotoProps) {
       width={windowWidth}
       height="full"
       padding={2}
-      borderColor="white"
-      borderWidth={4}
       flex={1}
       flexDirection="column"
     >

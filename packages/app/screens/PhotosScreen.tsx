@@ -99,8 +99,10 @@ export default function PhotosScreen({
       <Heading fontWeight="normal" size="xl" fontFamily="Poppins">
         Photos
       </Heading>
-      <LogOut />
-      <Upload />
+      <HStack>
+        <LogOut />
+        <Upload />
+      </HStack>
       {status === "loading" && (
         <HStack space={2} justifyContent="center">
           <Spinner accessibilityLabel="Loading photos" />
