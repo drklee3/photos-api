@@ -8,6 +8,8 @@ import {
   HStack,
   FlatList,
   Image,
+  VStack,
+  Text,
 } from "native-base";
 import {
   Animated,
@@ -243,7 +245,7 @@ export default function Gallery({
 
   return (
     <HStack flex={1}>
-      <Box flexGrow={1}>
+      <Box flexGrow={1} flex={1}>
         <Box ref={ref} width="100%"></Box>
         <SectionList
           zIndex={0}
@@ -271,28 +273,32 @@ export default function Gallery({
           )}
           ListEmptyComponent={<Center>Hmm there's nothing here</Center>}
         />
-        <Box
+        <VStack
           width={windowWidth}
           height={windowHeight}
-          display={route.params?.id === undefined ? "none" : "initial"}
+          display={route.params?.id === undefined ? "none" : "flex"}
           zIndex={3}
           position="fixed"
           top={0}
           left={0}
           backgroundColor="gray.800"
+          alignItems="center"
+          flexGrow={1}
         >
-          <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
-            Close
-          </Button>
-          <Button type={ButtonType.Primary} onPress={prevImage}>
-            Previous
-          </Button>
-          <Button type={ButtonType.Primary} onPress={nextImage}>
-            Next
-          </Button>
+          <HStack>
+            <Button type={ButtonType.Primary} onPress={closeSinglePhoto}>
+              Close
+            </Button>
+            <Button type={ButtonType.Primary} onPress={prevImage}>
+              Previous
+            </Button>
+            <Button type={ButtonType.Primary} onPress={nextImage}>
+              Next
+            </Button>
+          </HStack>
           <FlatList
+            flex={1}
             width="full"
-            height="full"
             data={imageList}
             pagingEnabled={true}
             horizontal={true}
@@ -307,22 +313,37 @@ export default function Gallery({
               offset: windowWidth * index,
               length: windowWidth,
             })}
+            CellRendererComponent={(d) => {
+              // Force the item to be full height
+              return <Box {...d} flexGrow={1} />;
+            }}
             renderItem={(d) => (
-              <Box width={windowWidth} height={windowHeight} m="4">
-                {d.item.id}
-                <Image
-                  source={{
-                    uri: d.item.uri,
-                  }}
-                  alt={d.item.id}
-                  width={windowWidth}
-                  height={windowHeight}
-                  resizeMode="contain"
-                />
+              <Box
+                width={windowWidth}
+                height="full"
+                padding={2}
+                borderColor="white"
+                borderWidth={4}
+                flex={1}
+                flexDirection="column"
+              >
+                <Text>{d.item.id}</Text>
+                <Box width="full" flexGrow={1}>
+                  <Image
+                    source={{
+                      uri: d.item.uri,
+                    }}
+                    alt={d.item.id}
+                    width="100%"
+                    height="100%"
+                    flexGrow={1}
+                    resizeMode="contain"
+                  />
+                </Box>
               </Box>
             )}
           />
-        </Box>
+        </VStack>
       </Box>
       <ScrollBar value={scrollIndicator} />
     </HStack>
