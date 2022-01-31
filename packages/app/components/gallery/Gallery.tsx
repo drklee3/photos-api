@@ -15,6 +15,8 @@ import {
   Animated,
   FlatList as RNFlatList,
   useWindowDimensions,
+  ViewabilityConfig,
+  ViewToken,
 } from "react-native";
 import GalleryRow from "./GalleryRow";
 import {
@@ -179,6 +181,7 @@ export default function Gallery({
 
       flatlistRef.current?.scrollToIndex({
         index,
+        animated: false,
       });
     }
   };
@@ -188,7 +191,16 @@ export default function Gallery({
   }, [route.params]);
 
   // Only updates url param, side effect listens for route parameter changes
-  const onImageClick = (imageId: string) => {
+  const updateUrlToImage = (imageId: string) => {
+    // Ignore if item is same as current (ie was just navigated to this item,
+    // we don't need to update it again)
+    if (imageId === route.params?.id) {
+      console.log("url already up to date for id", imageId, route.params?.id);
+      return;
+    }
+
+    console.log(`updating url to: /photos/${imageId}`);
+
     navigate("Root", {
       screen: "Photos",
       params: {
@@ -243,6 +255,26 @@ export default function Gallery({
     updateImageIndex(1);
   };
 
+  const onViewRef = useRef(
+    (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
+      console.log(info.viewableItems);
+
+      // Ignore mid-scroll
+      if (info.viewableItems.length !== 1) {
+        return;
+      }
+
+      updateUrlToImage(info.viewableItems[0].item.id);
+    }
+  );
+
+  // Require stopping on an image for 1 second before updating the URL
+  const viewConfigRef = useRef<ViewabilityConfig>({
+    minimumViewTime: 1000,
+    viewAreaCoveragePercentThreshold: 95,
+    waitForInteraction: false,
+  });
+
   return (
     <HStack flex={1}>
       <Box flexGrow={1} flex={1}>
@@ -261,7 +293,7 @@ export default function Gallery({
             <GalleryRow
               row={data.item}
               width={width}
-              onImageClick={onImageClick}
+              onImageClick={updateUrlToImage}
             />
           )}
           renderSectionHeader={({ section: { title } }) => (
@@ -303,6 +335,9 @@ export default function Gallery({
             pagingEnabled={true}
             horizontal={true}
             ref={flatlistRef}
+            keyExtractor={(item) => item.id}
+            onViewableItemsChanged={onViewRef.current}
+            viewabilityConfig={viewConfigRef.current}
             onContentSizeChange={() => {
               // Scroll to the image on load if one is selected,
               // initialScrollIndex doesn't work here
@@ -318,34 +353,45 @@ export default function Gallery({
               return <Box {...d} flexGrow={1} />;
             }}
             renderItem={(d) => (
-              <Box
-                width={windowWidth}
-                height="full"
-                padding={2}
-                borderColor="white"
-                borderWidth={4}
-                flex={1}
-                flexDirection="column"
-              >
-                <Text>{d.item.id}</Text>
-                <Box width="full" flexGrow={1}>
-                  <Image
-                    source={{
-                      uri: d.item.uri,
-                    }}
-                    alt={d.item.id}
-                    width="100%"
-                    height="100%"
-                    flexGrow={1}
-                    resizeMode="contain"
-                  />
-                </Box>
-              </Box>
+              <FullScreenPhoto windowWidth={windowWidth} item={d.item} />
             )}
           />
         </VStack>
       </Box>
       <ScrollBar value={scrollIndicator} />
     </HStack>
+  );
+}
+
+interface FullScreenPhotoProps {
+  windowWidth: number;
+  item: ImageData;
+}
+
+function FullScreenPhoto({ windowWidth, item }: FullScreenPhotoProps) {
+  return (
+    <Box
+      width={windowWidth}
+      height="full"
+      padding={2}
+      borderColor="white"
+      borderWidth={4}
+      flex={1}
+      flexDirection="column"
+    >
+      <Text>{item.id}</Text>
+      <Box width="full" flexGrow={1}>
+        <Image
+          source={{
+            uri: item.uri,
+          }}
+          alt={item.id}
+          width="100%"
+          height="100%"
+          flexGrow={1}
+          resizeMode="contain"
+        />
+      </Box>
+    </Box>
   );
 }
