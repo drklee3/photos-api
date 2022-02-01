@@ -11,6 +11,7 @@ import FileSystem, {
 } from "expo-file-system";
 import { uploadFileEndpoint } from "../client/uploadApi";
 import pLimit from "p-limit";
+import { Platform } from "react-native";
 
 const maxConcurrentUploads = 3;
 
@@ -36,43 +37,43 @@ export default function Upload() {
       return;
     }
 
-    let res;
     try {
-      // Use expo uploader, works in background
-      const uploadTasks = pickerRes.selected.map((img) => {
-        const task = FileSystem.createUploadTask(
-          uploadFileEndpoint,
-          img.uri,
-          {
-            uploadType: FileSystemUploadType.MULTIPART,
-            fieldName: "file",
-            sessionType: FileSystemSessionType.BACKGROUND,
-            parameters: {
-              // TODO: Upload directly to an album
-              // albumId: ""
+      if (Platform.OS !== "web") {
+        // Use expo uploader, works in background
+        const uploadTasks = pickerRes.selected.map((img) => {
+          const task = FileSystem.createUploadTask(
+            uploadFileEndpoint,
+            img.uri,
+            {
+              uploadType: FileSystemUploadType.MULTIPART,
+              fieldName: "file",
+              sessionType: FileSystemSessionType.BACKGROUND,
+              parameters: {
+                // TODO: Upload directly to an album
+                // albumId: ""
+              },
+              headers: {
+                // Include auth here
+              },
             },
-            headers: {
-              // Include auth here
-            },
-          },
-          (progress) => {
-            const progressPercent =
-              progress.totalByteSent / progress.totalBytesExpectedToSend;
-          }
+            (progress) => {
+              const progressPercent =
+                progress.totalByteSent / progress.totalBytesExpectedToSend;
+            }
+          );
+
+          return task;
+        });
+        // Limit concurrent uploads
+        const limit = pLimit(maxConcurrentUploads);
+
+        const uploadTasksAsync = uploadTasks.map((task) =>
+          limit(() => task.uploadAsync())
         );
+        const res = await Promise.all(uploadTasksAsync);
 
-        return task;
-      });
-
-      // Limit concurrent uploads
-      const limit = pLimit(maxConcurrentUploads);
-
-      const uploadTasksAsync = uploadTasks.map((task) =>
-        limit(() => task.uploadAsync())
-      );
-      res = await Promise.all(uploadTasksAsync);
-
-      console.log(res);
+        console.log(res);
+      }
     } catch (e) {
       console.error(e);
       return;
