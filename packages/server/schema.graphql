@@ -788,7 +788,6 @@ type Mutation {
   updateOnePhoto(data: PhotoUpdateInput!, where: PhotoWhereUniqueInput!): Photo
   updateOnePhotoOnAlbum(data: PhotoOnAlbumUpdateInput!, where: PhotoOnAlbumWhereUniqueInput!): PhotoOnAlbum
   updateOneUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  uploadPhotos(files: [Upload!]!): [Photo!]!
 }
 
 input NestedDateTimeFilter {
@@ -1481,14 +1480,6 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-type UploadFile {
-  filename: String
-  uri: String
 }
 
 type User {

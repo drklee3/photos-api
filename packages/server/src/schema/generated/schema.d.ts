@@ -5,23 +5,8 @@
 
 import type * as prisma from "./../../../node_modules/.prisma/client/index"
 import type { Context } from "./../../context"
-import type { core } from "nexus"
-declare global {
-  interface NexusGenCustomInputMethods<TypeName extends string> {
-    /**
-     * The `Upload` scalar type represents a file upload.
-     */
-    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
-  }
-}
-declare global {
-  interface NexusGenCustomOutputMethods<TypeName extends string> {
-    /**
-     * The `Upload` scalar type represents a file upload.
-     */
-    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
-  }
-}
+
+
 declare global {
   interface NexusGenCustomOutputProperties<TypeName extends string> {
     crud: NexusPrisma<TypeName, 'crud'>
@@ -1619,7 +1604,6 @@ export interface NexusGenScalars {
   ID: string
   DateTime: any
   Json: any
-  Upload: any
 }
 
 export interface NexusGenObjects {
@@ -1630,10 +1614,6 @@ export interface NexusGenObjects {
   Photo: prisma.Photo;
   PhotoOnAlbum: prisma.PhotoOnAlbum;
   Query: {};
-  UploadFile: { // root type
-    filename?: string | null; // String
-    uri?: string | null; // String
-  }
   User: prisma.User;
   UserOnAlbum: prisma.UserOnAlbum;
 }
@@ -1691,7 +1671,6 @@ export interface NexusGenFieldTypes {
     updateOnePhoto: NexusGenRootTypes['Photo'] | null; // Photo
     updateOnePhotoOnAlbum: NexusGenRootTypes['PhotoOnAlbum'] | null; // PhotoOnAlbum
     updateOneUser: NexusGenRootTypes['User'] | null; // User
-    uploadPhotos: NexusGenRootTypes['Photo'][]; // [Photo!]!
   }
   Photo: { // field return type
     albums: NexusGenRootTypes['PhotoOnAlbum'][]; // [PhotoOnAlbum!]!
@@ -1726,10 +1705,6 @@ export interface NexusGenFieldTypes {
     photos: NexusGenRootTypes['Photo'][]; // [Photo!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
-  }
-  UploadFile: { // field return type
-    filename: string | null; // String
-    uri: string | null; // String
   }
   User: { // field return type
     albums: NexusGenRootTypes['Album'][]; // [Album!]!
@@ -1791,7 +1766,6 @@ export interface NexusGenFieldTypeNames {
     updateOnePhoto: 'Photo'
     updateOnePhotoOnAlbum: 'PhotoOnAlbum'
     updateOneUser: 'User'
-    uploadPhotos: 'Photo'
   }
   Photo: { // field return type name
     albums: 'PhotoOnAlbum'
@@ -1826,10 +1800,6 @@ export interface NexusGenFieldTypeNames {
     photos: 'Photo'
     user: 'User'
     users: 'User'
-  }
-  UploadFile: { // field return type name
-    filename: 'String'
-    uri: 'String'
   }
   User: { // field return type name
     albums: 'Album'
@@ -1915,9 +1885,6 @@ export interface NexusGenArgTypes {
     updateOneUser: { // args
       data: NexusGenInputs['UserUpdateInput']; // UserUpdateInput!
       where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
-    }
-    uploadPhotos: { // args
-      files: NexusGenScalars['Upload'][]; // [Upload!]!
     }
   }
   Photo: {

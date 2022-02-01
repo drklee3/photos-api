@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Request } from 'express'
+import type { Request } from 'express'
 
 const prisma = new PrismaClient()
 
@@ -10,7 +10,7 @@ export interface Context {
 
 export function createContext(req: Request) {
   return {
-    ...req,
+    req,
     prisma,
   }
 }

@@ -4584,6 +4584,7 @@ __metadata:
     expo-asset: ~8.4.5
     expo-cli: ^5.0.3
     expo-constants: ~13.0.0
+    expo-file-system: ~13.1.2
     expo-font: ~10.0.4
     expo-image-picker: ~12.0.1
     expo-linear-gradient: ~11.0.0
@@ -4696,6 +4697,7 @@ __metadata:
     "@types/jest": ^27.0.3
     "@types/mime-types": ^2.1.1
     "@types/morgan": ^1.9.3
+    "@types/multer": ^1.4.7
     "@types/node": ^16.11.10
     "@types/react": ^17.0.37
     "@types/sharp": ^0.29.4
@@ -4727,6 +4729,7 @@ __metadata:
     jest: ^27.3.1
     mime-types: ^2.1.34
     morgan: ^1.10.0
+    multer: ^1.4.4
     nexus: 1.1.0
     prisma: 3.7.0
     react: ^17.0.2
@@ -6680,6 +6683,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/multer@npm:^1.4.7":
+  version: 1.4.7
+  resolution: "@types/multer@npm:1.4.7"
+  dependencies:
+    "@types/express": "*"
+  checksum: 680cb0710aa25264d20cdcdaf34c212b636b55ea141310f06c25354ab1401193c7aa6839f9d22abf64a223fab1f2b8287f2512b0bef7e1628c4e9ffe54b4aeb2
+  languageName: node
+  linkType: hard
+
 "@types/node-fetch@npm:^3.0.2":
   version: 3.0.3
   resolution: "@types/node-fetch@npm:3.0.3"
@@ -7781,6 +7793,13 @@ __metadata:
   version: 1.2.6
   resolution: "appdirsjs@npm:1.2.6"
   checksum: b680cffe91fe422168c29c66609bb390db7004c214f4b11644a3269d84bb2828b5d60b5e2dce5af10d143e538a68169f93738ce2f0a6f57cca8c5c4f19cef2ed
+  languageName: node
+  linkType: hard
+
+"append-field@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "append-field@npm:1.0.0"
+  checksum: 482ba08acc0ecef00fe7da6bf2f8e48359a9905ee1af525f3120c9260c02e91eedf0579b59d898e8d8455b6c199e340bc0a2fd4b9e02adaa29a8a86c722b37f9
   languageName: node
   linkType: hard
 
@@ -9006,6 +9025,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"busboy@npm:^0.2.11":
+  version: 0.2.14
+  resolution: "busboy@npm:0.2.14"
+  dependencies:
+    dicer: 0.2.5
+    readable-stream: 1.1.x
+  checksum: 9df9fca6d96dab9edd03f568bde31f215794e6fabd73c75d2b39a4be2e8b73a45121d987dea5db881f3fb499737c261b372106fe72d08b8db92afaed8d751165
+  languageName: node
+  linkType: hard
+
 "busboy@npm:^0.3.1":
   version: 0.3.1
   resolution: "busboy@npm:0.3.1"
@@ -9929,7 +9958,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concat-stream@npm:1.6.2, concat-stream@npm:^1.5.0":
+"concat-stream@npm:1.6.2, concat-stream@npm:^1.5.0, concat-stream@npm:^1.5.2":
   version: 1.6.2
   resolution: "concat-stream@npm:1.6.2"
   dependencies:
@@ -11076,6 +11105,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dicer@npm:0.2.5":
+  version: 0.2.5
+  resolution: "dicer@npm:0.2.5"
+  dependencies:
+    readable-stream: 1.1.x
+    streamsearch: 0.1.2
+  checksum: a6f0ce9ac5099c7ffeaec7398d711eea1dd803eb99036d0f05342e9ed46a4235a5ed0ea01ad5d6c785fdb0aae6d61d2722e6e64f9fabdfe39885f7f52eb635ee
+  languageName: node
+  linkType: hard
+
 "dicer@npm:0.3.0":
   version: 0.3.0
   resolution: "dicer@npm:0.3.0"
@@ -11998,6 +12037,18 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 8db0ecd4ba130efa87032bfe0a72cdc999adeadaa459418ac1dedb66102f7b51301a247e9f2d7ca9785f8c0ef37cf3b71abf10b57a544fe4347ef1a0c5b8f8da
+  languageName: node
+  linkType: hard
+
+"expo-file-system@npm:~13.1.2":
+  version: 13.1.2
+  resolution: "expo-file-system@npm:13.1.2"
+  dependencies:
+    "@expo/config-plugins": ^4.0.2
+    uuid: ^3.4.0
+  peerDependencies:
+    expo: "*"
+  checksum: 7bf1bc2e5c9511dd7be7f879f614ac37f728e5dd3f0501e4c7183c042bf526376231d335779d6906438597d34f58544aed1ad48929364475e2b392477fd6bf2c
   languageName: node
   linkType: hard
 
@@ -17946,7 +17997,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5, mkdirp@npm:~0.5.1":
+"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.4, mkdirp@npm:^0.5.5, mkdirp@npm:~0.5.1":
   version: 0.5.5
   resolution: "mkdirp@npm:0.5.5"
   dependencies:
@@ -18074,6 +18125,22 @@ __metadata:
     msgpackr-extract:
       optional: true
   checksum: 7102558a772df233189378f223234970d52c755b90cd1ebcb83d00c6a6c2ac7caea98113d941e6ca247365aad4fc3a81b1c1f0e97f3dac6024ebb6cec1bec11d
+  languageName: node
+  linkType: hard
+
+"multer@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "multer@npm:1.4.4"
+  dependencies:
+    append-field: ^1.0.0
+    busboy: ^0.2.11
+    concat-stream: ^1.5.2
+    mkdirp: ^0.5.4
+    object-assign: ^4.1.1
+    on-finished: ^2.3.0
+    type-is: ^1.6.4
+    xtend: ^4.0.0
+  checksum: b5550d250aeee9c4d630eaecd133af0899239f6b10cec4b448ddd0a808025b383520b8227198a8612f60c2cd2094bcb60de93d973084f889d4e40efe6dbd641e
   languageName: node
   linkType: hard
 
@@ -18941,7 +19008,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"on-finished@npm:~2.3.0":
+"on-finished@npm:^2.3.0, on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
   dependencies:
@@ -21070,7 +21137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:1.x >=1.1.9":
+"readable-stream@npm:1.1.x, readable-stream@npm:1.x >=1.1.9":
   version: 1.1.14
   resolution: "readable-stream@npm:1.1.14"
   dependencies:
@@ -24128,7 +24195,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-is@npm:~1.6.16, type-is@npm:~1.6.17, type-is@npm:~1.6.18":
+"type-is@npm:^1.6.4, type-is@npm:~1.6.16, type-is@npm:~1.6.17, type-is@npm:~1.6.18":
   version: 1.6.18
   resolution: "type-is@npm:1.6.18"
   dependencies:

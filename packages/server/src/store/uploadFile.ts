@@ -40,19 +40,13 @@ function streamToBuffer(stream: ReadStream): Promise<Buffer> {
   })
 }
 
-export const uploadFile = async (
-  file: Promise<FileUpload>,
-  app: Application,
-) => {
-  const { createReadStream, filename, mimetype, encoding } = await file
+export async function uploadFile(file: Express.Multer.File) {
+  const { buffer, mimetype, originalname } = file
 
   const id = uuidv4()
 
   // TODO: support video uploads
-  const stream = createReadStream()
-  const buf = await streamToBuffer(stream)
-
-  const metadata = await sharp(buf).metadata()
+  const metadata = await sharp(buffer).metadata()
 
   // Parse raw exif buffer if exists
   const exifData = metadata.exif ? exif(metadata.exif) : {}
@@ -66,10 +60,9 @@ export const uploadFile = async (
       aggregatedS3.putObject({
         Bucket: process.env.S3_BUCKET,
         Key: key,
-        Body: buf,
-        ContentDisposition: filename,
+        Body: buffer,
+        ContentDisposition: originalname,
         ContentType: mimetype,
-        ContentEncoding: encoding,
       }),
     { delay: 250, maxTry: 5 },
   )
@@ -82,14 +75,14 @@ export const uploadFile = async (
 
   const job: ImageResizeJob = {
     id,
-    filename,
+    filename: originalname,
     mimetype,
   }
 
   await channelWrapper.sendToQueue(IMAGE_RESIZE_QUEUE_NAME, job)
 
   return {
-    filename,
+    filename: originalname,
     id,
     data: obj,
     metadata: {
