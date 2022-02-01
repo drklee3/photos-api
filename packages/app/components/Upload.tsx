@@ -5,6 +5,14 @@ import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import useToastAlert from "../hooks/useToastAlert";
 import { useQueryClient } from "react-query";
+import FileSystem, {
+  FileSystemSessionType,
+  FileSystemUploadType,
+} from "expo-file-system";
+import { uploadFileEndpoint } from "../client/uploadApi";
+import pLimit from "p-limit";
+
+const maxConcurrentUploads = 3;
 
 export default function Upload() {
   const queryClient = useQueryClient();
@@ -28,18 +36,41 @@ export default function Upload() {
       return;
     }
 
-    const imgBlobPromises = pickerRes.selected.map(async (img) => {
-      const res = await fetch(img.uri);
-      return await res.blob();
-    });
-
-    const imgBlobs = await Promise.all(imgBlobPromises);
-
     let res;
     try {
-      res = await mutateAsync({
-        files: imgBlobs,
+      // Use expo uploader, works in background
+      const uploadTasks = pickerRes.selected.map((img) => {
+        const task = FileSystem.createUploadTask(
+          uploadFileEndpoint,
+          img.uri,
+          {
+            uploadType: FileSystemUploadType.MULTIPART,
+            fieldName: "file",
+            sessionType: FileSystemSessionType.BACKGROUND,
+            parameters: {
+              // TODO: Upload directly to an album
+              // albumId: ""
+            },
+            headers: {
+              // Include auth here
+            },
+          },
+          (progress) => {
+            const progressPercent =
+              progress.totalByteSent / progress.totalBytesExpectedToSend;
+          }
+        );
+
+        return task;
       });
+
+      // Limit concurrent uploads
+      const limit = pLimit(maxConcurrentUploads);
+
+      const uploadTasksAsync = uploadTasks.map((task) =>
+        limit(() => task.uploadAsync())
+      );
+      res = await Promise.all(uploadTasksAsync);
 
       console.log(res);
     } catch (e) {
@@ -49,7 +80,7 @@ export default function Upload() {
 
     toast.show({
       id: "upload:success",
-      title: `Uploaded ${res.uploadPhotos.length} photos`,
+      title: `Uploaded ${pickerRes.selected.length} photos`,
       status: "success",
     });
   };
