@@ -9,6 +9,7 @@ import FileSystem, {
 import { uploadFileEndpoint, useUploadFileMutation } from "../client/uploadApi";
 import pLimit from "p-limit";
 import { Platform } from "react-native";
+import { useAuthContext } from "./auth/AuthProvider";
 
 const maxConcurrentUploads = 3;
 
@@ -16,6 +17,9 @@ export default function Upload() {
   const toast = useToastAlert();
   // Only on web
   const { mutateAsync, isError, error, reset } = useUploadFileMutation();
+  const {
+    state: { session },
+  } = useAuthContext();
 
   const onPress = async () => {
     const pickerRes = await ImagePicker.launchImageLibraryAsync({
@@ -36,7 +40,8 @@ export default function Upload() {
           limit(() =>
             mutateAsync({
               img,
-              // TODO: Upload directly to an album
+              // TODO: Upload directly to an album when on album screen and
+              // albumId parameter exists
               albumId: undefined,
             })
           )
@@ -45,6 +50,17 @@ export default function Upload() {
 
         console.log(res);
       } else {
+        if (!session?.session_token) {
+          console.warn("No session token");
+          toast.show({
+            id: "upload:failed",
+            title: `You aren't logged in hmm..`,
+            status: "error",
+          });
+
+          return;
+        }
+
         // Use expo uploader on mobile, works in background
         const uploadTasks = pickerRes.selected.map((img) => {
           const task = FileSystem.createUploadTask(
@@ -59,7 +75,7 @@ export default function Upload() {
                 // albumId: ""
               },
               headers: {
-                // TODO: Include auth here
+                Authorization: `Bearer ${session.session_token}`,
               },
             },
             (progress) => {
