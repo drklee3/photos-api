@@ -6,7 +6,6 @@ import express from 'express'
 import http from 'http'
 
 import { registerMiddlewares } from './middleware'
-import { graphqlUploadExpress } from 'graphql-upload'
 import { channelWrapper } from './store/uploadFile'
 
 let origin: string
@@ -35,7 +34,6 @@ switch (process.env.NODE_ENV) {
 export async function getApp() {
   const app = express()
 
-  app.use(graphqlUploadExpress())
   registerMiddlewares(app)
 
   const httpServer = http.createServer(app)

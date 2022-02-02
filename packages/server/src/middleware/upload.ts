@@ -28,7 +28,7 @@ const upload = multer({
 
 export default function installMulterUploads(app: Express) {
   app.post('/photos/upload', upload.single('file'), async (req, res) => {
-    if (!Array.isArray(req.files)) {
+    if (req.files !== undefined) {
       return res.status(400).send('Must upload a single file, not array')
     }
 

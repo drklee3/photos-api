@@ -17,8 +17,6 @@ export function setSession(createHelpers: RouteOptionsCreator) {
     const authHeader = req.header('authorization')?.replace('Bearer', '')
     const cookieHeader = req.header('cookie')
 
-    log.debug({ authHeader, cookieHeader })
-
     const { sdk } = createHelpers(req)
 
     try {
