@@ -1,31 +1,21 @@
-import { useUploadPhotosMutation } from "../client/reactQuery";
 import Button, { ButtonType } from "./Button";
-import { client } from "../client/graphqlClient";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import useToastAlert from "../hooks/useToastAlert";
-import { useQueryClient } from "react-query";
 import FileSystem, {
   FileSystemSessionType,
   FileSystemUploadType,
 } from "expo-file-system";
-import { uploadFileEndpoint } from "../client/uploadApi";
+import { uploadFileEndpoint, useUploadFileMutation } from "../client/uploadApi";
 import pLimit from "p-limit";
 import { Platform } from "react-native";
 
 const maxConcurrentUploads = 3;
 
 export default function Upload() {
-  const queryClient = useQueryClient();
-
-  const { mutateAsync, status, isLoading, isError, error, reset } =
-    useUploadPhotosMutation(client, {
-      onSuccess: () => {
-        queryClient.invalidateQueries("photos");
-      },
-    });
-
   const toast = useToastAlert();
+  // Only on web
+  const { mutateAsync, isError, error, reset } = useUploadFileMutation();
 
   const onPress = async () => {
     const pickerRes = await ImagePicker.launchImageLibraryAsync({
@@ -38,8 +28,24 @@ export default function Upload() {
     }
 
     try {
-      if (Platform.OS !== "web") {
-        // Use expo uploader, works in background
+      if (Platform.OS === "web") {
+        // WEB upload
+        const limit = pLimit(maxConcurrentUploads);
+
+        const uploadTasksAsync = pickerRes.selected.map((img) =>
+          limit(() =>
+            mutateAsync({
+              img,
+              // TODO: Upload directly to an album
+              albumId: undefined,
+            })
+          )
+        );
+        const res = await Promise.all(uploadTasksAsync);
+
+        console.log(res);
+      } else {
+        // Use expo uploader on mobile, works in background
         const uploadTasks = pickerRes.selected.map((img) => {
           const task = FileSystem.createUploadTask(
             uploadFileEndpoint,
@@ -53,7 +59,7 @@ export default function Upload() {
                 // albumId: ""
               },
               headers: {
-                // Include auth here
+                // TODO: Include auth here
               },
             },
             (progress) => {

@@ -19,8 +19,6 @@ export type Scalars = {
   Float: number;
   DateTime: any;
   Json: any;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
 
 export type Album = {
@@ -336,12 +334,6 @@ export type AlbumWhereInput = {
 
 export type AlbumWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
-};
-
-export type AuthUser = {
-  __typename?: 'AuthUser';
-  token?: Maybe<Scalars['String']>;
-  user?: Maybe<User>;
 };
 
 export type Comment = {
@@ -825,16 +817,12 @@ export type Mutation = {
   deleteOnePhotoOnAlbum?: Maybe<PhotoOnAlbum>;
   deleteOneUser?: Maybe<User>;
   incrementAlbumViewCount?: Maybe<Album>;
-  login?: Maybe<AuthUser>;
-  logout?: Maybe<Scalars['Boolean']>;
   shareAlbum?: Maybe<Album>;
-  signup?: Maybe<AuthUser>;
   updateOneAlbum?: Maybe<Album>;
   updateOneComment?: Maybe<Comment>;
   updateOnePhoto?: Maybe<Photo>;
   updateOnePhotoOnAlbum?: Maybe<PhotoOnAlbum>;
   updateOneUser?: Maybe<User>;
-  uploadPhotos: Array<Photo>;
 };
 
 
@@ -883,23 +871,10 @@ export type MutationIncrementAlbumViewCountArgs = {
 };
 
 
-export type MutationLoginArgs = {
-  emailOrUsername: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
 export type MutationShareAlbumArgs = {
   albumId: Scalars['String'];
   role: AlbumRole;
   targetUserId: Scalars['String'];
-};
-
-
-export type MutationSignupArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  username: Scalars['String'];
 };
 
 
@@ -930,11 +905,6 @@ export type MutationUpdateOnePhotoOnAlbumArgs = {
 export type MutationUpdateOneUserArgs = {
   data: UserUpdateInput;
   where: UserWhereUniqueInput;
-};
-
-
-export type MutationUploadPhotosArgs = {
-  files: Array<Scalars['Upload']>;
 };
 
 export type NestedDateTimeFilter = {
@@ -1716,12 +1686,6 @@ export type StringNullableFilter = {
   startsWith?: InputMaybe<Scalars['String']>;
 };
 
-export type UploadFile = {
-  __typename?: 'UploadFile';
-  filename?: Maybe<Scalars['String']>;
-  uri?: Maybe<Scalars['String']>;
-};
-
 export type User = {
   __typename?: 'User';
   albums: Array<Album>;
@@ -1825,7 +1789,6 @@ export type UserCreateWithoutAlbumsInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
@@ -1836,7 +1799,6 @@ export type UserCreateWithoutCommentsInput = {
   albums?: InputMaybe<AlbumCreateNestedManyWithoutAuthorInput>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
@@ -1847,7 +1809,6 @@ export type UserCreateWithoutLikeInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
@@ -1859,7 +1820,6 @@ export type UserCreateWithoutPhotosInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
   sharedAlbums?: InputMaybe<UserOnAlbumCreateNestedManyWithoutUserInput>;
   username: Scalars['String'];
 };
@@ -1870,7 +1830,6 @@ export type UserCreateWithoutSharedAlbumsInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
   email: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
   photos?: InputMaybe<PhotoCreateNestedManyWithoutAuthorInput>;
   username: Scalars['String'];
 };
@@ -2065,7 +2024,6 @@ export type UserOrderByWithRelationInput = {
   comments?: InputMaybe<CommentOrderByRelationAggregateInput>;
   email?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
-  password?: InputMaybe<SortOrder>;
   photos?: InputMaybe<PhotoOrderByRelationAggregateInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumOrderByRelationAggregateInput>;
   username?: InputMaybe<SortOrder>;
@@ -2077,7 +2035,6 @@ export type UserUpdateInput = {
   comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2130,7 +2087,6 @@ export type UserUpdateWithoutAlbumsInput = {
   comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2141,7 +2097,6 @@ export type UserUpdateWithoutCommentsInput = {
   albums?: InputMaybe<AlbumUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2152,7 +2107,6 @@ export type UserUpdateWithoutLikeInput = {
   comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2164,7 +2118,6 @@ export type UserUpdateWithoutPhotosInput = {
   comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   sharedAlbums?: InputMaybe<UserOnAlbumUpdateManyWithoutUserInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
@@ -2175,7 +2128,6 @@ export type UserUpdateWithoutSharedAlbumsInput = {
   comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
   photos?: InputMaybe<PhotoUpdateManyWithoutAuthorInput>;
   username?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
@@ -2214,7 +2166,6 @@ export type UserWhereInput = {
   comments?: InputMaybe<CommentListRelationFilter>;
   email?: InputMaybe<StringFilter>;
   id?: InputMaybe<StringFilter>;
-  password?: InputMaybe<StringFilter>;
   photos?: InputMaybe<PhotoListRelationFilter>;
   sharedAlbums?: InputMaybe<UserOnAlbumListRelationFilter>;
   username?: InputMaybe<StringFilter>;
@@ -2239,28 +2190,6 @@ export type PhotoDataFragment = { __typename?: 'Photo', id: string, title?: stri
 
 export type UserDataFragment = { __typename?: 'User', id: string, username: string };
 
-export type LogInMutationVariables = Exact<{
-  emailOrUsername: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type LogInMutation = { __typename?: 'Mutation', login?: { __typename?: 'AuthUser', token?: string | null | undefined, user?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined } | null | undefined };
-
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutMutation = { __typename?: 'Mutation', logout?: boolean | null | undefined };
-
-export type SignupMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
-  email: Scalars['String'];
-}>;
-
-
-export type SignupMutation = { __typename?: 'Mutation', signup?: { __typename?: 'AuthUser', token?: string | null | undefined, user?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined } | null | undefined };
-
 export type CreateAlbumMutationVariables = Exact<{
   data: AlbumCreateInput;
 }>;
@@ -2275,13 +2204,6 @@ export type UpdateOnePhotoMutationVariables = Exact<{
 
 
 export type UpdateOnePhotoMutation = { __typename?: 'Mutation', updateOnePhoto?: { __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any } | null | undefined };
-
-export type UploadPhotosMutationVariables = Exact<{
-  files: Array<Scalars['Upload']> | Scalars['Upload'];
-}>;
-
-
-export type UploadPhotosMutation = { __typename?: 'Mutation', uploadPhotos: Array<{ __typename?: 'Photo', id: string, title?: string | null | undefined, description?: string | null | undefined, fileName?: string | null | undefined, width: number, height: number, mimetype: string, size: number, exif: any, createdAt: any, updatedAt: any }> };
 
 export type AlbumQueryVariables = Exact<{
   where: AlbumWhereUniqueInput;
@@ -2376,74 +2298,6 @@ export const AlbumDataFragmentDoc = `
 }
     ${PhotoDataFragmentDoc}
 ${UserDataFragmentDoc}`;
-export const LogInDocument = `
-    mutation LogIn($emailOrUsername: String!, $password: String!) {
-  login(emailOrUsername: $emailOrUsername, password: $password) {
-    user {
-      id
-      username
-      email
-    }
-    token
-  }
-}
-    `;
-export const useLogInMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<LogInMutation, TError, LogInMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<LogInMutation, TError, LogInMutationVariables, TContext>(
-      'LogIn',
-      (variables?: LogInMutationVariables) => fetcher<LogInMutation, LogInMutationVariables>(client, LogInDocument, variables, headers)(),
-      options
-    );
-export const LogoutDocument = `
-    mutation Logout {
-  logout
-}
-    `;
-export const useLogoutMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
-      'Logout',
-      (variables?: LogoutMutationVariables) => fetcher<LogoutMutation, LogoutMutationVariables>(client, LogoutDocument, variables, headers)(),
-      options
-    );
-export const SignupDocument = `
-    mutation Signup($username: String!, $password: String!, $email: String!) {
-  signup(username: $username, password: $password, email: $email) {
-    user {
-      id
-      username
-      email
-    }
-    token
-  }
-}
-    `;
-export const useSignupMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<SignupMutation, TError, SignupMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
-      'Signup',
-      (variables?: SignupMutationVariables) => fetcher<SignupMutation, SignupMutationVariables>(client, SignupDocument, variables, headers)(),
-      options
-    );
 export const CreateAlbumDocument = `
     mutation CreateAlbum($data: AlbumCreateInput!) {
   createOneAlbum(data: $data) {
@@ -2482,26 +2336,6 @@ export const useUpdateOnePhotoMutation = <
     useMutation<UpdateOnePhotoMutation, TError, UpdateOnePhotoMutationVariables, TContext>(
       'UpdateOnePhoto',
       (variables?: UpdateOnePhotoMutationVariables) => fetcher<UpdateOnePhotoMutation, UpdateOnePhotoMutationVariables>(client, UpdateOnePhotoDocument, variables, headers)(),
-      options
-    );
-export const UploadPhotosDocument = `
-    mutation UploadPhotos($files: [Upload!]!) {
-  uploadPhotos(files: $files) {
-    ...PhotoData
-  }
-}
-    ${PhotoDataFragmentDoc}`;
-export const useUploadPhotosMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<UploadPhotosMutation, TError, UploadPhotosMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<UploadPhotosMutation, TError, UploadPhotosMutationVariables, TContext>(
-      'UploadPhotos',
-      (variables?: UploadPhotosMutationVariables) => fetcher<UploadPhotosMutation, UploadPhotosMutationVariables>(client, UploadPhotosDocument, variables, headers)(),
       options
     );
 export const AlbumDocument = `
