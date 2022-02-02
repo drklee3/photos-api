@@ -32,70 +32,21 @@ export default function Upload() {
     }
 
     try {
-      if (Platform.OS === "web") {
-        // WEB upload
-        const limit = pLimit(maxConcurrentUploads);
+      const limit = pLimit(maxConcurrentUploads);
 
-        const uploadTasksAsync = pickerRes.selected.map((img) =>
-          limit(() =>
-            mutateAsync({
-              img,
-              // TODO: Upload directly to an album when on album screen and
-              // albumId parameter exists
-              albumId: undefined,
-            })
-          )
-        );
-        const res = await Promise.all(uploadTasksAsync);
+      const uploadTasksAsync = pickerRes.selected.map((img) =>
+        limit(() =>
+          mutateAsync({
+            img,
+            // TODO: Upload directly to an album when on album screen and
+            // albumId parameter exists
+            albumId: undefined,
+          })
+        )
+      );
+      const res = await Promise.all(uploadTasksAsync);
 
-        console.log(res);
-      } else {
-        if (!session?.session_token) {
-          console.warn("No session token");
-          toast.show({
-            id: "upload:failed",
-            title: `You aren't logged in hmm..`,
-            status: "error",
-          });
-
-          return;
-        }
-
-        // Use expo uploader on mobile, works in background
-        const uploadTasks = pickerRes.selected.map((img) => {
-          const task = FileSystem.createUploadTask(
-            uploadFileEndpoint,
-            img.uri,
-            {
-              uploadType: FileSystemUploadType.MULTIPART,
-              fieldName: "file",
-              sessionType: FileSystemSessionType.BACKGROUND,
-              parameters: {
-                // TODO: Upload directly to an album
-                // albumId: ""
-              },
-              headers: {
-                Authorization: `Bearer ${session.session_token}`,
-              },
-            },
-            (progress) => {
-              const progressPercent =
-                progress.totalByteSent / progress.totalBytesExpectedToSend;
-            }
-          );
-
-          return task;
-        });
-        // Limit concurrent uploads
-        const limit = pLimit(maxConcurrentUploads);
-
-        const uploadTasksAsync = uploadTasks.map((task) =>
-          limit(() => task.uploadAsync())
-        );
-        const res = await Promise.all(uploadTasksAsync);
-
-        console.log(res);
-      }
+      console.log(res);
     } catch (e) {
       console.error(e);
       return;
