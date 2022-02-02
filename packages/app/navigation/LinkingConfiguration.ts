@@ -19,9 +19,7 @@ const linking: LinkingOptions<RootStackParamList> = {
             path: "photos/:id?",
           },
           Albums: {
-            screens: {
-              AlbumsScreen: "albums",
-            },
+            path: "albums/:albumId?",
           },
         },
       },

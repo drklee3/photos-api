@@ -31,7 +31,9 @@ export type RootTabParamList = {
   Photos: {
     id?: string;
   };
-  Albums: undefined;
+  Albums: {
+    albumId?: string;
+  };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
