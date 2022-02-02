@@ -69,5 +69,12 @@ services:
     networks:
       - ory_internal
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 networks:
   ory_internal: null
