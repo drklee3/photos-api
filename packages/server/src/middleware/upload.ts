@@ -27,8 +27,12 @@ const upload = multer({
 })
 
 export default function installMulterUploads(app: Express) {
-  app.post('/photos/upload', upload.array('photos'), async (req, res) => {
-    if (req.files === undefined) {
+  app.post('/photos/upload', upload.single('file'), async (req, res) => {
+    if (!Array.isArray(req.files)) {
+      return res.status(400).send('Must upload a single file, not array')
+    }
+
+    if (req.file === undefined) {
       return
     }
 
@@ -38,13 +42,9 @@ export default function installMulterUploads(app: Express) {
       throw new Error("user id not found, this shouldn't happen")
     }
 
-    if (!Array.isArray(req.files)) {
-      return res.status(400).send('Must upload a single array of files')
-    }
+    const files = [req.file]
 
-    console.log('upload album target', req.body.albumId)
-
-    const promises = req.files.map((file: Express.Multer.File) =>
+    const promises = files.map((file: Express.Multer.File) =>
       retryAsync(async () => uploadFile(file), {
         delay: 0,
         maxTry: 3,

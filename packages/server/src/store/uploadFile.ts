@@ -9,15 +9,16 @@ import { aggregatedS3 } from './s3'
 import { ImageResizeJob, IMAGE_RESIZE_QUEUE_NAME } from '@picatch/shared'
 import { getImageKey } from './image'
 import { retryAsync } from 'ts-retry'
+import { log } from '../utils/logger'
 
 // AMQP
 const amqpConn = amqp.connect(process.env.AMQP_ENDPOINT!)
 amqpConn.on('connect', () => {
-  console.log('amqp connected')
+  log.info('amqp connected')
 })
 
 amqpConn.on('disconnect', (err) => {
-  console.log('amqp disconnected', err)
+  log.info('amqp disconnected', err)
 })
 
 export const channelWrapper = amqpConn.createChannel({

@@ -1,4 +1,5 @@
 import { getApp } from './server'
+import { log } from './utils/logger'
 
 async function main() {
   const { httpServer, apolloServer } = await getApp()
@@ -6,7 +7,7 @@ async function main() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve),
   )
-  console.log(
+  log.info(
     `🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`,
   )
 }
