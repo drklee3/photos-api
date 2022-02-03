@@ -4590,13 +4590,13 @@ __metadata:
     "@types/react-native": ~0.64.12
     axios: ^0.24.0
     expo: ^44.0.0
-    expo-asset: ~8.4.5
+    expo-asset: ~8.4.6
     expo-cli: ^5.0.3
-    expo-constants: ~13.0.0
+    expo-constants: ~13.0.1
     expo-file-system: ~13.1.2
     expo-font: ~10.0.4
     expo-image-picker: ~12.0.1
-    expo-linear-gradient: ~11.0.0
+    expo-linear-gradient: ~11.0.1
     expo-linking: ~3.0.0
     expo-media-library: ~14.0.0
     expo-secure-store: ~11.1.0
@@ -11956,6 +11956,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-asset@npm:~8.4.6":
+  version: 8.4.6
+  resolution: "expo-asset@npm:8.4.6"
+  dependencies:
+    blueimp-md5: ^2.10.0
+    invariant: ^2.2.4
+    md5-file: ^3.2.3
+    path-browserify: ^1.0.0
+    url-parse: ^1.4.4
+  checksum: d11dddbe6ad04d372c94e90c9841f6949215874455c5f968f36849d27867c440f86fe0f96fb479aac03cfeb79c4dcafacbeac619137b921c94399fe7de981267
+  languageName: node
+  linkType: hard
+
 "expo-cli@npm:^5.0.3":
   version: 5.0.4
   resolution: "expo-cli@npm:5.0.4"
@@ -12037,6 +12050,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-constants@npm:~13.0.1":
+  version: 13.0.2
+  resolution: "expo-constants@npm:13.0.2"
+  dependencies:
+    "@expo/config": ^6.0.6
+    uuid: ^3.3.2
+  peerDependencies:
+    expo: "*"
+  checksum: 594a0ccc80cef5e11bae6b2e32e3249ce323e2613232eaa4381966c6aa050192a265dd3498ba1bcb3a81e0a292f2216b2ea23b49807cced51f4b333419e855d9
+  languageName: node
+  linkType: hard
+
 "expo-error-recovery@npm:~3.0.4":
   version: 3.0.4
   resolution: "expo-error-recovery@npm:3.0.4"
@@ -12102,12 +12127,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-linear-gradient@npm:~11.0.0":
-  version: 11.0.0
-  resolution: "expo-linear-gradient@npm:11.0.0"
+"expo-linear-gradient@npm:~11.0.1":
+  version: 11.0.2
+  resolution: "expo-linear-gradient@npm:11.0.2"
   peerDependencies:
     expo: "*"
-  checksum: b2d125c6d2a493a48f0becb654391bd6ec7e23086000e0d9b29df32065c8b13bf193db750f6f7ba65ffb836837dc4941f65a7e59fca22961e20862345c5ecd49
+  checksum: 942f9072b0b21a1d2a17a09bb9b84923bb1e209bcb6d5ac771ca882a0e2e382f0553d53e450180daa10116b7cb8719d3677d3ed4b7e2d6e2c61e120416b5cc9c
   languageName: node
   linkType: hard
 
