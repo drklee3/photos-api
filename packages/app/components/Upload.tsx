@@ -4,7 +4,6 @@ import "react";
 import useToastAlert from "../hooks/useToastAlert";
 import { useUploadFileMutation } from "../client/uploadApi";
 import pLimit from "p-limit";
-import { useAuthContext } from "./auth/AuthProvider";
 
 const maxConcurrentUploads = 3;
 
@@ -12,9 +11,6 @@ export default function Upload() {
   const toast = useToastAlert();
   // Only on web
   const { mutateAsync, isError, error, reset } = useUploadFileMutation();
-  const {
-    state: { session },
-  } = useAuthContext();
 
   const onPress = async () => {
     const pickerRes = await ImagePicker.launchImageLibraryAsync({
