@@ -338,6 +338,7 @@ export default function Gallery({
           width="full"
           data={imageList}
           pagingEnabled={true}
+          decelerationRate={1.0}
           horizontal={true}
           ref={flatlistRef}
           keyExtractor={(item) => item.id}

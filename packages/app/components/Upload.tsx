@@ -1,14 +1,9 @@
 import Button, { ButtonType } from "./Button";
-import * as ImagePicker from "expo-image-picker";
-import * as React from "react";
+import ImagePicker from "expo-image-picker";
+import "react";
 import useToastAlert from "../hooks/useToastAlert";
-import FileSystem, {
-  FileSystemSessionType,
-  FileSystemUploadType,
-} from "expo-file-system";
-import { uploadFileEndpoint, useUploadFileMutation } from "../client/uploadApi";
+import { useUploadFileMutation } from "../client/uploadApi";
 import pLimit from "p-limit";
-import { Platform } from "react-native";
 import { useAuthContext } from "./auth/AuthProvider";
 
 const maxConcurrentUploads = 3;
