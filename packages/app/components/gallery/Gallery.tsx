@@ -32,6 +32,7 @@ import ScrollBar from "./ScrollBar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabScreenProps } from "../../types";
 import Button, { ButtonType } from "../Button";
+import PinchableImage from "./PinchableImage";
 
 function calculateRowItems(
   rowWidth: number,
@@ -381,7 +382,7 @@ function FullScreenPhoto({ windowWidth, item }: FullScreenPhotoProps) {
     >
       <Text>{item.id}</Text>
       <Box width="full" flexGrow={1}>
-        <Image
+        <PinchableImage
           source={{
             uri: item.uri,
           }}

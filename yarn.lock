@@ -2865,6 +2865,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@egjs/hammerjs@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "@egjs/hammerjs@npm:2.0.17"
+  dependencies:
+    "@types/hammerjs": ^2.0.36
+  checksum: 8945137cec5837edd70af3f2e0ea621543eb0aa3b667e6269ec6485350f4d120c2434b37c7c30b1cf42a65275dd61c1f24626749c616696d3956ac0c008c4766
+  languageName: node
+  linkType: hard
+
 "@emotion/is-prop-valid@npm:^0.8.2":
   version: 0.8.8
   resolution: "@emotion/is-prop-valid@npm:0.8.8"
@@ -4605,6 +4614,7 @@ __metadata:
     react-dom: 17.0.1
     react-hook-form: ^7.22.5
     react-native: 0.64.3
+    react-native-gesture-handler: ~2.1.0
     react-native-reanimated: ~2.3.1
     react-native-safe-area-context: 3.3.2
     react-native-screens: ~3.10.1
@@ -6480,6 +6490,13 @@ __metadata:
     "@types/koa": "*"
     graphql: ^15.3.0
   checksum: a847d3f29c6194344c56fd9436b5f59adbad0b95f3c3e9ab0cf19e822ed3ebfc786d73c432d302106303803dd4989fa24bdd1e3b3b0c995a14982c6965086960
+  languageName: node
+  linkType: hard
+
+"@types/hammerjs@npm:^2.0.36":
+  version: 2.0.41
+  resolution: "@types/hammerjs@npm:2.0.41"
+  checksum: d16fbd688fc9b18cc270abe8dea8d4c50ef7bd8375e593d92c233d299387933a6b003c8db69819344833052458bc5f9ef1b472001277a49f095928d184356006
   languageName: node
   linkType: hard
 
@@ -14002,7 +14019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.2":
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -20877,6 +20894,19 @@ __metadata:
     jscodeshift: ^0.11.0
     nullthrows: ^1.1.1
   checksum: 545d1e416be5bd0bc27a9bc4d58719317577fbcb38f80082857142f4946ba336df3f5fa3e87137709691acd809ee46e1f52834648399cb50219a70f441d6e6a3
+  languageName: node
+  linkType: hard
+
+"react-native-gesture-handler@npm:~2.1.0":
+  version: 2.1.1
+  resolution: "react-native-gesture-handler@npm:2.1.1"
+  dependencies:
+    "@egjs/hammerjs": ^2.0.17
+    hoist-non-react-statics: ^3.3.0
+    invariant: ^2.2.4
+    lodash: ^4.17.21
+    prop-types: ^15.7.2
+  checksum: d26f56150ec94c0145128117fc3cf69338fdabff0e688ab5eb5bc18e90588d64d9813575d81791189a430c9333c4bbaf69552c7bc856c57b257c225e9da15505
   languageName: node
   linkType: hard
 
