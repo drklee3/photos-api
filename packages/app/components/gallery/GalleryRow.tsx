@@ -1,8 +1,7 @@
-import * as React from "react";
-import { Box, Flex, HStack } from "native-base";
+import "react";
+import { HStack } from "native-base";
 import GalleryImage from "./GalleryImage";
-import { getHeight, ImageData, ImageRow } from "./ImageData";
-import { useMeasure } from "react-use";
+import { ImageRow } from "./ImageData";
 
 interface GalleryRowProps {
   width: number;

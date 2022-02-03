@@ -22,12 +22,11 @@ import GalleryRow from "./GalleryRow";
 import {
   getAspectRatio,
   getHeight,
-  getResizedImageDimensions,
   getWidth,
   ImageData,
   ImageRow,
 } from "./ImageData";
-import { useMeasure, useWindowSize } from "react-use";
+import { useMeasure } from "react-use";
 import ScrollBar from "./ScrollBar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabScreenProps } from "../../types";
